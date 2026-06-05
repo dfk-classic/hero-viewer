@@ -9,8 +9,14 @@ import MaleRightFootShadow from "../../../assets/images/hero/male/RightFoot-shad
 import archerLeftFoot from "../../../assets/images/hero/male/clothes/archer-LeftFoot.svg";
 import archerRightFoot from "../../../assets/images/hero/male/clothes/archer-RightFoot.svg";
 
+import berserkerLeftFoot from "../../../assets/images/hero/male/clothes/berserker-LeftFoot.svg";
+import berserkerRightFoot from "../../../assets/images/hero/male/clothes/berserker-RightFoot.svg";
+
 import knightLeftFoot from "../../../assets/images/hero/male/clothes/knight-LeftFoot.svg";
 import knightRightFoot from "../../../assets/images/hero/male/clothes/knight-RightFoot.svg";
+
+import legionnaireLeftFoot from "../../../assets/images/hero/male/clothes/legionnaire-LeftFoot.svg";
+import legionnaireRightFoot from "../../../assets/images/hero/male/clothes/legionnaire-RightFoot.svg";
 
 import monkLeftFoot from "../../../assets/images/hero/male/clothes/monk-LeftFoot.svg";
 import monkRightFoot from "../../../assets/images/hero/male/clothes/monk-RightFoot.svg";
@@ -20,6 +26,12 @@ import pirateRightFoot from "../../../assets/images/hero/male/clothes/pirate-Rig
 
 import priestLeftFoot from "../../../assets/images/hero/male/clothes/priest-LeftFoot.svg";
 import priestRightFoot from "../../../assets/images/hero/male/clothes/priest-RightFoot.svg";
+
+import scholarLeftFoot from "../../../assets/images/hero/male/clothes/scholar-LeftFoot.svg";
+import scholarRightFoot from "../../../assets/images/hero/male/clothes/scholar-RightFoot.svg";
+
+import seerLeftFoot from "../../../assets/images/hero/male/clothes/seer-LeftFoot.svg";
+import seerRightFoot from "../../../assets/images/hero/male/clothes/seer-RightFoot.svg";
 
 import thiefLeftFoot from "../../../assets/images/hero/male/clothes/thief-LeftFoot.svg";
 import thiefRightFoot from "../../../assets/images/hero/male/clothes/thief-RightFoot.svg";
@@ -39,12 +51,18 @@ import summonerLeftFoot from "../../../assets/images/hero/male/clothes/advanced/
 import summonerRightFoot from "../../../assets/images/hero/male/clothes/advanced/summoner-RightFoot.svg";
 import ninjaLeftFoot from "../../../assets/images/hero/male/clothes/advanced/ninja-LeftFoot.svg";
 import ninjaRightFoot from "../../../assets/images/hero/male/clothes/advanced/ninja-RightFoot.svg";
+import shapeshifterLeftFoot from "../../../assets/images/hero/male/clothes/advanced/shapeshifter-LeftFoot.svg";
+import shapeshifterRightFoot from "../../../assets/images/hero/male/clothes/advanced/shapeshifter-RightFoot.svg";
+import bardLeftFoot from "../../../assets/images/hero/male/clothes/advanced/bard-LeftFoot.svg";
+import bardRightFoot from "../../../assets/images/hero/male/clothes/advanced/bard-RightFoot.svg";
 
 /* ELITE HEROES */
 import dragoonLeftFoot from "../../../assets/images/hero/male/clothes/elite/dragoon-LeftFoot.svg";
 import dragoonRightFoot from "../../../assets/images/hero/male/clothes/elite/dragoon-RightFoot.svg";
 import sageLeftFoot from "../../../assets/images/hero/male/clothes/elite/sage-LeftFoot.svg";
 import sageRightFoot from "../../../assets/images/hero/male/clothes/elite/sage-RightFoot.svg";
+import spellBowLeftFoot from "../../../assets/images/hero/male/clothes/elite/spellbow-LeftFoot.svg";
+import spellBowRightFoot from "../../../assets/images/hero/male/clothes/elite/spellbow-RightFoot.svg";
 
 /* LEGENDARY HEROES */
 import dreadKnightLeftFoot from "../../../assets/images/hero/male/clothes/legendary/dreadknight-LeftFoot.svg";
@@ -63,10 +81,22 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 				rightFoot: archerRightFoot,
 			};
 		}
+		case "berserker": {
+			return {
+				leftFoot: berserkerLeftFoot,
+				rightFoot: berserkerRightFoot,
+			};
+		}
 		case "knight": {
 			return {
 				leftFoot: knightLeftFoot,
 				rightFoot: knightRightFoot,
+			};
+		}
+		case "legionnaire": {
+			return {
+				leftFoot: legionnaireLeftFoot,
+				rightFoot: legionnaireRightFoot,
 			};
 		}
 		case "monk": {
@@ -85,6 +115,18 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 			return {
 				leftFoot: priestLeftFoot,
 				rightFoot: priestRightFoot,
+			};
+		}
+		case "scholar": {
+			return {
+				leftFoot: scholarLeftFoot,
+				rightFoot: scholarRightFoot,
+			};
+		}
+		case "seer": {
+			return {
+				leftFoot: seerLeftFoot,
+				rightFoot: seerRightFoot,
 			};
 		}
 		case "thief": {
@@ -109,6 +151,18 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 			return {
 				leftFoot: paladinLeftFoot,
 				rightFoot: paladinRightFoot,
+			};
+		}
+		case "shapeshifter": {
+			return {
+				leftFoot: shapeshifterLeftFoot,
+				rightFoot: shapeshifterRightFoot,
+			};
+		}
+		case "bard": {
+			return {
+				leftFoot: bardLeftFoot,
+				rightFoot: bardRightFoot,
 			};
 		}
 		case "darkKnight": {
@@ -139,6 +193,12 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 			return {
 				leftFoot: sageLeftFoot,
 				rightFoot: sageRightFoot,
+			};
+		}
+		case "spellBow": {
+			return {
+				leftFoot: spellBowLeftFoot,
+				rightFoot: spellBowRightFoot,
 			};
 		}
 		case "dreadKnight": {

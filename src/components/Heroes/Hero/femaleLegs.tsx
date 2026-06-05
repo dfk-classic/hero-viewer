@@ -15,10 +15,20 @@ import archerLeftLegBottom from "../../../assets/images/hero/female/clothes/arch
 import archerRightLegTop from "../../../assets/images/hero/female/clothes/archer-RightLeg.svg";
 import archerRightLegBottom from "../../../assets/images/hero/female/clothes/archer-RightLegBtm.svg";
 
+import berserkerLeftLegTop from "../../../assets/images/hero/female/clothes/berserker-LeftLeg.svg";
+import berserkerLeftLegBottom from "../../../assets/images/hero/female/clothes/berserker-LeftLegBtm.svg";
+import berserkerRightLegTop from "../../../assets/images/hero/female/clothes/berserker-RightLeg.svg";
+import berserkerRightLegBottom from "../../../assets/images/hero/female/clothes/berserker-RightLegBtm.svg";
+
 import knightLeftLegTop from "../../../assets/images/hero/female/clothes/knight-LeftLeg.svg";
 import knightLeftLegBottom from "../../../assets/images/hero/female/clothes/knight-LeftLegBtm.svg";
 import knightRightLegTop from "../../../assets/images/hero/female/clothes/knight-RightLeg.svg";
 import knightRightLegBottom from "../../../assets/images/hero/female/clothes/knight-RightLegBtm.svg";
+
+import legionnaireLeftLegTop from "../../../assets/images/hero/female/clothes/legionnaire-LeftLeg.svg";
+import legionnaireLeftLegBottom from "../../../assets/images/hero/female/clothes/legionnaire-LeftLegBtm.svg";
+import legionnaireRightLegTop from "../../../assets/images/hero/female/clothes/legionnaire-RightLeg.svg";
+import legionnaireRightLegBottom from "../../../assets/images/hero/female/clothes/legionnaire-RightLegBtm.svg";
 
 import monkLeftLegTop from "../../../assets/images/hero/female/clothes/monk-LeftLeg.svg";
 import monkLeftLegBottom from "../../../assets/images/hero/female/clothes/monk-LeftLegBtm.svg";
@@ -34,6 +44,16 @@ import priestLeftLegTop from "../../../assets/images/hero/female/clothes/priest-
 import priestLeftLegBottom from "../../../assets/images/hero/female/clothes/priest-LeftLegBtm.svg";
 import priestRightLegTop from "../../../assets/images/hero/female/clothes/priest-RightLeg.svg";
 import priestRightLegBottom from "../../../assets/images/hero/female/clothes/priest-RightLegBtm.svg";
+
+import scholarLeftLegTop from "../../../assets/images/hero/female/clothes/scholar-LeftLeg.svg";
+import scholarLeftLegBottom from "../../../assets/images/hero/female/clothes/scholar-LeftLegBtm.svg";
+import scholarRightLegTop from "../../../assets/images/hero/female/clothes/scholar-RightLeg.svg";
+import scholarRightLegBottom from "../../../assets/images/hero/female/clothes/scholar-RightLegBtm.svg";
+
+import seerLeftLegTop from "../../../assets/images/hero/female/clothes/seer-LeftLeg.svg";
+import seerLeftLegBottom from "../../../assets/images/hero/female/clothes/seer-LeftLegBtm.svg";
+import seerRightLegTop from "../../../assets/images/hero/female/clothes/seer-RightLeg.svg";
+import seerRightLegBottom from "../../../assets/images/hero/female/clothes/seer-RightLegBtm.svg";
 
 import thiefLeftLegTop from "../../../assets/images/hero/female/clothes/thief-LeftLeg.svg";
 import thiefLeftLegBottom from "../../../assets/images/hero/female/clothes/thief-LeftLegBtm.svg";
@@ -71,6 +91,16 @@ import ninjaLeftLegBottom from "../../../assets/images/hero/female/clothes/advan
 import ninjaRightLegTop from "../../../assets/images/hero/female/clothes/advanced/ninja-RightLeg.svg";
 import ninjaRightLegBottom from "../../../assets/images/hero/female/clothes/advanced/ninja-RightLegBtm.svg";
 
+import shapeshifterLeftLegTop from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-LeftLeg.svg";
+import shapeshifterLeftLegBottom from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-LeftLegBtm.svg";
+import shapeshifterRightLegTop from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-RightLeg.svg";
+import shapeshifterRightLegBottom from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-RightLegBtm.svg";
+
+import bardLeftLegTop from "../../../assets/images/hero/female/clothes/advanced/bard-LeftLeg.svg";
+import bardLeftLegBottom from "../../../assets/images/hero/female/clothes/advanced/bard-LeftLegBtm.svg";
+import bardRightLegTop from "../../../assets/images/hero/female/clothes/advanced/bard-RightLeg.svg";
+import bardRightLegBottom from "../../../assets/images/hero/female/clothes/advanced/bard-RightLegBtm.svg";
+
 /* ELITE HEROES */
 import dragoonLeftLegTop from "../../../assets/images/hero/female/clothes/elite/dragoon-LeftLeg.svg";
 import dragoonLeftLegBottom from "../../../assets/images/hero/female/clothes/elite/dragoon-LeftLegBtm.svg";
@@ -81,6 +111,11 @@ import sageLeftLegTop from "../../../assets/images/hero/female/clothes/elite/sag
 import sageLeftLegBottom from "../../../assets/images/hero/female/clothes/elite/sage-LeftLegBtm.svg";
 import sageRightLegTop from "../../../assets/images/hero/female/clothes/elite/sage-RightLeg.svg";
 import sageRightLegBottom from "../../../assets/images/hero/female/clothes/elite/sage-RightLegBtm.svg";
+
+import spellBowLeftLegTop from "../../../assets/images/hero/female/clothes/elite/spellbow-LeftLeg.svg";
+import spellBowLeftLegBottom from "../../../assets/images/hero/female/clothes/elite/spellbow-LeftLegBtm.svg";
+import spellBowRightLegTop from "../../../assets/images/hero/female/clothes/elite/spellbow-RightLeg.svg";
+import spellBowRightLegBottom from "../../../assets/images/hero/female/clothes/elite/spellbow-RightLegBtm.svg";
 
 /* LEGENDARY HEROES */
 import dreadKnightLeftLegTop from "../../../assets/images/hero/female/clothes/legendary/dreadknight-LeftLeg.svg";
@@ -105,12 +140,28 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 				rightLegBottom: archerRightLegBottom,
 			};
 		}
+		case "berserker": {
+			return {
+				leftLegTop: berserkerLeftLegTop,
+				leftLegBottom: berserkerLeftLegBottom,
+				rightLegTop: berserkerRightLegTop,
+				rightLegBottom: berserkerRightLegBottom,
+			};
+		}
 		case "knight": {
 			return {
 				leftLegTop: knightLeftLegTop,
 				leftLegBottom: knightLeftLegBottom,
 				rightLegTop: knightRightLegTop,
 				rightLegBottom: knightRightLegBottom,
+			};
+		}
+		case "legionnaire": {
+			return {
+				leftLegTop: legionnaireLeftLegTop,
+				leftLegBottom: legionnaireLeftLegBottom,
+				rightLegTop: legionnaireRightLegTop,
+				rightLegBottom: legionnaireRightLegBottom,
 			};
 		}
 		case "monk": {
@@ -135,6 +186,22 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 				leftLegBottom: priestLeftLegBottom,
 				rightLegTop: priestRightLegTop,
 				rightLegBottom: priestRightLegBottom,
+			};
+		}
+		case "scholar": {
+			return {
+				leftLegTop: scholarLeftLegTop,
+				leftLegBottom: scholarLeftLegBottom,
+				rightLegTop: scholarRightLegTop,
+				rightLegBottom: scholarRightLegBottom,
+			};
+		}
+		case "seer": {
+			return {
+				leftLegTop: seerLeftLegTop,
+				leftLegBottom: seerLeftLegBottom,
+				rightLegTop: seerRightLegTop,
+				rightLegBottom: seerRightLegBottom,
 			};
 		}
 		case "thief": {
@@ -167,6 +234,22 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 				leftLegBottom: paladinLeftLegBottom,
 				rightLegTop: paladinRightLegTop,
 				rightLegBottom: paladinRightLegBottom,
+			};
+		}
+		case "shapeshifter": {
+			return {
+				leftLegTop: shapeshifterLeftLegTop,
+				leftLegBottom: shapeshifterLeftLegBottom,
+				rightLegTop: shapeshifterRightLegTop,
+				rightLegBottom: shapeshifterRightLegBottom,
+			};
+		}
+		case "bard": {
+			return {
+				leftLegTop: bardLeftLegTop,
+				leftLegBottom: bardLeftLegBottom,
+				rightLegTop: bardRightLegTop,
+				rightLegBottom: bardRightLegBottom,
 			};
 		}
 		case "darkKnight": {
@@ -207,6 +290,14 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 				leftLegBottom: sageLeftLegBottom,
 				rightLegTop: sageRightLegTop,
 				rightLegBottom: sageRightLegBottom,
+			};
+		}
+		case "spellBow": {
+			return {
+				leftLegTop: spellBowLeftLegTop,
+				leftLegBottom: spellBowLeftLegBottom,
+				rightLegTop: spellBowRightLegTop,
+				rightLegBottom: spellBowRightLegBottom,
 			};
 		}
 		case "dreadKnight": {

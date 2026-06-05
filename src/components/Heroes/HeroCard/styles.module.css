@@ -833,10 +833,21 @@ WEAPONS
 	left: 0;
 }
 
-.priest .heroWeapon,
-.archer .heroWeapon {
+.heroOffhand {
+	position: absolute;
+	z-index: 1;
 	top: 0;
 	left: 0;
+}
+
+.priest .heroWeapon,
+.archer .heroWeapon,
+.spellBow .heroWeapon {
+	top: 0;
+	left: 0;
+}
+.spellBow .heroWeapon {
+  	z-index: 13;
 }
 
 .priest .heroWeapon img {
@@ -848,7 +859,8 @@ WEAPONS
 	left: 18px;
 }
 
-.archer .heroWeapon img {
+.archer .heroWeapon img,
+.spellBow .heroWeapon img {
 	transform: rotate(-90deg);
 	top: 44px;
 	left: 24px;
@@ -859,6 +871,10 @@ WEAPONS
 	height: calc(36px * 4);
 }
 
+.spellBow .heroWeapon img {
+	width: calc(9px * 4);
+	height: calc(29px * 4);
+}
 .priest .heroWeapon img {
 	width: calc(7px * 4);
 	height: calc(39px * 4);
@@ -987,9 +1003,26 @@ WEAPONS
 	left: -68px;
 }
 
+.bard .heroWeapon {
+	z-index: 6;
+}
+
+.bard .heroWeapon img {
+	width: calc(15px * 4);
+	height: calc(14px * 4);
+	transform: rotate(0deg);
+	top: 117px;
+	left: -16px;
+}
+
 .male.darkKnight .heroWeapon img {
 	top: 125px;
 	left: -66px;
+}
+
+.male.bard .heroWeapon img {
+	top: 120px;
+	left: -18px;
 }
 
 .darkKnight .heroWeapon {
@@ -1020,6 +1053,69 @@ WEAPONS
 	z-index: -1;
 }
 
+.seer .heroWeapon {
+	z-index: 0;
+}
+
+.seer .heroWeapon img {
+	width: calc(9px * 4);
+	height: calc(23px * 4);
+	top: 66px;
+	left: 0px;
+	transform: rotate(-40deg);
+}
+
+.scholar .heroWeapon img {
+	width: calc(5px * 4);
+	height: calc(12px * 4);
+	top: 98px;
+	left: 6px;
+	transform: rotate(-78deg);
+}
+
+.scholar .heroOffhand,
+.scholar .heroWeapon {
+	z-index: -1;
+}
+
+.scholar .heroOffhand img {
+	width: calc(12px * 4);
+	height: calc(10px * 4);
+	top: 112px;
+	left: 53px;
+}
+
+.scholar.male .heroOffhand img {
+	left: 54px;
+}
+
+.male.seer .heroWeapon img {
+	top: 58px;
+	left: 3px;
+}
+
+.male.scholar .heroWeapon img {
+	top: 93px;
+	left: 2px;
+}
+
+.berserker .heroWeapon {
+	z-index: 0;
+}
+
+.berserker .heroWeapon img {
+	width: calc(16px * 4);
+	height: calc(42px * 4);
+	top: -13px;
+	left: -40px;
+	transform: rotate(-30deg);
+}
+
+.male.berserker .heroWeapon img {
+	top: -15px;
+	left: -38px;
+}
+
 /* ELITE */
 
 .dragoon .heroWeapon img {
@@ -1029,8 +1125,27 @@ WEAPONS
 	top: -4px;
 	left: 20px;
 }
+.legionnaire .heroOffhand {
+	z-index: 6;
+}
+.legionnaire .heroOffhand img {
+	width: calc(13px * 4);
+	height: calc(22px * 4);
+	transform: rotate(0deg);
+	top: 76px;
+	left: 70px;
+}
 
-.dragoon .heroWeapon {
+.legionnaire .heroWeapon img {
+	width: calc(7px * 4);
+	height: calc(43px * 4);
+	transform: rotate(-70deg);
+	left: 14px;
+	top: 35px;
+}
+
+.dragoon .heroWeapon,
+.legionnaire .heroWeapon {
 	z-index: -1;
 }
 
@@ -1050,6 +1165,22 @@ WEAPONS
 
 .sage .heroWeapon {
 	z-index: -1;
+}
+
+.shapeshifter .heroWeapon {
+	z-index: 6;
+}
+
+.shapeshifter .heroWeapon img {
+	width: calc(7px * 4);
+	height: calc(13px * 4);
+	top: 116px;
+	left: 69px;
+}
+
+.male.shapeshifter .heroWeapon img {
+	top: 113px;
+	left: 73px;
 }
 
 /* LEGENDARY */

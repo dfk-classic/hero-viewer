@@ -5,14 +5,22 @@ import styles from "../HeroCard/styles.module.css";
 
 import maleArcherBody from "../../../assets/images/hero/male/clothes/archer-Body.svg";
 import maleArcherBehind from "../../../assets/images/hero/male/clothes/archer-Behind.svg";
+import maleBerserkerBody from "../../../assets/images/hero/male/clothes/berserker-Body.svg";
+import maleBerserkerBehind from "../../../assets/images/hero/male/clothes/berserker-Behind.svg";
 import maleKnightBody from "../../../assets/images/hero/male/clothes/knight-Body.svg";
 import maleKnightBehind from "../../../assets/images/hero/male/clothes/knight-Behind.svg";
+import maleLegionnaireBody from "../../../assets/images/hero/male/clothes/legionnaire-Body.svg";
+import maleLegionnaireBehind from "../../../assets/images/hero/male/clothes/legionnaire-Behind.svg";
 import maleMonkBody from "../../../assets/images/hero/male/clothes/monk-Body.svg";
 import maleMonkBehind from "../../../assets/images/hero/male/clothes/monk-Behind.svg";
 import malePirateBody from "../../../assets/images/hero/male/clothes/pirate-Body.svg";
 import malePirateBehind from "../../../assets/images/hero/male/clothes/pirate-Behind.svg";
 import malePriestBody from "../../../assets/images/hero/male/clothes/priest-Body.svg";
 import malePriestBehind from "../../../assets/images/hero/male/clothes/priest-Behind.svg";
+import maleScholarBody from "../../../assets/images/hero/male/clothes/scholar-Body.svg";
+import maleScholarBehind from "../../../assets/images/hero/male/clothes/scholar-Behind.svg";
+import maleSeerBody from "../../../assets/images/hero/male/clothes/seer-Body.svg";
+import maleSeerBehind from "../../../assets/images/hero/male/clothes/seer-Behind.svg";
 import maleThiefBody from "../../../assets/images/hero/male/clothes/thief-Body.svg";
 import maleThiefBehind from "../../../assets/images/hero/male/clothes/thief-Behind.svg";
 import maleWarriorBody from "../../../assets/images/hero/male/clothes/warrior-Body.svg";
@@ -33,12 +41,18 @@ import maleSummonerBody from "../../../assets/images/hero/male/clothes/advanced/
 import maleSummonerBehind from "../../../assets/images/hero/male/clothes/advanced/summoner-Behind.svg";
 import maleNinjaBody from "../../../assets/images/hero/male/clothes/advanced/ninja-Body.svg";
 import maleNinjaBehind from "../../../assets/images/hero/male/clothes/advanced/ninja-Behind.svg";
+import maleShapeshifterBody from "../../../assets/images/hero/male/clothes/advanced/shapeshifter-Body.svg";
+import maleShapeshifterBehind from "../../../assets/images/hero/male/clothes/advanced/shapeshifter-Behind.svg";
+import maleBardBody from "../../../assets/images/hero/male/clothes/advanced/bard-Body.svg";
+import maleBardBehind from "../../../assets/images/hero/male/clothes/advanced/bard-Behind.svg";
 
 /* ELITE HEROES */
 import maleDragoonBody from "../../../assets/images/hero/male/clothes/elite/dragoon-Body.svg";
 import maleDragoonBehind from "../../../assets/images/hero/male/clothes/elite/dragoon-Behind.svg";
 import maleSageBody from "../../../assets/images/hero/male/clothes/elite/sage-Body.svg";
 import maleSageBehind from "../../../assets/images/hero/male/clothes/elite/sage-Behind.svg";
+import maleSpellBowBody from "../../../assets/images/hero/male/clothes/elite/spellbow-Body.svg";
+import maleSpellBowBehind from "../../../assets/images/hero/male/clothes/elite/spellbow-Behind.svg";
 
 /* LEGENDARY HEROES */
 import maleDreadKnightBody from "../../../assets/images/hero/male/clothes/legendary/dreadknight-Body.svg";
@@ -63,10 +77,22 @@ const getBody = (mainClass: any): GetBodyProps => {
 				behind: maleArcherBehind,
 			};
 		}
+		case "berserker": {
+			return {
+				body: maleBerserkerBody,
+				behind: maleBerserkerBehind,
+			};
+		}
 		case "knight": {
 			return {
 				body: maleKnightBody,
 				behind: maleKnightBehind,
+			};
+		}
+		case "legionnaire": {
+			return {
+				body: maleLegionnaireBody,
+				behind: maleLegionnaireBehind,
 			};
 		}
 		case "monk": {
@@ -85,6 +111,12 @@ const getBody = (mainClass: any): GetBodyProps => {
 			return {
 				body: malePriestBody,
 				behind: malePriestBehind,
+			};
+		}
+		case "seer": {
+			return {
+				body: maleSeerBody,
+				behind: maleSeerBehind,
 			};
 		}
 		case "thief": {
@@ -111,10 +143,28 @@ const getBody = (mainClass: any): GetBodyProps => {
 				behind: malePaladinBehind,
 			};
 		}
+		case "shapeshifter": {
+			return {
+				body: maleShapeshifterBody,
+				behind: maleShapeshifterBehind,
+			};
+		}
+		case "bard": {
+			return {
+				body: maleBardBody,
+				behind: maleBardBehind,
+			};
+		}
 		case "darkKnight": {
 			return {
 				body: maleDarkKnightBody,
 				behind: maleDarkKnightBehind,
+			};
+		}
+		case "scholar": {
+			return {
+				body: maleScholarBody,
+				behind: maleScholarBehind,
 			};
 		}
 		case "summoner": {
@@ -139,6 +189,12 @@ const getBody = (mainClass: any): GetBodyProps => {
 			return {
 				body: maleSageBody,
 				behind: maleSageBehind,
+			};
+		}
+		case "spellBow": {
+			return {
+				body: maleSpellBowBody,
+				behind: maleSpellBowBehind,
 			};
 		}
 		case "dreadKnight": {

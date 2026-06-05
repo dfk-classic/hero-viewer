@@ -1,3 +1,4 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-export default defineConfig({ base: '/dfk-hero-viewer/', plugins: [react()], server: { port: 5174 } });
+import svgr from 'vite-plugin-svgr'
+export default defineConfig({ base: '/dfk-hero-viewer/', plugins: [react(), svgr()], server: { port: 5174 } });
