@@ -1,0 +1,10 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DFK Classic Hero Viewer</title>
+<style>
+body{background:#0e1014;margin:0;padding:24px;font-family:system-ui}h1{color:#e2922b;font-size:20px}
+/* Hero part components render <img src=""> for slots with no asset (e.g. newer
+   classes' missing clothes). Chrome paints those as faint broken-image boxes.
+   Hide empty-src images so missing layers are invisible instead of squares. */
+img[src=""],img:not([src]){visibility:hidden!important}
+</style>
+</head><body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body></html>
