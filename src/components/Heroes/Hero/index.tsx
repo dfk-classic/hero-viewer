@@ -17,8 +17,11 @@ import HeroEyes from "./Eyes";
 
 import FemaleHeadHighlight from "../../../assets/images/hero/female/Head-highlight.svg";
 import FemaleHeadShadow from "../../../assets/images/hero/female/Head-shadow.svg";
+import femaleSeerHead from '../../../assets/images/hero/female/clothes/seer-HeadPiece.svg'
 import MaleHeadHighlight from "../../../assets/images/hero/male/Head-highlight.svg";
 import MaleHeadShadow from "../../../assets/images/hero/male/Head-shadow.svg";
+import maleSeerHead from '../../../assets/images/hero/male/clothes/seer-HeadPiece.svg'
+
 interface Props {
 	stroke?: any;
 	backId?: any;
@@ -99,17 +102,31 @@ const Hero = ({ isAnimated = false, hero, noCard, onClick }: HeroProps) => {
 				<div className={styles.heroContainer}>
 					<div className={styles.heroHeadContainer}>
 						{hero.gender === "female" && (
-							<FemaleHair
-								hairId={hero.visualGenes.hairStyle}
-								hairColor={hero.visualGenes.hairColor}
-							/>
+							<>
+								<FemaleHair
+									hairId={hero.visualGenes.hairStyle}
+									hairColor={hero.visualGenes.hairColor}
+								/>
+								{hero.class == 'seer' && (
+									<div className={styles.heroHeadPiece}>
+										<img src={femaleSeerHead} className={styles.clothing} />
+									</div>
+								)}
+							</>
 						)}
 
 						{hero.gender === "male" && (
-							<MaleHair
-								hairId={hero.visualGenes.hairStyle}
-								hairColor={hero.visualGenes.hairColor}
-							/>
+							<>
+								<MaleHair
+									hairId={hero.visualGenes.hairStyle}
+									hairColor={hero.visualGenes.hairColor}
+								/>
+								{hero.class == 'seer' && (
+									<div className={styles.heroHeadPiece}>
+										<img src={maleSeerHead} className={styles.clothing} />
+									</div>
+								)}
+							</>
 						)}
 
 						<div className={styles.heroEyes}>

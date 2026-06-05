@@ -783,6 +783,10 @@ HERO BODY
 .hair .highlight {
 	z-index: 5;
 }
+.heroHeadPiece {
+  z-index: 9;
+  position: relative;
+}
 
 /*** BODY ***/
 
