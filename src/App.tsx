@@ -22,7 +22,7 @@ export default function App() {
   const runRef = useRef(0); // cancels an in-flight batch when a new one starts
 
   useEffect(() => {
-    fetch('/roster.csv').then(r => r.text()).then(t => {
+    fetch(import.meta.env.BASE_URL + 'roster.csv').then(r => r.text()).then(t => {
       const entries = t.trim().split('\n').slice(1).map(l => {
         const [id, chain] = l.split(',');
         return { id, chain };

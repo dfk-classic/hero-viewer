@@ -4,6 +4,8 @@ Browse the transcended hero roster as fully rendered, tavern-style hero cards,
 fetched live from chain. Companion app to
 [transcended-roster](https://github.com/dfk-classic/transcended-roster).
 
+**Live demo: https://gen-a.dev/dfk-hero-viewer/**
+
 ## What it does
 
 - Loads the full roster of 170,829 transcended heroes (DFK Chain + Kaia)
