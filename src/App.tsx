@@ -89,7 +89,7 @@ export default function App() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18 }}>
         {heroes.map((h, i) => (
           <div key={(h.id?.toString?.() ?? i) + '-' + i}>
-            <HeroCard hero={h} />
+            <HeroCard hero={h} flipToggle />
           </div>
         ))}
       </div>

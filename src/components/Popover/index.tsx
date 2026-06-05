@@ -1,5 +1,4 @@
 import { Placement } from "@popperjs/core";
-import { transparentize } from "polished";
 import React, { useCallback, useState } from "react";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
@@ -13,11 +12,10 @@ const PopoverContainer = styled.div<{ show: boolean }>`
 	opacity: ${(props) => (props.show ? 1 : 0)};
 	transition: visibility 150ms linear, opacity 150ms linear;
 
-	background: #2c2f36;
-	border: 1px solid #40444f;
-	box-shadow: 0 4px 8px 0 ${transparentize(0.9, "#2F80ED")};
-	color: ${({ theme }) => theme.text2};
-	border-radius: 8px;
+	background: #100f21;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	color: #fff;
+	border-radius: 4px;
 `;
 
 const ReferenceElement = styled.div`
@@ -25,6 +23,7 @@ const ReferenceElement = styled.div`
 `;
 
 const Arrow = styled.div`
+	display: none; /* card tooltips have no arrow */
 	width: 8px;
 	height: 8px;
 	z-index: 9998;

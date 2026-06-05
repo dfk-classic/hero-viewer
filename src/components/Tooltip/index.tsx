@@ -2,12 +2,18 @@ import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import Popover, { PopoverProps } from '../Popover'
 
+/* Matches the card's CSS .tooltip pills (HeroCard/styles.module.css) */
 const TooltipContainer = styled.div`
-  width: 228px;
-  padding: 0.6rem 1rem;
-  line-height: 110%;
+  width: auto;
+  padding: 2px 10px;
+  line-height: 140%;
   font-weight: 400;
-  font-size: 0.7rem;
+  font-size: 11px;
+  font-family: "Poppins", sans-serif;
+  white-space: nowrap;
+  text-align: center;
+  text-transform: capitalize;
+  color: #fff;
 `
 
 interface TooltipProps extends Omit<PopoverProps, 'content'> {

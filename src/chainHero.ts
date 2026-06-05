@@ -46,5 +46,10 @@ export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain
     firstName: raw.info.firstName,
     lastName: raw.info.lastName,
   };
-  return buildHero(heroRaw, null);
+  const hero = buildHero(heroRaw, null);
+  // Full built hero for cross-checking against the exported dataset.
+  // hero.genes holds the complete translation (every stat and visual trait,
+  // dominant + r1/r2/r3, named). Shows under the Verbose console level.
+  console.debug(`hero ${heroId} (${chain}):`, { genes: hero.genes, stats: hero.stats, statGrowth: hero.statGrowth, skills: hero.skills, hero });
+  return hero;
 }

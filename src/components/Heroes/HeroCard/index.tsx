@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import styles from "./styles.module.css";
 
-import { ChevronLeft, ChevronRight } from "react-feather";
-
 import Hero from "../Hero";
 import HeroInfo from "../HeroInfo";
 import HeroStatsSkills from "../HeroStatsSkills";
 import HeroStatsGrowth from "../HeroStatsGrowth";
+import HeroStatsAbilities from "../HeroStatsAbilities";
+import HeroStatsRecessive from "../HeroStatsRecessive";
+import HeroCardTabs from "../HeroCardTabs";
 
 import femaleIcon from "../../../assets/images/hero/icons/icon-female.png";
 import maleIcon from "../../../assets/images/hero/icons/icon-male.png";
@@ -39,8 +40,6 @@ import mythicIcon from "../../../assets/images/hero/icons/rarity-mythic.png";
 import healthIcon from "../../../assets/images/hero/icons/icon-health.png";
 import manaIcon from "../../../assets/images/hero/icons/icon-mana.png";
 
-import statsIcon from "../../../assets/images/hero/icons/stats-icon.png";
-import growthIcon from "../../../assets/images/hero/icons/growth-icon.png";
 import survivorIcon from "../../../assets/images/gui/survivor_badge_2x.png";
 
 interface HeroCardProps {
@@ -57,128 +56,59 @@ const HeroCard = ({
   isAnimated,
   flipToggle,
 }: HeroCardProps) => {
-  const [dataPageIndex, setDataPageIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("Stats");
   const [Flipped, setFlipped] = useState(isFlipped);
 
-  // Stats shown for newly summoned heroes that don't have all data available.
-  let dataPages = [
+  // Back-of-card pages, HONK Marketplace tab set:
+  // Stats / Growth / Abilities / Recessive 1 / Recessive 2.
+  const dataPages = [
     {
-      label: "stats",
-      icon: statsIcon,
+      label: "Stats",
+      symbol: "\u{1F4CA}",
       content: (
         <>
           <HeroStatsSkills hero={hero} />
-          {hero && hero.owner.name && (
+          {hero && hero.owner.name ? (
             <div className={styles.heroOwner}>Owned by: {hero.owner.name}</div>
-          )}
-          {hero && hero.owner.owner && (
+          ) : null}
+          {hero && hero.owner.owner ? (
             <div className={styles.heroHash}>{hero.owner.owner}</div>
-          )}
+          ) : null}
         </>
       ),
     },
   ];
-
-  let statSliders;
-
-  // Stats shown for heroes when all data is available.
   if (hero.statGrowth && hero.statGrowth.primary) {
-    dataPages = [
+    dataPages.push({
+      label: "Growth",
+      symbol: "\u{1F4C8}",
+      content: <HeroStatsGrowth hero={hero} />,
+    });
+  }
+  if (hero.genes) {
+    dataPages.push(
       {
-        label: "stats",
-        icon: statsIcon,
-        content: (
-          <>
-            <HeroStatsSkills hero={hero} />
-            {hero && hero.owner.name ? (
-              <div className={styles.heroOwner}>
-                Owned by: {hero.owner.name}
-              </div>
-            ) : null}
-            {hero && hero.owner.owner ? (
-              <div className={styles.heroHash}>{hero.owner.owner}</div>
-            ) : null}
-          </>
-        ),
+        label: "Abilities",
+        symbol: "⚔️",
+        content: <HeroStatsAbilities hero={hero} />,
       },
       {
-        label: "growth",
-        icon: growthIcon,
-        content: <HeroStatsGrowth hero={hero} />,
-      },
-    ];
-
-    statSliders = (
-      <>
-        <div
-          className={`${styles.sliderToggle} ${styles.sliderLeft}`}
-          onClick={(e: any) => {
-            e.stopPropagation();
-            handleStatsSlide("left");
-          }}
-        >
-          <ChevronLeft />
-        </div>
-
-        <div
-          className={`${styles.sliderToggle} ${styles.sliderRight}`}
-          onClick={(e: any) => {
-            e.stopPropagation();
-            handleStatsSlide("right");
-          }}
-        >
-          <ChevronRight />
-        </div>
-
-        <div className={styles.statsToggle}>
-          {dataPages.map((page, index) => {
-            return (
-              <div
-                key={page.label}
-                className={`${styles.statsToggleButton}`}
-                onClick={(e: any) => {
-                  e.stopPropagation();
-                  setDataPageIndex(index);
-                }}
-              >
-                <div
-                  className={`${styles.statsToggleButtonImage} ${
-                    dataPages[dataPageIndex].label === page.label
-                      ? styles.statsToggleButtonImageActive
-                      : "inactive"
-                  }`}
-                  style={{
-                    backgroundImage: `url(${page.icon})`,
-                  }}
-                >
-                  &nbsp;
-                </div>
-                <span className={styles.tooltip}>{page.label}</span>
-              </div>
-            );
-          })}
-        </div>
-      </>
+        label: "Recessive 1",
+        symbol: "\u{1F9EC}",
+        recessive: true,
+        content: <HeroStatsRecessive hero={hero} slot="r1" />,
+      } as any,
+      {
+        label: "Recessive 2",
+        symbol: "\u{1F9EC}",
+        recessive: true,
+        sup: "2",
+        content: <HeroStatsRecessive hero={hero} slot="r2" />,
+      } as any
     );
   }
-
-  const handleStatsSlide = (stat: string) => {
-    const pagesLength = dataPages.length;
-    if (stat === "left") {
-      if (dataPageIndex === 0) {
-        setDataPageIndex(pagesLength - 1);
-      } else {
-        setDataPageIndex(dataPageIndex - 1);
-      }
-    }
-    if (stat === "right") {
-      if (dataPageIndex === pagesLength - 1) {
-        setDataPageIndex(0);
-      } else {
-        setDataPageIndex(dataPageIndex + 1);
-      }
-    }
-  };
+  const activePage =
+    dataPages.find((p) => p.label === activeTab) ?? dataPages[0];
 
   return (
     <>
@@ -191,6 +121,7 @@ const HeroCard = ({
             className={`
           ${styles.heroCard}
           ${isAnimated && styles.animate}
+          ${flipToggle ? styles.flippable : ""}
           ${hero.shiny ? styles.shiny : ""}
           ${hero.shiny ? styles[`shiny${hero.shinyStyle}`] : ""}
           ${styles[`${hero.element}`]}
@@ -379,12 +310,14 @@ const HeroCard = ({
                 </div>
 
                 <div className={styles.heroStats}>
-                  <div className={styles.heroFrame}>
-                    {dataPages[dataPageIndex].content}
-                  </div>
+                  <div className={styles.heroFrame}>{activePage.content}</div>
                 </div>
               </div>
-              {statSliders}
+              <HeroCardTabs
+                tabs={dataPages}
+                activeTab={activePage.label}
+                onTabChange={setActiveTab}
+              />
             </div>
           </div>
         </CardContainer>

@@ -1,0 +1,62 @@
+/* HONK Marketplace tab bar, adapted to the viewer card */
+.tabs {
+	position: absolute;
+	left: 50%;
+	bottom: 10px;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 10px;
+	z-index: 10;
+	justify-content: center;
+	align-items: center;
+}
+
+.tab {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: 1px solid #7e6d36;
+}
+
+.tab:hover {
+	transform: scale(1.1);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-color: #fbe375;
+}
+
+.tab.active {
+	background-color: rgba(251, 227, 117, 0.3);
+	border: 2px solid #fbe375;
+}
+
+.symbol {
+	font-size: 12px;
+	line-height: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.recessiveSymbol {
+	color: #9c27b0;
+	font-weight: bold;
+	position: relative;
+	display: inline-flex;
+	align-items: flex-end;
+}
+
+.sup {
+	font-size: 9px;
+	color: #fff;
+	position: absolute;
+	left: 60%;
+	font-weight: 700;
+	pointer-events: none;
+	bottom: -4px;
+}

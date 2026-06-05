@@ -2,6 +2,7 @@
 import { BigNumber, utils } from "ethers";
 import { DateTime } from "luxon";
 import { getFullName, getFirstName, getLastName } from "./names.js";
+import { translateGenes } from "./geneTranslator";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
@@ -255,7 +256,7 @@ const choices: { [index: string]: any } = {
 		19: "Advanced4",
 		24: "Elite1",
 		25: "Elite2",
-		28: "Transcendent1",
+		28: "Exalted1",
 	},
 	passive2: {
 		0: "Basic1",
@@ -272,7 +273,7 @@ const choices: { [index: string]: any } = {
 		19: "Advanced4",
 		24: "Elite1",
 		25: "Elite2",
-		28: "Transcendent1",
+		28: "Exalted1",
 	},
 	active1: {
 		0: "Basic1",
@@ -289,7 +290,7 @@ const choices: { [index: string]: any } = {
 		19: "Advanced4",
 		24: "Elite1",
 		25: "Elite2",
-		28: "Transcendent1",
+		28: "Exalted1",
 	},
 	active2: {
 		0: "Basic1",
@@ -306,7 +307,7 @@ const choices: { [index: string]: any } = {
 		19: "Advanced4",
 		24: "Elite1",
 		25: "Elite2",
-		28: "Transcendent1",
+		28: "Exalted1",
 	},
 	statBoost1: {
 		0: "STR",
@@ -719,6 +720,9 @@ export default function buildHero(heroRaw: any, owner: any) {
 			},
 		},
 		statGenes: statGenes,
+		// Full translation of both gene strings: every trait, dominant + r1/r2/r3,
+		// named the same way HONK and the transcended-roster dataset name them.
+		genes: translateGenes(heroRaw.info.statGenes, heroRaw.info.visualGenes),
 		skills: {
 			mining: heroRaw.professions.mining / 10,
 			gardening: heroRaw.professions.gardening / 10,
