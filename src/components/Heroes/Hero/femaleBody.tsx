@@ -5,14 +5,22 @@ import styles from "../HeroCard/styles.module.css";
 
 import femaleArcherBody from "../../../assets/images/hero/female/clothes/archer-Body.svg";
 import femaleArcherBehind from "../../../assets/images/hero/female/clothes/archer-Behind.svg";
+import femaleBerserkerBody from "../../../assets/images/hero/female/clothes/berserker-Body.svg";
+import femaleBerserkerBehind from "../../../assets/images/hero/female/clothes/berserker-Behind.svg";
 import femaleKnightBody from "../../../assets/images/hero/female/clothes/knight-Body.svg";
 import femaleKnightBehind from "../../../assets/images/hero/female/clothes/knight-Behind.svg";
+import femaleLegionnaireBody from "../../../assets/images/hero/female/clothes/legionnaire-Body.svg";
+import femaleLegionnaireBehind from "../../../assets/images/hero/female/clothes/legionnaire-Behind.svg";
 import femaleMonkBody from "../../../assets/images/hero/female/clothes/monk-Body.svg";
 import femaleMonkBehind from "../../../assets/images/hero/female/clothes/monk-Behind.svg";
 import femalePirateBody from "../../../assets/images/hero/female/clothes/pirate-Body.svg";
 import femalePirateBehind from "../../../assets/images/hero/female/clothes/pirate-Behind.svg";
 import femalePriestBody from "../../../assets/images/hero/female/clothes/priest-Body.svg";
 import femalePriestBehind from "../../../assets/images/hero/female/clothes/priest-Behind.svg";
+import femaleScholarBody from "../../../assets/images/hero/female/clothes/scholar-Body.svg";
+import femaleScholarBehind from "../../../assets/images/hero/female/clothes/scholar-Behind.svg";
+import femaleSeerBody from "../../../assets/images/hero/female/clothes/seer-Body.svg";
+import femaleSeerBehind from "../../../assets/images/hero/female/clothes/seer-Behind.svg";
 import femaleThiefBody from "../../../assets/images/hero/female/clothes/thief-Body.svg";
 import femaleThiefBehind from "../../../assets/images/hero/female/clothes/thief-Behind.svg";
 import femaleWarriorBody from "../../../assets/images/hero/female/clothes/warrior-Body.svg";
@@ -25,10 +33,14 @@ import FemaleBodyHighlight from "../../../assets/images/hero/female/Body-highlig
 import FemaleBodyShadow from "../../../assets/images/hero/female/Body-shadow.svg";
 
 /* ADVANCED HEROES */
+import femaleBardBody from "../../../assets/images/hero/female/clothes/advanced/bard-Body.svg";
+import femaleBardBehind from "../../../assets/images/hero/female/clothes/advanced/bard-Behind.svg";
 import femalePaladinBody from "../../../assets/images/hero/female/clothes/advanced/paladin-Body.svg";
 import femalePaladinBehind from "../../../assets/images/hero/female/clothes/advanced/paladin-Behind.svg";
 import femaleDarkKnightBody from "../../../assets/images/hero/female/clothes/advanced/darkKnight-Body.svg";
 import femaleDarkKnightBehind from "../../../assets/images/hero/female/clothes/advanced/darkKnight-Behind.svg";
+import femaleShapeshifterBody from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-Body.svg";
+import femaleShapeshifterBehind from "../../../assets/images/hero/female/clothes/advanced/shapeshifter-Behind.svg";
 import femaleSummonerBody from "../../../assets/images/hero/female/clothes/advanced/summoner-Body.svg";
 import femaleSummonerBehind from "../../../assets/images/hero/female/clothes/advanced/summoner-Behind.svg";
 import femaleNinjaBody from "../../../assets/images/hero/female/clothes/advanced/ninja-Body.svg";
@@ -39,6 +51,8 @@ import femaleDragoonBody from "../../../assets/images/hero/female/clothes/elite/
 import femaleDragoonBehind from "../../../assets/images/hero/female/clothes/elite/dragoon-Behind.svg";
 import femaleSageBody from "../../../assets/images/hero/female/clothes/elite/sage-Body.svg";
 import femaleSageBehind from "../../../assets/images/hero/female/clothes/elite/sage-Behind.svg";
+import femaleSpellBowBody from "../../../assets/images/hero/female/clothes/elite/spellbow-Body.svg";
+import femaleSpellBowBehind from "../../../assets/images/hero/female/clothes/elite/spellbow-Behind.svg";
 
 /* LEGENDARY HEROES */
 import femaleDreadKnightBody from "../../../assets/images/hero/female/clothes/legendary/dreadknight-Body.svg";
@@ -63,10 +77,22 @@ const getBody = (mainClass: any): GetBodyProps => {
 				behind: femaleArcherBehind,
 			};
 		}
+		case "berserker": {
+			return {
+				body: femaleBerserkerBody,
+				behind: femaleBerserkerBehind,
+			};
+		}
 		case "knight": {
 			return {
 				body: femaleKnightBody,
 				behind: femaleKnightBehind,
+			};
+		}
+		case "legionnaire": {
+			return {
+				body: femaleLegionnaireBody,
+				behind: femaleLegionnaireBehind,
 			};
 		}
 		case "monk": {
@@ -85,6 +111,18 @@ const getBody = (mainClass: any): GetBodyProps => {
 			return {
 				body: femalePriestBody,
 				behind: femalePriestBehind,
+			};
+		}
+		case "scholar": {
+			return {
+				body: femaleScholarBody,
+				behind: femaleScholarBehind,
+			};
+		}
+		case "seer": {
+			return {
+				body: femaleSeerBody,
+				behind: femaleSeerBehind,
 			};
 		}
 		case "thief": {
@@ -109,6 +147,18 @@ const getBody = (mainClass: any): GetBodyProps => {
 			return {
 				body: femalePaladinBody,
 				behind: femalePaladinBehind,
+			};
+		}
+		case "shapeshifter": {
+			return {
+				body: femaleShapeshifterBody,
+				behind: femaleShapeshifterBehind,
+			};
+		}
+		case "bard": {
+			return {
+				body: femaleBardBody,
+				behind: femaleBardBehind,
 			};
 		}
 		case "darkKnight": {
@@ -139,6 +189,12 @@ const getBody = (mainClass: any): GetBodyProps => {
 			return {
 				body: femaleSageBody,
 				behind: femaleSageBehind,
+			};
+		}
+		case "spellBow": {
+			return {
+				body: femaleSpellBowBody,
+				behind: femaleSpellBowBehind,
 			};
 		}
 		case "dreadKnight": {
