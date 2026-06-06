@@ -2,8 +2,7 @@ import { BigNumber, utils } from "ethers";
 import { DateTime } from "luxon";
 import { getFullName, getFirstName, getLastName } from "./names.js";
 import { translateGenes } from "./geneTranslator";
-
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+import { ZERO_ADDRESS } from "../../../../constants";
 
 // Raw payloads deliver ids/timestamps as BigNumber (on-chain calls) or decimal strings (subgraph); normalise both to BigNumber so downstream .toNumber() reads are safe regardless of source.
 const toBN = (value: BigNumber | string): BigNumber =>

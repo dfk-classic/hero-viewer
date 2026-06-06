@@ -2,8 +2,7 @@ import { BigNumber } from "ethers";
 import buildHero from "../../src/components/Heroes/HeroInfo/utils/heroes";
 import type { RawNestedHero } from "../../src/components/Heroes/HeroInfo/utils/heroes";
 import type { Hero } from "../../src/types/hero";
-
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
+import { ZERO_ADDRESS } from "../../src/constants";
 
 // Encode a hero gene string from a sparse {traitIndex: dominantCode} map. convertGenes reads the
 // dominant nibble of each 4-kai trait group, which is the last char of the group (kai index i*4+3).
