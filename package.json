@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.4",
@@ -38,7 +39,8 @@
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.60.1",
     "vite": "^5.2.0",
-    "vite-plugin-svgr": "^5.2.0"
+    "vite-plugin-svgr": "^5.2.0",
+    "vitest": "^4.1.8"
   },
   "description": "Browse the DFK Classic transcended hero roster as rendered hero cards, live from chain"
 }
