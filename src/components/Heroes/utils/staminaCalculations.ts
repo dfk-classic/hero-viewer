@@ -4,8 +4,7 @@ import type { Hero } from "../../../types/hero";
 export const calculateRemainingStamina = (hero: Hero) => {
 	const secondsPerStaminaPoint = 1200;
 	const currentTime = DateTime.fromJSDate(new Date());
-	const staminaFullAt =
-		hero.staminaFullAt && DateTime.fromJSDate(new Date(hero.staminaFullAt));
+	const staminaFullAt = hero.staminaFullAt;
 
 	if (!staminaFullAt || staminaFullAt <= currentTime) {
 		return hero.stats.stamina;

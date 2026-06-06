@@ -636,8 +636,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 
 	return {
 		owner: {
-			name: owner.name ? owner.name : owner._name,
-			owner: owner.owner ? owner.owner : owner._owner ? owner._owner : owner.id,
+			name: owner.name || owner._name || "",
+			owner: owner.owner || owner._owner || owner.id || "",
 		},
 		background: visualGenes.background as string,
 		class: (statGenes.class || statGenes.mainClass) as string,
@@ -661,7 +661,7 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 			heroRaw.info.firstName,
 			heroRaw.info.lastName
 		),
-		rarity: RARITY_LEVELS[heroRaw.info.rarity],
+		rarity: RARITY_LEVELS[heroRaw.info.rarity as number],
 		rarityNum: heroRaw.info.rarity as number,
 		shiny: heroRaw.info.shiny,
 		shinyStyle: heroRaw.info.shiny ? heroRaw.info.shinyStyle : 0,
@@ -696,8 +696,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 			endingPrice: heroRaw.endingPrice
 				? parseFloat(utils.formatEther(heroRaw.endingPrice))
 				: 0,
-			startedAt: heroRaw.startedAt,
-			duration: heroRaw.duration,
+			startedAt: heroRaw.startedAt ?? 0,
+			duration: heroRaw.duration ?? 0,
 		},
 		stats: {
 			strength: heroRaw.stats.strength,

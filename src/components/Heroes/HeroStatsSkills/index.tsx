@@ -9,6 +9,7 @@ interface HeroStatsSkillsProps {
 
 /* exported component */
 const HeroStatsSkills = ({ hero }: HeroStatsSkillsProps) => {
+	if (!hero) return null;
 	return (
 		<>
 			<div style={{ padding: "0 10px" }}>
