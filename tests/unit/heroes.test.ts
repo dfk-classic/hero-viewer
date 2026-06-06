@@ -80,6 +80,18 @@ describe("buildHero", () => {
 		expect(hero.subClass).toBe("paladin");
 		expect(hero.element).toBe("fire");
 	});
+
+	it.each([
+		[0, "common"],
+		[1, "uncommon"],
+		[2, "rare"],
+		[3, "legendary"],
+		[4, "mythic"],
+	])("maps numeric rarity %i onto the %s tier name", (rarityNum, name) => {
+		const hero = buildHero(makeRawHero({ rarity: rarityNum }));
+		expect(hero.rarity).toBe(name);
+		expect(hero.rarityNum).toBe(rarityNum);
+	});
 });
 
 describe("calculateRequiredXp", () => {
