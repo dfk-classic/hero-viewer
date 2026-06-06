@@ -54,6 +54,22 @@ describe("buildHero", () => {
 		expect(live.auction.startingPrice).toBe(1);
 		expect(live.auction.endingPrice).toBe(2);
 	});
+
+	it("decodes class, subClass and element from the stat genes", () => {
+		// statsGenesMap indices: 0 -> class, 1 -> subClass, 10 -> element.
+		// summoner (18) / thief sub (2) / dark element (14).
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 0: 18, 1: 2, 10: 14 }) }));
+		expect(hero.class).toBe("summoner");
+		expect(hero.subClass).toBe("thief");
+		expect(hero.element).toBe("dark");
+	});
+
+	it("decodes a different class/element pair to prove the mapping is data-driven", () => {
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 0: 28, 1: 16, 10: 0 }) }));
+		expect(hero.class).toBe("dreadKnight");
+		expect(hero.subClass).toBe("paladin");
+		expect(hero.element).toBe("fire");
+	});
 });
 
 describe("calculateRequiredXp", () => {
