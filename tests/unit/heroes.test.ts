@@ -21,6 +21,16 @@ describe("convertGenes", () => {
 		expect(decoded.background).toBe("desert");
 		expect(decoded.gender).toBeUndefined();
 	});
+
+	it("decodes colour and appendage traits across the trait map", () => {
+		// visualGenesMap indices: 1 -> headAppendage, 5 -> hairColor, 7 -> eyeColor, 8 -> skinColor.
+		const decoded = convertGenes(genesToBigNumber({ 1: 16, 5: 7, 7: 14, 8: 2 }), visualGenesMap);
+		expect(decoded.hairColor).toBe("62a7e6");
+		expect(decoded.eyeColor).toBe("a41e12");
+		expect(decoded.skinColor).toBe("f1ca9e");
+		// headAppendage choices map a code to itself (a numeric id, not a string).
+		expect(decoded.headAppendage).toBe(16);
+	});
 });
 
 describe("buildHero", () => {
