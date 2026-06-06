@@ -243,7 +243,7 @@ const Appendage = ({ overlay, stroke, baseString }: { base?: string; overlay?: s
 };
 
 export const HeadAppendage = ({ headId, stroke }: { headId?: string | number; stroke?: string }) => {
-  const info = getInfo(headId);
+  const info = getInfo(headId ?? "");
   return (
     <>
       <Appendage

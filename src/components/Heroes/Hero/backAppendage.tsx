@@ -253,7 +253,7 @@ const Appendage = ({ overlay, stroke, baseString, backId }: { base?: string; ove
 };
 
 export const BackAppendage = ({ backId, stroke }: { backId?: string | number; stroke?: string }) => {
-  const info = getInfo(backId);
+  const info = getInfo(backId ?? "");
   return (
     <>
       <div className={styles.backAppendage}>

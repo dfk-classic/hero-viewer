@@ -24,11 +24,11 @@ const HeroProfile = ({
 				[styles.profileSmall]: profileSmall,
 			})}
 			title={
-				hero &&
-				hero.name &&
-				hero.name.replace(/(^\w{1})|(\s{1}\w{1})/g, (s: string) =>
-					s.toUpperCase()
-				)
+				hero?.name
+					? hero.name.replace(/(^\w{1})|(\s{1}\w{1})/g, (s: string) =>
+							s.toUpperCase()
+						)
+					: undefined
 			}
 		>
 			<div className={styles.heroFrame}>

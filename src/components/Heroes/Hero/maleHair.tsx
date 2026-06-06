@@ -470,12 +470,12 @@ const getHair = (id: string | number): GetHairProps => {
 };
 
 const MaleHair = ({ hairId, hairColor }: { hairId?: string | number; hairColor?: string | number }) => {
-  const config = getHair(hairId);
+  const config = getHair(hairId ?? "");
   const BackBase = config.backbase;
   const FrontBase = config.frontbase;
   return (
     <>
-      {config.backbase && (
+      {BackBase && (
         <div className={`${styles.heroHairBack} ${styles.hair}`}>
           <>
             <img src={config.backhighlight} className={styles.highlight} />
@@ -484,7 +484,7 @@ const MaleHair = ({ hairId, hairColor }: { hairId?: string | number; hairColor?:
           </>
         </div>
       )}
-      {config.frontbase && (
+      {FrontBase && (
         <div className={`${styles.heroHairFront} ${styles.hair}`}>
           <>
             <img src={config.fronthighlight} className={styles.highlight} />

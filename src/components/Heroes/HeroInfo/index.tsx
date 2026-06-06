@@ -14,8 +14,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 	const remainingStamina = calculateRemainingStamina(hero);
 	const staminaPercentage = (remainingStamina / hero.stats.stamina) * 100;
 	const currentTime = DateTime.fromJSDate(new Date());
-	const staminaFullAt =
-		hero.staminaFullAt && DateTime.fromJSDate(new Date(hero.staminaFullAt));
+	const staminaFullAt = hero.staminaFullAt;
 
 	let staminaFullAtString = "Full " + staminaFullAt.toRelative();
 	if (!staminaFullAt || staminaFullAt <= currentTime) {

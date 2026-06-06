@@ -26,6 +26,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@types/luxon": "^2.4.0",
+    "@types/react-dom": "^17.0.26",
+    "@types/styled-components": "^5.1.36",
     "@vitejs/plugin-react": "^4.2.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^5.2.0",

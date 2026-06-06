@@ -9,6 +9,7 @@ interface HeroStatsGrowthProps {
 }
 
 const HeroStatsGrowth = ({ hero }: HeroStatsGrowthProps) => {
+	if (!hero) return null;
 	return (
 		<div style={{ padding: "0 10px" }}>
 			<div className={styles.col}>

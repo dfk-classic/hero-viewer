@@ -405,7 +405,7 @@ const RightLegBtmMale = ({
 );
 
 const MaleLegs = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
-	const classInfo = getClassInfo(mainClass);
+	const classInfo = getClassInfo(mainClass ?? "");
 	return (
 		<>
 			<div className={`${styles.heroLegLeft} ${styles.bodyPart}`}>

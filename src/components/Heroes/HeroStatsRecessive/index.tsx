@@ -25,7 +25,7 @@ const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
 const HeroStatsRecessive = ({ hero, slot }: HeroStatsRecessiveProps) => {
 	const g = hero?.genes?.stat;
 	if (!g) return null;
-	const v = (trait: string) => String(g[trait][slot].name);
+	const v = (trait: keyof typeof g) => String(g[trait][slot].name);
 	return (
 		<div style={{ padding: "0 10px" }}>
 			<div className={styles.col}>

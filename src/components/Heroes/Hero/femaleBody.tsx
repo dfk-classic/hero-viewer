@@ -210,7 +210,7 @@ const getBody = (mainClass: string): GetBodyProps => {
 };
 
 const FemaleBody = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
-	const config = getBody(mainClass);
+	const config = getBody(mainClass ?? "");
 	return (
 		<>
 			<div className={`${styles.heroBody} ${styles.bodyPart}`}>
