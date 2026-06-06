@@ -94,4 +94,17 @@ describe("calculateRequiredXp", () => {
 	])("returns %i -> %i xp for the next level", (level, expected) => {
 		expect(calculateRequiredXp(level)).toBe(expected);
 	});
+
+	it.each([
+		[0, 1000],
+		[8, 12000],
+		[15, 40000],
+		[35, 140000],
+		[55, 290000],
+		[100, 740000],
+	])("lands on each tier's lower boundary: level %i -> %i xp", (level, expected) => {
+		// Each level sits at the bottom of a piecewise tier, so the value must equal the constant
+		// term of that tier — proving the breakpoints join continuously with no gap or overlap.
+		expect(calculateRequiredXp(level)).toBe(expected);
+	});
 });
