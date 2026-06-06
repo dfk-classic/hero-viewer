@@ -47,12 +47,12 @@ import overlay26 from "../../../assets/images/hero/head-appendage/head-appendage
 import overlay28 from "../../../assets/images/hero/head-appendage/head-appendage-overlay28.svg";
 
 interface GetInfoProps {
-  base?: any;
-  baseString?: any;
-  overlay?: any;
+  base?: string;
+  baseString?: string;
+  overlay?: string;
 }
 
-const getInfo = (mainClass: any): GetInfoProps => {
+const getInfo = (mainClass: string | number): GetInfoProps => {
   switch (mainClass) {
     case 0: {
       return {
@@ -222,7 +222,7 @@ const getInfo = (mainClass: any): GetInfoProps => {
   }
 };
 
-const Appendage = ({ overlay, stroke, baseString }: any) => {
+const Appendage = ({ overlay, stroke, baseString }: { base?: string; overlay?: string; stroke?: string; baseString?: string }) => {
   // const Base = props.base
 
   return (
@@ -242,7 +242,7 @@ const Appendage = ({ overlay, stroke, baseString }: any) => {
   );
 };
 
-export const HeadAppendage = ({ headId, stroke }: any) => {
+export const HeadAppendage = ({ headId, stroke }: { headId?: string | number; stroke?: string }) => {
   const info = getInfo(headId);
   return (
     <>

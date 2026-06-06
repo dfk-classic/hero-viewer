@@ -108,19 +108,19 @@ export default function Popover({
 		}
 	);
 	const updateCallback = useCallback(() => {
-		update && update();
+		if (update) update();
 	}, [update]);
 	useInterval(updateCallback, show ? 100 : null);
 
 	return (
 		<>
-			<ReferenceElement ref={setReferenceElement as any}>
+			<ReferenceElement ref={setReferenceElement}>
 				{children}
 			</ReferenceElement>
 			<Portal>
 				<PopoverContainer
 					show={show}
-					ref={setPopperElement as any}
+					ref={setPopperElement}
 					style={styles.popper}
 					{...attributes.popper}
 				>
@@ -128,7 +128,7 @@ export default function Popover({
 					<Arrow
 						className={`arrow-${attributes.popper?.["data-popper-placement"] ??
 							""}`}
-						ref={setArrowElement as any}
+						ref={setArrowElement}
 						style={styles.arrow}
 						{...attributes.arrow}
 					/>

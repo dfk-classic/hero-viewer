@@ -1,4 +1,4 @@
-export const calculateHeroSummonCost = (summonerGen: any, totalHeroesAlreadySummoned: any) => {
+export const calculateHeroSummonCost = (summonerGen: number, totalHeroesAlreadySummoned: number) => {
   const baseCost = 6
   const perChildIncrease = 2
   const GenerationIncrease = 10

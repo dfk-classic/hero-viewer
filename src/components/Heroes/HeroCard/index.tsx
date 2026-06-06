@@ -41,9 +41,10 @@ import healthIcon from "../../../assets/images/hero/icons/icon-health.png";
 import manaIcon from "../../../assets/images/hero/icons/icon-mana.png";
 
 import survivorIcon from "../../../assets/images/gui/survivor_badge_2x.png";
+import type { Hero as HeroType } from "../../../types/hero";
 
 interface HeroCardProps {
-  hero: any;
+  hero: HeroType;
   isFlipped?: boolean;
   isAnimated?: boolean;
   flipToggle?: boolean;
@@ -61,7 +62,14 @@ const HeroCard = ({
 
   // Back-of-card pages, HONK Marketplace tab set:
   // Stats / Growth / Abilities / Recessive 1 / Recessive 2.
-  const dataPages = [
+  type DataPage = {
+    label: string;
+    symbol: string;
+    content: React.ReactNode;
+    recessive?: boolean;
+    sup?: string;
+  };
+  const dataPages: DataPage[] = [
     {
       label: "Stats",
       symbol: "\u{1F4CA}",
@@ -97,14 +105,14 @@ const HeroCard = ({
         symbol: "\u{1F9EC}",
         recessive: true,
         content: <HeroStatsRecessive hero={hero} slot="r1" />,
-      } as any,
+      },
       {
         label: "Recessive 2",
         symbol: "\u{1F9EC}",
         recessive: true,
         sup: "2",
         content: <HeroStatsRecessive hero={hero} slot="r2" />,
-      } as any
+      }
     );
   }
   const activePage =
@@ -329,7 +337,7 @@ const HeroCard = ({
 export default React.memo(HeroCard);
 
 // Styled Components
-const CardContainer = styled.div.attrs((props) => ({
+const CardContainer = styled.div.attrs(() => ({
   className: "cardContainer",
 }))`
   perspective: 1000px;

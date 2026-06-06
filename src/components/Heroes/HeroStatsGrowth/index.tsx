@@ -2,9 +2,10 @@ import React from "react";
 import stats from "../utils/stats";
 import GrowthStat from "../GrowthStat";
 import styles from "../HeroCard/styles.module.css";
+import type { Hero } from "../../../types/hero";
 
 interface HeroStatsGrowthProps {
-	hero?: any;
+	hero?: Hero;
 }
 
 const HeroStatsGrowth = ({ hero }: HeroStatsGrowthProps) => {

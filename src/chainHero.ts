@@ -2,7 +2,8 @@
 // Routes to the right chain: DFK Chain (Crystalvale) or Kaia (Serendale);
 // same getHero struct on both HeroCore diamonds.
 import { ethers } from 'ethers';
-import buildHero from './components/Heroes/HeroInfo/utils/heroes';
+import buildHero, { type RawNestedHero } from './components/Heroes/HeroInfo/utils/heroes';
+import type { Hero } from './types/hero';
 
 const CHAINS: Record<string, { rpc: string; herocore: string }> = {
   dfkchain: {
@@ -30,11 +31,11 @@ function contractFor(chain: string) {
   return contracts[chain];
 }
 
-export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain') {
+export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain'): Promise<Hero> {
   const raw = await contractFor(chain).getHero(heroId);
   // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName;
   // ethers tuples only expose the nested form, so alias the flat fields.
-  const heroRaw: any = {
+  const heroRaw: RawNestedHero = {
     id: raw.id,
     summoningInfo: raw.summoningInfo,
     info: raw.info,

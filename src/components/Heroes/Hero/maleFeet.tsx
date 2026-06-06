@@ -69,11 +69,11 @@ import dreadKnightLeftFoot from "../../../assets/images/hero/male/clothes/legend
 import dreadKnightRightFoot from "../../../assets/images/hero/male/clothes/legendary/dreadknight-RightFoot.svg";
 
 interface GetClassInfoProps {
-	leftFoot?: any;
-	rightFoot?: any;
+	leftFoot?: string;
+	rightFoot?: string;
 }
 
-const getClassInfo = (mainClass: any): GetClassInfoProps => {
+const getClassInfo = (mainClass: string): GetClassInfoProps => {
 	switch (mainClass) {
 		case "archer": {
 			return {
@@ -213,7 +213,7 @@ const getClassInfo = (mainClass: any): GetClassInfoProps => {
 	}
 };
 
-const LeftFootMale = ({ leftFoot, stroke }: any) => (
+const LeftFootMale = ({ leftFoot, stroke }: { leftFoot?: string; rightFoot?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={leftFoot} className={styles.clothing} alt="" />
 		<img src={MaleLeftFootHighlight} className={styles.highlight} alt="" />
@@ -229,7 +229,7 @@ const LeftFootMale = ({ leftFoot, stroke }: any) => (
 	</React.Fragment>
 );
 
-const RightFootMale = ({ rightFoot, stroke }: any) => (
+const RightFootMale = ({ rightFoot, stroke }: { leftFoot?: string; rightFoot?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={rightFoot} className={styles.clothing} alt="" />
 		<img src={MaleRightFootHighlight} className={styles.highlight} alt="" />
@@ -245,7 +245,7 @@ const RightFootMale = ({ rightFoot, stroke }: any) => (
 	</React.Fragment>
 );
 
-const MaleFeet = ({ mainClass, stroke }: any) => {
+const MaleFeet = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
 	const classInfo = getClassInfo(mainClass);
 	return (
 		<>

@@ -47,11 +47,11 @@ import overlay26 from "../../../assets/images/hero/back-appendage/back-appendage
 import overlay28 from "../../../assets/images/hero/back-appendage/back-appendage-overlay28.svg";
 
 interface GetInfoProps {
-  base?: any;
-  baseString?: any;
-  overlay?: any;
+  base?: string;
+  baseString?: string;
+  overlay?: string;
 }
-const getInfo = (mainClass: any): GetInfoProps => {
+const getInfo = (mainClass: string | number): GetInfoProps => {
   switch (mainClass) {
     case 0: {
       return {
@@ -233,7 +233,7 @@ const getInfo = (mainClass: any): GetInfoProps => {
   }
 };
 
-const Appendage = ({ overlay, stroke, baseString, backId }: any) => {
+const Appendage = ({ overlay, stroke, baseString, backId }: { base?: string; overlay?: string; stroke?: string; baseString?: string; backId?: string | number }) => {
   // const Base = props.base
 
   return (
@@ -252,7 +252,7 @@ const Appendage = ({ overlay, stroke, baseString, backId }: any) => {
   );
 };
 
-export const BackAppendage = ({ backId, stroke }: any) => {
+export const BackAppendage = ({ backId, stroke }: { backId?: string | number; stroke?: string }) => {
   const info = getInfo(backId);
   return (
     <>

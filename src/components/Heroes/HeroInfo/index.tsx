@@ -4,9 +4,10 @@ import { DateTime } from "luxon";
 import { calculateRequiredXp } from "./utils/heroes";
 import { calculateRemainingStamina } from "../utils/staminaCalculations";
 import styles from "../HeroCard/styles.module.css";
+import type { Hero } from "../../../types/hero";
 
 interface HeroInfoProps {
-	hero: any;
+	hero: Hero;
 }
 
 const HeroInfo = ({ hero }: HeroInfoProps) => {

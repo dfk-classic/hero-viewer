@@ -2,9 +2,10 @@ import React from "react";
 import cx from "classnames";
 import Hero from "../Hero";
 import styles from "./index.module.scss";
+import type { Hero as HeroType } from "../../../types/hero";
 
 interface HeroProfile {
-	hero: any | null;
+	hero: HeroType | null;
 	placeholderComponent?: JSX.Element;
 	profileChoice?: boolean;
 	profileSmall?: boolean;

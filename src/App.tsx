@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeroCard from './components/Heroes/HeroCard';
 import { fetchHeroOnChain } from './chainHero';
+import type { Hero } from './types/hero';
 
 type RosterEntry = { id: string; chain: string };
 
@@ -15,7 +16,7 @@ const inp: React.CSSProperties = {
 
 export default function App() {
   const [roster, setRoster] = useState<RosterEntry[]>([]);
-  const [heroes, setHeroes] = useState<any[]>([]);
+  const [heroes, setHeroes] = useState<Hero[]>([]);
   const [count, setCount] = useState(8);
   const [lookupId, setLookupId] = useState('');
   const [status, setStatus] = useState('loading roster…');
@@ -35,7 +36,7 @@ export default function App() {
   async function loadBatch(entries: RosterEntry[], label: string) {
     const run = ++runRef.current;
     setHeroes([]);
-    const out: any[] = [];
+    const out: Hero[] = [];
     for (const e of entries) {
       if (runRef.current !== run) return; // newer batch started
       try {
@@ -44,9 +45,10 @@ export default function App() {
         if (runRef.current !== run) return;
         setHeroes([...out]);
         setStatus(`${label}: ${out.length}/${entries.length} loaded from chain…`);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error(e.id, err);
-        setStatus(`hero ${e.id} (${e.chain}) failed: ${String(err?.message).slice(0, 90)}`);
+        const message = err instanceof Error ? err.message : String(err);
+        setStatus(`hero ${e.id} (${e.chain}) failed: ${message.slice(0, 90)}`);
       }
     }
     setStatus(`${label}: ${out.length} heroes, live from chain.`);

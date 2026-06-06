@@ -59,17 +59,17 @@ import maleDreadKnightBody from "../../../assets/images/hero/male/clothes/legend
 import maleDreadKnightBehind from "../../../assets/images/hero/male/clothes/legendary/dreadknight-Behind.svg";
 
 interface GetBodyProps {
-	body?: any;
-	behind?: any;
-	backbase?: any;
+	body?: string;
+	behind?: string;
+	backbase?: string;
 	backhighlight?: string | undefined;
 	backshadow?: string | undefined;
-	frontbase?: any;
+	frontbase?: string;
 	fronthighlight?: string | undefined;
 	frontshadow?: string | undefined;
 }
 
-const getBody = (mainClass: any): GetBodyProps => {
+const getBody = (mainClass: string): GetBodyProps => {
 	switch (mainClass) {
 		case "archer": {
 			return {
@@ -209,7 +209,7 @@ const getBody = (mainClass: any): GetBodyProps => {
 	}
 };
 
-const MaleBody = ({ mainClass, stroke }: any) => {
+const MaleBody = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
 	const config = getBody(mainClass);
 	return (
 		<>

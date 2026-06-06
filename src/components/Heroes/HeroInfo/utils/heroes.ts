@@ -1,4 +1,3 @@
-// @ts-ignore
 import { BigNumber, utils } from "ethers";
 import { DateTime } from "luxon";
 import { getFullName, getFirstName, getLastName } from "./names.js";
@@ -6,7 +5,11 @@ import { translateGenes } from "./geneTranslator";
 
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-const choices: { [index: string]: any } = {
+// Raw payloads deliver ids/timestamps as BigNumber (on-chain calls) or decimal strings (subgraph); normalise both to BigNumber so downstream .toNumber() reads are safe regardless of source.
+const toBN = (value: BigNumber | string): BigNumber =>
+	typeof value === "string" ? BigNumber.from(value) : value;
+
+const choices: { [index: string]: { [code: number]: string | number } } = {
 	gender: { 1: "male", 3: "female" },
 	background: {
 		0: "desert",
@@ -474,11 +477,11 @@ export function convertGenes(
 		.split(" ")
 		.join("");
 
-	const genes: { [index: string]: any } = {};
+	const genes: { [index: string]: string | number } = {};
 
 	// Remove spaces, and get every 4th character.
 	for (const k in rawKai.split("")) {
-		if (rawKai.hasOwnProperty(k)) {
+		if (Object.prototype.hasOwnProperty.call(rawKai, k)) {
 			const trait = genesMap[Math.floor(Number(k) / 4)];
 
 			const kai = rawKai[k];
@@ -526,7 +529,7 @@ export const RARITY_UNCOMMON = "uncommon";
 export const RARITY_RARE = "rare";
 export const RARITY_LEGENDARY = "legendary";
 export const RARITY_MYTHIC = "mythic";
-export const RARITY_COLORS: any = {
+export const RARITY_COLORS: Record<string, string> = {
 	[RARITY_COMMON]: "#FFFFFF",
 	[RARITY_UNCOMMON]: "#14C25A",
 	[RARITY_RARE]: "#21CCFF",
@@ -544,7 +547,7 @@ export const RARITY_LEVELS = [
 export const calculateCurrentAuctionPrice = (
 	startingPrice: number,
 	endingPrice: number,
-	startedAt: any,
+	startedAt: number,
 	duration: number
 ) => {
 	if (startingPrice === endingPrice) {
@@ -583,10 +586,109 @@ export const calculateCurrentAuctionPrice = (
 	}
 };
 
-/**
- * Returns a hero object the way the game likes it.
- */
-export default function buildHero(heroRaw: any, owner: any) {
+interface RawOwner {
+	id?: string;
+	name?: string;
+	_name?: string;
+	owner?: string;
+	_owner?: string;
+	picId?: string | number | null;
+	_picId?: string | number | null;
+}
+
+interface RawStatBlock {
+	strength: number;
+	intelligence: number;
+	wisdom: number;
+	luck: number;
+	agility: number;
+	vitality: number;
+	endurance: number;
+	dexterity: number;
+}
+
+export interface RawNestedHero {
+	id: BigNumber | string;
+	firstName?: string | number;
+	lastName?: string | number;
+	info: {
+		visualGenes: BigNumber;
+		statGenes: BigNumber;
+		generation: number;
+		rarity: string | number;
+		shiny: boolean;
+		shinyStyle: number;
+		firstName?: string | number;
+		lastName?: string | number;
+	};
+	state: {
+		xp: BigNumber | string;
+		staminaFullAt: BigNumber | string;
+		level: number;
+		currentQuest: string;
+	};
+	summoningInfo: {
+		summonedTime: BigNumber | string;
+		nextSummonTime: BigNumber | string;
+		summonerId: number;
+		assistantId: number;
+		summons: number;
+		maxSummons: number;
+	};
+	stats: RawStatBlock & { hp: number; mp: number; stamina: number };
+	primaryStatGrowth: RawStatBlock;
+	secondaryStatGrowth: RawStatBlock;
+	professions: { mining: number; gardening: number; fishing: number; foraging: number };
+	salePrice?: BigNumber | string | number;
+	summoningPrice?: BigNumber | string | number;
+	startingPrice?: BigNumber | string | number;
+	endingPrice?: BigNumber | string | number;
+	startedAt?: number;
+	duration?: number;
+	winner?: string | null;
+}
+
+interface RawGraphHero extends RawStatBlock {
+	id: BigNumber | string;
+	visualGenes: BigNumber;
+	statGenes: BigNumber;
+	generation: number;
+	rarity: number;
+	shiny: boolean;
+	shinyStyle: number;
+	firstName?: string | number;
+	lastName?: string | number;
+	xp: BigNumber | string;
+	level: number;
+	staminaFullAt: BigNumber | string;
+	summonedTime: BigNumber | string;
+	nextSummonTime: BigNumber | string;
+	summonerId: number;
+	assistantId: number;
+	currentQuest: string;
+	summons: number;
+	maxSummons: number;
+	hp: number;
+	mp: number;
+	stamina: number;
+	mining: number;
+	gardening: number;
+	fishing: number;
+	foraging: number;
+	salePrice?: BigNumber | string | number;
+	summoningPrice?: BigNumber | string | number;
+	winner?: string | null;
+}
+
+interface RawLineageHero {
+	rarity?: number;
+	statGenes?: BigNumber;
+	visualGenes?: BigNumber;
+	[key: string]: unknown;
+}
+
+/** Returns a hero object the way the game likes it. */
+export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 	const visualGenes = convertGenes(heroRaw.info.visualGenes, visualGenesMap);
 	const statGenes = convertGenes(heroRaw.info.statGenes, statsGenesMap);
 
@@ -609,7 +711,7 @@ export default function buildHero(heroRaw: any, owner: any) {
 			heroRaw.summoningInfo.nextSummonTime
 		);
 		heroRaw.info.rarity = RARITY_LEVELS.indexOf(
-			heroRaw.info.rarity.toLowerCase()
+			(heroRaw.info.rarity as string).toLowerCase()
 		);
 	}
 
@@ -618,21 +720,21 @@ export default function buildHero(heroRaw: any, owner: any) {
 			name: owner.name ? owner.name : owner._name,
 			owner: owner.owner ? owner.owner : owner._owner ? owner._owner : owner.id,
 		},
-		background: visualGenes.background,
-		class: statGenes.class || statGenes.mainClass,
-		subClass: statGenes.subClass,
+		background: visualGenes.background as string,
+		class: (statGenes.class || statGenes.mainClass) as string,
+		subClass: statGenes.subClass as string,
 		classType: "basic",
-		element: statGenes.element,
-		gender: visualGenes.gender,
+		element: statGenes.element as string,
+		gender: visualGenes.gender as string,
 		generation: heroRaw.info.generation,
-		id: heroRaw.id.toNumber(),
-		heroId: heroRaw.id.toNumber(),
+		id: toBN(heroRaw.id).toNumber(),
+		heroId: toBN(heroRaw.id).toNumber(),
 		summonerId: heroRaw.summoningInfo.summonerId,
 		assistantId: heroRaw.summoningInfo.assistantId,
 		currentQuest: heroRaw.state.currentQuest,
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
 		level: heroRaw.state.level,
-		xp: heroRaw.state.xp.toNumber(),
+		xp: toBN(heroRaw.state.xp).toNumber(),
 		firstName: getFirstName(visualGenes.gender, heroRaw.firstName),
 		lastName: getLastName(heroRaw.lastName),
 		name: getFullName(
@@ -641,16 +743,16 @@ export default function buildHero(heroRaw: any, owner: any) {
 			heroRaw.info.lastName
 		),
 		rarity: RARITY_LEVELS[heroRaw.info.rarity],
-		rarityNum: heroRaw.info.rarity,
+		rarityNum: heroRaw.info.rarity as number,
 		shiny: heroRaw.info.shiny,
 		shinyStyle: heroRaw.info.shiny ? heroRaw.info.shinyStyle : 0,
 		currentStamina: heroRaw.stats.stamina,
-		staminaFullAt: DateTime.fromSeconds(heroRaw.state.staminaFullAt.toNumber()),
+		staminaFullAt: DateTime.fromSeconds(toBN(heroRaw.state.staminaFullAt).toNumber()),
 		summonedDate: DateTime.fromSeconds(
-			heroRaw.summoningInfo.summonedTime.toNumber()
+			toBN(heroRaw.summoningInfo.summonedTime).toNumber()
 		),
 		nextSummonTime: DateTime.fromSeconds(
-			heroRaw.summoningInfo.nextSummonTime.toNumber()
+			toBN(heroRaw.summoningInfo.nextSummonTime).toNumber()
 		),
 		summons: heroRaw.summoningInfo.summons,
 		maxSummons: heroRaw.summoningInfo.maxSummons,
@@ -732,10 +834,8 @@ export default function buildHero(heroRaw: any, owner: any) {
 	};
 }
 
-/**
- * Returns a hero object the way the game likes it from the graph.
- */
-export function buildGraphHero(heroRaw: any, owner: any) {
+/** Returns a hero object the way the game likes it from the graph. */
+export function buildGraphHero(heroRaw: RawGraphHero, owner?: RawOwner) {
 	const visualGenes = convertGenes(heroRaw.visualGenes, visualGenesMap);
 	const statGenes = convertGenes(heroRaw.statGenes, statsGenesMap);
 
@@ -770,13 +870,13 @@ export function buildGraphHero(heroRaw: any, owner: any) {
 		element: statGenes.element,
 		gender: visualGenes.gender,
 		generation: heroRaw.generation,
-		id: heroRaw.id.toNumber(),
-		heroId: heroRaw.id.toNumber(),
+		id: toBN(heroRaw.id).toNumber(),
+		heroId: toBN(heroRaw.id).toNumber(),
 		summonerId: heroRaw.summonerId,
 		assistantId: heroRaw.assistantId,
 		currentQuest: heroRaw.currentQuest,
 		isQuesting: heroRaw.currentQuest !== ZERO_ADDRESS,
-		xp: heroRaw.xp.toNumber(),
+		xp: toBN(heroRaw.xp).toNumber(),
 		level: heroRaw.level,
 		firstName: getFirstName(visualGenes.gender, heroRaw.firstName),
 		lastName: getLastName(heroRaw.lastName),
@@ -785,9 +885,9 @@ export function buildGraphHero(heroRaw: any, owner: any) {
 		rarityNum: heroRaw.rarity,
 		shiny: heroRaw.shiny,
 		shinyStyle: heroRaw.shiny ? heroRaw.shinyStyle : 0,
-		staminaFullAt: DateTime.fromSeconds(heroRaw.staminaFullAt.toNumber()),
-		summonedDate: DateTime.fromSeconds(heroRaw.summonedTime.toNumber()),
-		nextSummonTime: DateTime.fromSeconds(heroRaw.nextSummonTime.toNumber()),
+		staminaFullAt: DateTime.fromSeconds(toBN(heroRaw.staminaFullAt).toNumber()),
+		summonedDate: DateTime.fromSeconds(toBN(heroRaw.summonedTime).toNumber()),
+		nextSummonTime: DateTime.fromSeconds(toBN(heroRaw.nextSummonTime).toNumber()),
 		summons: heroRaw.summons,
 		maxSummons: heroRaw.maxSummons,
 		summonsRemaining:
@@ -828,7 +928,7 @@ export function buildGraphHero(heroRaw: any, owner: any) {
 	};
 }
 
-export function buildLineageHero(hero: any = {}) {
+export function buildLineageHero(hero: RawLineageHero = {}) {
 	const statGenes = convertGenes(hero.statGenes, statsGenesMap);
 	return {
 		...hero,

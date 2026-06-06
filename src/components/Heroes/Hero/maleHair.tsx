@@ -122,7 +122,6 @@ import maleHair25frontbase from "../../../assets/images/hero/male/hair/hair25-fr
 import maleHair25fronthighlight from "../../../assets/images/hero/male/hair/hair25-front-highlight.svg";
 import maleHair25frontshadow from "../../../assets/images/hero/male/hair/hair25-front-shadow.svg";
 import maleHair26frontbase from "../../../assets/images/hero/male/hair/hair26-front-base.svg?react";
-import maleHair26fronthighlight from "../../../assets/images/hero/male/hair/hair26-front-highlight.svg";
 import maleHair26frontshadow from "../../../assets/images/hero/male/hair/hair26-front-shadow.svg";
 
 import maleHair27frontbase from "../../../assets/images/hero/male/hair/hair27-front-base.svg?react";
@@ -141,16 +140,18 @@ import maleHair30frontbase from "../../../assets/images/hero/male/hair/hair30-fr
 import maleHair30fronthighlight from "../../../assets/images/hero/male/hair/hair30-front-highlight.svg";
 import maleHair30frontshadow from "../../../assets/images/hero/male/hair/hair30-front-shadow.svg";
 
+type SvgComponent = React.FunctionComponent<React.ComponentProps<"svg"> & { title?: string }>;
+
 interface GetHairProps {
-  backbase?: any;
+  backbase?: SvgComponent;
   backhighlight?: string | undefined;
   backshadow?: string | undefined;
-  frontbase?: any;
+  frontbase?: SvgComponent;
   fronthighlight?: string | undefined;
   frontshadow?: string | undefined;
 }
 // write a getter functions that uses a switch statement tto use every import
-const getHair = (id: any): GetHairProps => {
+const getHair = (id: string | number): GetHairProps => {
   switch (id) {
     case 0: {
       return {
@@ -468,7 +469,7 @@ const getHair = (id: any): GetHairProps => {
   }
 };
 
-const MaleHair = ({ hairId, hairColor }: any) => {
+const MaleHair = ({ hairId, hairColor }: { hairId?: string | number; hairColor?: string | number }) => {
   const config = getHair(hairId);
   const BackBase = config.backbase;
   const FrontBase = config.frontbase;
