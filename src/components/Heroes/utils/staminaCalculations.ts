@@ -20,17 +20,3 @@ export const calculateRemainingStamina = (hero: Hero) => {
 		return hero.stats.stamina;
 	}
 };
-
-export const updatedStaminaCooldown = (
-	hero: Hero,
-	staminaSubtracted: number
-) => {
-	const secondsPerStaminaPoint = 1200;
-	const staminaFullAt =
-		hero.staminaFullAt.ts === 0 || hero.staminaFullAt <= DateTime.now()
-			? DateTime.fromJSDate(new Date())
-			: DateTime.fromJSDate(new Date(hero.staminaFullAt));
-	return staminaFullAt.plus({
-		seconds: secondsPerStaminaPoint * staminaSubtracted,
-	});
-};
