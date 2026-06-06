@@ -124,13 +124,13 @@ import dreadKnightRightLegTop from "../../../assets/images/hero/female/clothes/l
 import dreadKnightRightLegBottom from "../../../assets/images/hero/female/clothes/legendary/dreadknight-RightLegBtm.svg";
 
 interface GetClassInfoProps {
-	leftLegTop?: any;
-	leftLegBottom?: any;
-	rightLegTop?: any;
-	rightLegBottom?: any;
+	leftLegTop?: string;
+	leftLegBottom?: string;
+	rightLegTop?: string;
+	rightLegBottom?: string;
 }
 
-const getClassInfo = (mainClass: any): GetClassInfoProps => {
+const getClassInfo = (mainClass: string): GetClassInfoProps => {
 	switch (mainClass) {
 		case "archer": {
 			return {
@@ -319,7 +319,7 @@ const LeftLegFemale = ({
 	legTopHighlight,
 	legTopShadow,
 	stroke,
-}: any) => (
+}: { legTop?: string; legTopHighlight?: string; legTopShadow?: string; legBottom?: string; legBottomHighlight?: string; legBottomShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={legTop} className={styles.clothing} alt="" />
 		<img src={legTopHighlight} className={styles.highlight} alt="" />
@@ -343,7 +343,7 @@ const RightLegFemale = ({
 	legTopHighlight,
 	legTopShadow,
 	stroke,
-}: any) => (
+}: { legTop?: string; legTopHighlight?: string; legTopShadow?: string; legBottom?: string; legBottomHighlight?: string; legBottomShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={legTop} className={styles.clothing} alt="" />
 		<img src={legTopHighlight} className={styles.highlight} alt="" />
@@ -367,7 +367,7 @@ const LeftLegBtmFemale = ({
 	legBottomHighlight,
 	legBottomShadow,
 	stroke,
-}: any) => (
+}: { legTop?: string; legTopHighlight?: string; legTopShadow?: string; legBottom?: string; legBottomHighlight?: string; legBottomShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={legBottom} className={styles.clothing} alt="" />
 		<img src={legBottomHighlight} className={styles.highlight} alt="" />
@@ -388,7 +388,7 @@ const RightLegBtmFemale = ({
 	legBottomHighlight,
 	legBottomShadow,
 	stroke,
-}: any) => (
+}: { legTop?: string; legTopHighlight?: string; legTopShadow?: string; legBottom?: string; legBottomHighlight?: string; legBottomShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={legBottom} className={styles.clothing} alt="" />
 		<img src={legBottomHighlight} className={styles.highlight} alt="" />
@@ -404,7 +404,7 @@ const RightLegBtmFemale = ({
 	</React.Fragment>
 );
 
-const FemaleLegs = ({ mainClass, stroke }: any) => {
+const FemaleLegs = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
 	const classInfo = getClassInfo(mainClass);
 	return (
 		<>

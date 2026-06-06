@@ -1,9 +1,10 @@
 import React from "react";
 import styles from "../HeroCard/styles.module.css";
+import type { Hero } from "../../../types/hero";
 
 interface GrowthStatProps {
 	stat: { value: string; label: string; abbr: string };
-	hero: any;
+	hero: Hero;
 	position: "primary" | "secondary";
 	labelType: "abbr" | "full";
 }

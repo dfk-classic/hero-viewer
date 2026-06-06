@@ -179,15 +179,15 @@ import scholarWeapon from './img/scholar-weapon.png'
 import spellbowWeapon from './img/spellbow-weapon.png'
 
 interface GetClassInfoProps {
-	classWeapon?: any;
-	offHand?: any;
-	rightArmTop?: any;
-	rightArmBottom?: any;
-	leftArmTop?: any;
-	leftArmBotttom?: any;
+	classWeapon?: string;
+	offHand?: string;
+	rightArmTop?: string;
+	rightArmBottom?: string;
+	leftArmTop?: string;
+	leftArmBotttom?: string;
 }
 
-const getClassInfo = (mainClass: any): GetClassInfoProps => {
+const getClassInfo = (mainClass: string): GetClassInfoProps => {
 	switch (mainClass) {
 		case "archer": {
 			return {
@@ -400,7 +400,7 @@ const RightArmTopFemale = ({
 	armTopHighlight,
 	armTopShadow,
 	stroke,
-}: any) => (
+}: { armTop?: string; armTopHighlight?: string; armTopShadow?: string; armBtm?: string; armBtmHighlight?: string; armBtmShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={armTop} className={styles.clothing} alt="" />
 		<img src={armTopHighlight} className={styles.highlight} alt="" />
@@ -424,7 +424,7 @@ const RightArmBtmFemale = ({
 	armBtmHighlight,
 	armBtmShadow,
 	stroke,
-}: any) => (
+}: { armTop?: string; armTopHighlight?: string; armTopShadow?: string; armBtm?: string; armBtmHighlight?: string; armBtmShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={armBtm} className={styles.clothing} alt="" />
 		<img src={armBtmHighlight} className={styles.highlight} alt="" />
@@ -448,7 +448,7 @@ const LeftArmTopFemale = ({
 	armTopHighlight,
 	armTopShadow,
 	stroke,
-}: any) => (
+}: { armTop?: string; armTopHighlight?: string; armTopShadow?: string; armBtm?: string; armBtmHighlight?: string; armBtmShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={armTop} className={styles.clothing} alt="" />
 		<img src={armTopHighlight} className={styles.highlight} alt="" />
@@ -472,7 +472,7 @@ const LeftArmBtmFemale = ({
 	armBtmHighlight,
 	armBtmShadow,
 	stroke,
-}: any) => (
+}: { armTop?: string; armTopHighlight?: string; armTopShadow?: string; armBtm?: string; armBtmHighlight?: string; armBtmShadow?: string; stroke?: string }) => (
 	<React.Fragment>
 		<img src={armBtm} className={styles.clothing} alt="" />
 		<img src={armBtmHighlight} className={styles.highlight} alt="" />
@@ -491,7 +491,7 @@ const LeftArmBtmFemale = ({
 	</React.Fragment>
 );
 
-const FemaleArms = ({ mainClass, stroke }: any) => {
+const FemaleArms = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
 	const classInfo = getClassInfo(mainClass);
 	return (
 		<>

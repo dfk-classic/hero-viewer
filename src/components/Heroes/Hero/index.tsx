@@ -14,6 +14,7 @@ import MaleFeet from "./maleFeet";
 import { HeadAppendage } from "./headAppendage";
 import { BackAppendage } from "./backAppendage";
 import HeroEyes from "./Eyes";
+import type { Hero as HeroType } from "../../../types/hero";
 
 import FemaleHeadHighlight from "../../../assets/images/hero/female/Head-highlight.svg";
 import FemaleHeadShadow from "../../../assets/images/hero/female/Head-shadow.svg";
@@ -23,15 +24,15 @@ import MaleHeadShadow from "../../../assets/images/hero/male/Head-shadow.svg";
 import maleSeerHead from '../../../assets/images/hero/male/clothes/seer-HeadPiece.svg'
 
 interface Props {
-	stroke?: any;
-	backId?: any;
-	eyeColor?: any;
+	stroke?: string;
+	backId?: string | number;
+	eyeColor?: string | number;
 }
 interface HeroProps {
-	hero: any;
-	noCard?: any;
+	hero: HeroType;
+	noCard?: boolean;
 	noGlow?: boolean;
-	onClick?: Function;
+	onClick?: (hero: HeroType) => void;
 	isAnimated?: boolean;
 }
 
@@ -88,7 +89,7 @@ const HeroWrapper = styled.div`
 /* exported component */
 const Hero = ({ isAnimated = false, hero, noCard, onClick }: HeroProps) => {
 	const onHeroClick = useCallback(() => {
-		onClick && onClick(hero);
+		if (onClick) onClick(hero);
 	}, [onClick, hero]);
 	return (
 		<span className={`${isAnimated ? styles.animate : ""}`}>

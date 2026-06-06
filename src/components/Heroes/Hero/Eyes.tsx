@@ -5,7 +5,7 @@ import styles from "../HeroCard/styles.module.css";
 import EyesHighlight from "../../../assets/images/hero/eyes-highlight.svg";
 import EyesShadow from "../../../assets/images/hero/eyes-shadow.svg";
 
-const HeroEyes = ({ eyeColor }: any) => {
+const HeroEyes = ({ eyeColor }: { eyeColor?: string | number }) => {
   return (
     <>
       <img src={EyesHighlight} className={styles.highlight} alt="" />

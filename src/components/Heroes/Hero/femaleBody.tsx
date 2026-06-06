@@ -59,17 +59,17 @@ import femaleDreadKnightBody from "../../../assets/images/hero/female/clothes/le
 import femaleDreadKnightBehind from "../../../assets/images/hero/female/clothes/legendary/dreadknight-Behind.svg";
 
 interface GetBodyProps {
-	body?: any;
-	behind?: any;
-	backbase?: any;
+	body?: string;
+	behind?: string;
+	backbase?: string;
 	backhighlight?: string | undefined;
 	backshadow?: string | undefined;
-	frontbase?: any;
+	frontbase?: string;
 	fronthighlight?: string | undefined;
 	frontshadow?: string | undefined;
 }
 
-const getBody = (mainClass: any): GetBodyProps => {
+const getBody = (mainClass: string): GetBodyProps => {
 	switch (mainClass) {
 		case "archer": {
 			return {
@@ -209,7 +209,7 @@ const getBody = (mainClass: any): GetBodyProps => {
 	}
 };
 
-const FemaleBody = ({ mainClass, stroke }: any) => {
+const FemaleBody = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
 	const config = getBody(mainClass);
 	return (
 		<>

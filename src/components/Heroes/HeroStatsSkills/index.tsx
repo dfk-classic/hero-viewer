@@ -1,9 +1,10 @@
 import React from "react"; // useState
 import styles from "../HeroCard/styles.module.css";
 import stats from "../utils/stats";
+import type { Hero } from "../../../types/hero";
 
 interface HeroStatsSkillsProps {
-	hero?: any;
+	hero?: Hero;
 }
 
 /* exported component */
@@ -14,7 +15,7 @@ const HeroStatsSkills = ({ hero }: HeroStatsSkillsProps) => {
 				<div className={styles.col}>
 					<h3 style={{ marginTop: ".5rem" }}>Stats</h3>
 					<div className={styles.statList}>
-						{stats.map((stat: any) => {
+						{stats.map((stat) => {
 							return (
 								<div key={stat.value}>
 									<div className={styles.statName}>

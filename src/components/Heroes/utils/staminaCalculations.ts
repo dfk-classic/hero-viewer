@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
+import type { Hero } from "../../../types/hero";
 
-export const calculateRemainingStamina = (hero: any) => {
+export const calculateRemainingStamina = (hero: Hero) => {
 	const secondsPerStaminaPoint = 1200;
 	const currentTime = DateTime.fromJSDate(new Date());
 	const staminaFullAt =
@@ -21,7 +22,7 @@ export const calculateRemainingStamina = (hero: any) => {
 };
 
 export const updatedStaminaCooldown = (
-	hero: any,
+	hero: Hero,
 	staminaSubtracted: number
 ) => {
 	const secondsPerStaminaPoint = 1200;

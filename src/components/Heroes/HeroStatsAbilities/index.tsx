@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "../HeroCard/styles.module.css";
+import type { Hero } from "../../../types/hero";
 
 interface HeroStatsAbilitiesProps {
-	hero?: any;
+	hero?: Hero;
 }
 
 // Abilities tab, HONK Marketplace style: the four dominant ability genes
@@ -10,7 +11,7 @@ interface HeroStatsAbilitiesProps {
 const HeroStatsAbilities = ({ hero }: HeroStatsAbilitiesProps) => {
 	const g = hero?.genes?.stat;
 	if (!g) return null;
-	const rows: [string, string][] = [
+	const rows: [string, string | number][] = [
 		["Active 1", g.active1.dominant.name],
 		["Active 2", g.active2.dominant.name],
 		["Passive 1", g.passive1.dominant.name],

@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "../HeroCard/styles.module.css";
+import type { Hero } from "../../../types/hero";
 
 interface HeroStatsRecessiveProps {
-	hero?: any;
+	hero?: Hero;
 	slot: "r1" | "r2" | "r3";
 }
 
