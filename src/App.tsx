@@ -4,6 +4,7 @@ import { fetchHeroOnChain } from './chainHero';
 import { loadRoster, samplePicks } from './roster';
 import { MIN_COUNT, MAX_COUNT, clampCount } from './countBounds';
 import { runPool } from './runPool';
+import { heroKey } from './heroKey';
 import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
 
@@ -90,7 +91,7 @@ export default function App() {
       <div style={{ color: '#8b93a3', fontSize: 12, marginBottom: 14 }}>{status}</div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18 }}>
         {heroes.map((h, i) => (
-          <div key={(h.id?.toString?.() ?? i) + '-' + i}>
+          <div key={heroKey(h, i)}>
             <HeroCard hero={h} flipToggle />
           </div>
         ))}
