@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import styles from "./styles.module.css";
+import { isActivateKey } from "./cardKeys";
 
 import Hero from "../Hero";
 import HeroInfo from "../HeroInfo";
@@ -118,6 +119,34 @@ const HeroCard = ({
   const activePage =
     dataPages.find((p) => p.label === activeTab) ?? dataPages[0];
 
+  // Copy the hero id to the clipboard and briefly confirm in place. Shared by the
+  // pointer (onClick) and keyboard (onKeyDown) paths so both behave identically.
+  const copyHeroId = (el: HTMLDivElement) => {
+    navigator.clipboard.writeText(String(hero.id));
+    const original = el.textContent;
+    el.textContent = "copied!";
+    setTimeout(() => {
+      el.textContent = original;
+    }, 900);
+  };
+
+  // Make the whole card a keyboard-operable toggle, but only when it is actually
+  // flippable. aria-pressed exposes the flipped state, so role="button" is
+  // required here for it to carry meaning to assistive tech.
+  const flipToggleProps: React.HTMLAttributes<HTMLDivElement> = flipToggle
+    ? {
+        role: "button",
+        tabIndex: 0,
+        "aria-label": "Flip hero card",
+        "aria-pressed": Boolean(Flipped),
+        onKeyDown: (e) => {
+          if (!isActivateKey(e.key)) return;
+          e.preventDefault();
+          setFlipped(!Flipped);
+        },
+      }
+    : {};
+
   return (
     <>
       {hero && (
@@ -126,6 +155,7 @@ const HeroCard = ({
             onClick={() => {
               if (flipToggle) setFlipped(!Flipped);
             }}
+            {...flipToggleProps}
             className={`
           ${styles.heroCard}
           ${isAnimated && styles.animate}
@@ -149,14 +179,18 @@ const HeroCard = ({
                 className={styles.heroID}
                 style={{ cursor: "pointer" }}
                 title="Click to copy hero ID"
+                role="button"
+                tabIndex={0}
+                aria-label={`Copy hero ID ${hero.id}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  const id = String(hero.id);
-                  navigator.clipboard.writeText(id);
-                  const el = e.currentTarget;
-                  const original = el.textContent;
-                  el.textContent = "copied!";
-                  setTimeout(() => { el.textContent = original; }, 900);
+                  copyHeroId(e.currentTarget);
+                }}
+                onKeyDown={(e) => {
+                  if (!isActivateKey(e.key)) return;
+                  e.preventDefault();
+                  e.stopPropagation(); // inner control, never flips the card
+                  copyHeroId(e.currentTarget);
                 }}
               >
                 #{hero.id}
