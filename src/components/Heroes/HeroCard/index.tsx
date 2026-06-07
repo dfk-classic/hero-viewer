@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import styles from "./styles.module.css";
 import { isActivateKey } from "./cardKeys";
@@ -64,8 +64,6 @@ const HeroCard = ({
   const [activeTab, setActiveTab] = useState("Stats");
   const [Flipped, setFlipped] = useState(isFlipped);
 
-  // Back-of-card pages, HONK Marketplace tab set:
-  // Stats / Growth / Abilities / Recessive 1 / Recessive 2.
   type DataPage = {
     label: string;
     symbol: string;
@@ -73,57 +71,60 @@ const HeroCard = ({
     recessive?: boolean;
     sup?: string;
   };
-  const dataPages: DataPage[] = [
-    {
-      label: "Stats",
-      symbol: "\u{1F4CA}",
-      content: (
-        <>
-          <HeroStatsSkills hero={hero} />
-          {hero && hero.owner.name ? (
-            <div className={styles.heroOwner}>Owned by: {hero.owner.name}</div>
-          ) : null}
-          {hero && hero.owner.owner ? (
-            <div className={styles.heroHash}>{hero.owner.owner}</div>
-          ) : null}
-        </>
-      ),
-    },
-  ];
-  if (hero.statGrowth && hero.statGrowth.primary) {
-    dataPages.push({
-      label: "Growth",
-      symbol: "\u{1F4C8}",
-      content: <HeroStatsGrowth hero={hero} />,
-    });
-  }
-  if (hero.genes) {
-    dataPages.push(
+  // Back-of-card pages, HONK Marketplace tab set: Stats / Growth / Abilities / Recessive 1 / Recessive 2. Memoised on the hero so the array identity stays stable across flip, tab-change and copy-feedback re-renders — that restores HeroCardTabs's React.memo (it was handed a freshly-built array every render) and builds each page's content node once per hero instead of on every interaction.
+  const dataPages = useMemo<DataPage[]>(() => {
+    const pages: DataPage[] = [
       {
-        label: "Abilities",
-        symbol: "⚔️",
-        content: <HeroStatsAbilities hero={hero} />,
+        label: "Stats",
+        symbol: "\u{1F4CA}",
+        content: (
+          <>
+            <HeroStatsSkills hero={hero} />
+            {hero && hero.owner.name ? (
+              <div className={styles.heroOwner}>Owned by: {hero.owner.name}</div>
+            ) : null}
+            {hero && hero.owner.owner ? (
+              <div className={styles.heroHash}>{hero.owner.owner}</div>
+            ) : null}
+          </>
+        ),
       },
-      {
-        label: "Recessive 1",
-        symbol: "\u{1F9EC}",
-        recessive: true,
-        content: <HeroStatsRecessive hero={hero} slot="r1" />,
-      },
-      {
-        label: "Recessive 2",
-        symbol: "\u{1F9EC}",
-        recessive: true,
-        sup: "2",
-        content: <HeroStatsRecessive hero={hero} slot="r2" />,
-      }
-    );
-  }
+    ];
+    if (hero.statGrowth && hero.statGrowth.primary) {
+      pages.push({
+        label: "Growth",
+        symbol: "\u{1F4C8}",
+        content: <HeroStatsGrowth hero={hero} />,
+      });
+    }
+    if (hero.genes) {
+      pages.push(
+        {
+          label: "Abilities",
+          symbol: "⚔️",
+          content: <HeroStatsAbilities hero={hero} />,
+        },
+        {
+          label: "Recessive 1",
+          symbol: "\u{1F9EC}",
+          recessive: true,
+          content: <HeroStatsRecessive hero={hero} slot="r1" />,
+        },
+        {
+          label: "Recessive 2",
+          symbol: "\u{1F9EC}",
+          recessive: true,
+          sup: "2",
+          content: <HeroStatsRecessive hero={hero} slot="r2" />,
+        }
+      );
+    }
+    return pages;
+  }, [hero]);
   const activePage =
     dataPages.find((p) => p.label === activeTab) ?? dataPages[0];
 
-  // Copy the hero id to the clipboard and briefly confirm in place. Shared by the
-  // pointer (onClick) and keyboard (onKeyDown) paths so both behave identically.
+  // Copy the hero id to the clipboard and briefly confirm in place. Shared by the pointer (onClick) and keyboard (onKeyDown) paths so both behave identically.
   const copyHeroId = (el: HTMLDivElement) => {
     navigator.clipboard.writeText(String(hero.id));
     const original = el.textContent;
@@ -133,9 +134,7 @@ const HeroCard = ({
     }, COPIED_FEEDBACK_MS);
   };
 
-  // Make the whole card a keyboard-operable toggle, but only when it is actually
-  // flippable. aria-pressed exposes the flipped state, so role="button" is
-  // required here for it to carry meaning to assistive tech.
+  // Make the whole card a keyboard-operable toggle, but only when it is actually flippable. aria-pressed exposes the flipped state, so role="button" is required here for it to carry meaning to assistive tech.
   const flipToggleProps: React.HTMLAttributes<HTMLDivElement> = flipToggle
     ? {
         role: "button",
