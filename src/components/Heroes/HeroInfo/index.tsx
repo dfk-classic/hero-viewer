@@ -2,7 +2,7 @@ import React from "react";
 import { MouseoverTooltip } from "../../Tooltip";
 import { DateTime } from "luxon";
 import { calculateRequiredXp } from "./utils/heroes";
-import { calculateRemainingStamina } from "../utils/staminaCalculations";
+import { calculateRemainingStamina, staminaFullLabel } from "../utils/staminaCalculations";
 import StatBar from "./StatBar";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
@@ -15,12 +15,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 	const remainingStamina = calculateRemainingStamina(hero);
 	const staminaPercentage = (remainingStamina / hero.stats.stamina) * 100;
 	const currentTime = DateTime.fromJSDate(new Date());
-	const staminaFullAt = hero.staminaFullAt;
-
-	let staminaFullAtString = "Full " + staminaFullAt.toRelative();
-	if (!staminaFullAt || staminaFullAt <= currentTime) {
-		staminaFullAtString = "Full";
-	}
+	const staminaFullAtString = staminaFullLabel(hero.staminaFullAt, currentTime);
 	const tooltips: Record<string, string> = {
 		staminaFullAtString: staminaFullAtString,
 	};

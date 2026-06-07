@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { calculateRemainingStamina } from "../../src/components/Heroes/utils/staminaCalculations";
+import { DateTime } from "luxon";
+import { calculateRemainingStamina, staminaFullLabel } from "../../src/components/Heroes/utils/staminaCalculations";
 import { makeHero } from "../helpers/heroFixtures";
 
 const nowSeconds = () => Math.floor(Date.now() / 1000);
@@ -37,5 +38,27 @@ describe("calculateRemainingStamina", () => {
 		// staminaFullAt at (or just before) now hits the <= branch and returns the full pool.
 		const hero = makeHero({ stamina: 25, staminaFullAt: nowSeconds() });
 		expect(calculateRemainingStamina(hero)).toBe(25);
+	});
+});
+
+describe("staminaFullLabel", () => {
+	it("returns a plain \"Full\" for a null recharge time instead of dereferencing it", () => {
+		// Regression guard: the component built the label as `"Full " + staminaFullAt.toRelative()` before the null check, so a null staminaFullAt threw a TypeError on toRelative before the guard could ever run.
+		expect(staminaFullLabel(null, DateTime.now())).toBe("Full");
+	});
+
+	it("returns a plain \"Full\" for an invalid DateTime instead of \"Full null\"", () => {
+		// Regression guard: an out-of-range DateTime.fromSeconds(NaN) (the real path when an on-chain value fails to parse) is a truthy, never-<=-now object whose toRelative() is null, so the old concatenation rendered the literal string "Full null".
+		expect(staminaFullLabel(DateTime.fromSeconds(NaN), DateTime.now())).toBe("Full");
+	});
+
+	it("prefixes the relative time when the recharge moment is still in the future", () => {
+		const now = DateTime.now();
+		expect(staminaFullLabel(now.plus({ hours: 2 }), now)).toBe("Full in 2 hours");
+	});
+
+	it("collapses to \"Full\" once the recharge moment has passed", () => {
+		const now = DateTime.now();
+		expect(staminaFullLabel(now.minus({ hours: 2 }), now)).toBe("Full");
 	});
 });

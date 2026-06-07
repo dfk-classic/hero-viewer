@@ -20,3 +20,12 @@ export const calculateRemainingStamina = (hero: Hero): number => {
 		return hero.stats.stamina;
 	}
 };
+
+// Builds the "Full <relative time>" stamina label without ever dereferencing a missing or invalid recharge time: the guard runs before toRelative, so a null/undefined staminaFullAt or an out-of-range DateTime.fromSeconds result resolves to a plain "Full" rather than throwing on the missing value or rendering the literal "Full null". Passing the reference instant in keeps the relative phrasing deterministic against a single "now".
+export function staminaFullLabel(staminaFullAt: DateTime | null | undefined, now: DateTime): string {
+	if (!staminaFullAt || !staminaFullAt.isValid || staminaFullAt <= now) {
+		return "Full";
+	}
+	const relative = staminaFullAt.toRelative({ base: now });
+	return relative ? `Full ${relative}` : "Full";
+}
