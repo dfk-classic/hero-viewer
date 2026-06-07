@@ -30,3 +30,4 @@ Notable changes to this project. Format follows [Keep a Changelog](https://keepa
 
 ### Removed
 - Dead commented-out code: stale SVG imports in the limb and hair layers, and leftover `props.base` lines.
+- Eight unused trait data modules left over from the old filter UI (`backgrounds`, `elements`, `genders`, `heroClasses`, `professions`, `shiny`, `rarity`, `statBonusValues`). Nothing imported them; the class, element, and profession lists the app actually decodes against live in `geneTranslator` and `heroes` instead.
