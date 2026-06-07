@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import HeroCard from './components/Heroes/HeroCard';
 import { fetchHeroOnChain } from './chainHero';
 import { loadRoster, samplePicks } from './roster';
+import { MIN_COUNT, MAX_COUNT, clampCount } from './countBounds';
 import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
 
@@ -67,8 +68,8 @@ export default function App() {
       <h1>DFK Classic: Transcended Hero Viewer</h1>
       <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', margin: '10px 0 6px' }}>
         <label style={{ fontSize: 13, color: '#8b93a3' }}>show</label>
-        <input style={{ ...inp, width: 64 }} type="number" min={1} max={60} value={count}
-               onChange={e => setCount(Math.max(1, Math.min(60, Number(e.target.value) || 1)))} />
+        <input style={{ ...inp, width: 64 }} type="number" min={MIN_COUNT} max={MAX_COUNT} value={count}
+               onChange={e => setCount(clampCount(e.target.value))} />
         <button style={btn} onClick={firstN} disabled={!roster.length}>First {count}</button>
         <button style={btn} onClick={randomN} disabled={!roster.length}>Random {count}</button>
         <span style={{ width: 14 }} />
