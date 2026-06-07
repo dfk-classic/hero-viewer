@@ -1,6 +1,8 @@
 import React from "react";
 import stats from "../utils/stats";
 import GrowthStat from "../GrowthStat";
+import StatTab from "../StatTab";
+import StatColumn from "../StatColumn";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
 
@@ -21,10 +23,9 @@ const GROWTH_COLUMNS: {
 const HeroStatsGrowth = ({ hero }: HeroStatsGrowthProps) => {
 	if (!hero) return null;
 	return (
-		<div style={{ padding: "0 10px" }}>
+		<StatTab>
 			{GROWTH_COLUMNS.map(({ title, marginTop, position }) => (
-				<div className={styles.col} key={position}>
-					<h3 style={{ marginTop }}>{title}</h3>
+				<StatColumn key={position} title={title} marginTop={marginTop}>
 					<div className={`${styles.statList}`}>
 						{stats.map((stat) => (
 							<GrowthStat
@@ -36,9 +37,9 @@ const HeroStatsGrowth = ({ hero }: HeroStatsGrowthProps) => {
 							/>
 						))}
 					</div>
-				</div>
+				</StatColumn>
 			))}
-		</div>
+		</StatTab>
 	);
 };
 

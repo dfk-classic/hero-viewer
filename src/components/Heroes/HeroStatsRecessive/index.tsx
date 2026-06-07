@@ -1,5 +1,7 @@
 import React from "react";
 import GeneRow from "../GeneRow";
+import StatTab from "../StatTab";
+import StatColumn from "../StatColumn";
 import { recessiveRows } from "./recessiveRows";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
@@ -15,11 +17,8 @@ const HeroStatsRecessive = ({ hero, slot }: HeroStatsRecessiveProps) => {
 	if (!g) return null;
 	const groups = recessiveRows(g, slot);
 	return (
-		<div style={{ padding: "0 10px" }}>
-			<div className={styles.col}>
-				<h3 style={{ marginTop: ".5rem" }}>
-					Recessive Genes ({slot.toUpperCase()})
-				</h3>
+		<StatTab>
+			<StatColumn title={`Recessive Genes (${slot.toUpperCase()})`}>
 				<div className={styles.geneList}>
 					{groups.map((group, i) => {
 						const rows = group.rows.map((row) => (
@@ -39,8 +38,8 @@ const HeroStatsRecessive = ({ hero, slot }: HeroStatsRecessiveProps) => {
 						);
 					})}
 				</div>
-			</div>
-		</div>
+			</StatColumn>
+		</StatTab>
 	);
 };
 
