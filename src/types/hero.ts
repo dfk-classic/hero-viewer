@@ -1,10 +1,7 @@
 import type { DateTime } from "luxon";
 import type { TranslatedGenes } from "../components/Heroes/HeroInfo/utils/geneTranslator";
 
-// Canonical hero shape produced by buildHero (HeroInfo/utils/heroes.ts) and consumed
-// across the card, profile, stats, gene and SVG render layers. Fields mirror the
-// builder's return literal one-for-one; collections that callers index by a dynamic
-// key carry a string index signature so lookups like stats[stat.value] stay typed.
+// Canonical hero shape produced by buildHero (HeroInfo/utils/heroes.ts) and consumed across the card, profile, stats, gene and SVG render layers. Fields mirror the builder's return literal one-for-one; collections that callers index by a dynamic key carry a string index signature so lookups like stats[stat.value] stay typed.
 
 export interface HeroOwner {
 	name: string;
@@ -74,8 +71,7 @@ export interface HeroVisual {
 	[trait: string]: string | number | boolean;
 }
 
-// Full translated gene tree (stat + visual, dominant + r1/r2/r3 per trait) reused
-// verbatim from translateGenes so the builder's output matches field-for-field.
+// Full translated gene tree (stat + visual, dominant + r1/r2/r3 per trait) reused verbatim from translateGenes so the builder's output matches field-for-field.
 export interface Hero {
 	id: number;
 	heroId: number;
