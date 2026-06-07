@@ -3,8 +3,14 @@ import HeroCard from './components/Heroes/HeroCard';
 import { fetchHeroOnChain } from './chainHero';
 import { loadRoster, samplePicks } from './roster';
 import { MIN_COUNT, MAX_COUNT, clampCount } from './countBounds';
+import { runPool } from './runPool';
 import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
+
+// How many hero fetches run against the chain at once. The viewer reads from a
+// shared public RPC, so this caps in-flight requests to stay polite while still
+// loading a batch far faster than the old one-at-a-time walk.
+const LOAD_CONCURRENCY = 6;
 
 const btn: React.CSSProperties = {
   background: '#1d2330', color: '#e9e4d8', border: '1px solid #2e3850',
@@ -34,24 +40,30 @@ export default function App() {
   async function loadBatch(entries: RosterEntry[], label: string) {
     const run = ++runRef.current;
     setHeroes([]);
-    const out: Hero[] = [];
-    for (const e of entries) {
-      if (runRef.current !== run) return; // newer batch started
+    // Results land in roster-position slots so out-of-order completions still
+    // render in roster order; `loaded` counts successes for the status line.
+    const slots: (Hero | undefined)[] = Array.from({ length: entries.length });
+    let loaded = 0;
+    const isStale = () => runRef.current !== run; // a newer batch superseded this one
+    await runPool(entries, LOAD_CONCURRENCY, async (e, i) => {
       try {
         const h = await fetchHeroOnChain(e.id, e.chain);
-        out.push(h);
-        if (runRef.current !== run) return;
-        setHeroes([...out]);
-        setStatus(`${label}: ${out.length}/${entries.length} loaded from chain…`);
+        if (isStale()) return;
+        slots[i] = h;
+        loaded++;
+        setHeroes(slots.filter((x): x is Hero => x !== undefined));
+        setStatus(`${label}: ${loaded}/${entries.length} loaded from chain…`);
       } catch (err: unknown) {
+        if (isStale()) return;
         // Dev-only trace; the user-facing failure is surfaced via setStatus below.
         // Vite strips this from production builds.
         if (import.meta.env.DEV) console.error(e.id, err);
         const message = err instanceof Error ? err.message : String(err);
         setStatus(`hero ${e.id} (${e.chain}) failed: ${message.slice(0, 90)}`);
       }
-    }
-    setStatus(`${label}: ${out.length} heroes, live from chain.`);
+    }, isStale);
+    if (isStale()) return;
+    setStatus(`${label}: ${loaded} heroes, live from chain.`);
   }
 
   const firstN = () => loadBatch(roster.slice(0, count), `first ${count}`);
