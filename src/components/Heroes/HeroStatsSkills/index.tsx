@@ -7,6 +7,14 @@ interface HeroStatsSkillsProps {
 	hero?: Hero;
 }
 
+// The four hero professions in card display order. Each renders an identical name/level row, so the list drives both the chosen-profession highlight and the skills lookup off the same key.
+const PROFESSIONS: { key: string; label: string }[] = [
+	{ key: "mining", label: "Mining" },
+	{ key: "gardening", label: "Gardening" },
+	{ key: "fishing", label: "Fishing" },
+	{ key: "foraging", label: "Foraging" },
+];
+
 /* exported component */
 const HeroStatsSkills = ({ hero }: HeroStatsSkillsProps) => {
 	if (!hero) return null;
@@ -72,50 +80,21 @@ const HeroStatsSkills = ({ hero }: HeroStatsSkillsProps) => {
 				<div className={styles.col}>
 					<h3 style={{ marginTop: ".75rem" }}>Professions</h3>
 					<div className={styles.skillList}>
-						<div
-							className={`${styles.skillName} ${
-								hero.statGenes.profession === "mining" ? styles.chosen : ""
-							}`}
-						>
-							Mining
-							<span className={styles.tooltip}>Main</span>
-						</div>
-						<div className={styles.skillLevel}>
-							{hero.skills.mining.toFixed(1)}
-						</div>
-						<div
-							className={`${styles.skillName} ${
-								hero.statGenes.profession === "gardening" ? styles.chosen : ""
-							}`}
-						>
-							Gardening
-							<span className={styles.tooltip}>Main</span>
-						</div>
-						<div className={styles.skillLevel}>
-							{hero.skills.gardening.toFixed(1)}
-						</div>
-						<div
-							className={`${styles.skillName} ${
-								hero.statGenes.profession === "fishing" ? styles.chosen : ""
-							}`}
-						>
-							Fishing
-							<span className={styles.tooltip}>Main</span>
-						</div>
-						<div className={styles.skillLevel}>
-							{hero.skills.fishing.toFixed(1)}
-						</div>
-						<div
-							className={`${styles.skillName} ${
-								hero.statGenes.profession === "foraging" ? styles.chosen : ""
-							}`}
-						>
-							Foraging
-							<span className={styles.tooltip}>Main</span>
-						</div>
-						<div className={styles.skillLevel}>
-							{hero.skills.foraging.toFixed(1)}
-						</div>
+						{PROFESSIONS.map(({ key, label }) => (
+							<React.Fragment key={key}>
+								<div
+									className={`${styles.skillName} ${
+										hero.statGenes.profession === key ? styles.chosen : ""
+									}`}
+								>
+									{label}
+									<span className={styles.tooltip}>Main</span>
+								</div>
+								<div className={styles.skillLevel}>
+									{hero.skills[key].toFixed(1)}
+								</div>
+							</React.Fragment>
+						))}
 					</div>
 				</div>
 			</div>
