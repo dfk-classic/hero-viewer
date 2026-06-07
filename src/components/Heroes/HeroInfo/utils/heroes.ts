@@ -442,24 +442,27 @@ const statsGenesMap: { [index: number]: string } = {
 	11: "statsUnknown2",
 };
 
+// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x"
+// (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two
+// directions of the conversion can never drift out of sync.
+const KAI_ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
+
 function kai2dec(kai: string) {
-	const ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
-	return ALPHABET.indexOf(kai);
+	return KAI_ALPHABET.indexOf(kai);
 }
 
 function genesToKai(genes: bigint) {
-	const ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
-	const BASE = BigInt(ALPHABET.length);
+	const BASE = BigInt(KAI_ALPHABET.length);
 
 	let buf = "";
 	while (genes >= BASE) {
 		const mod = genes % BASE;
-		buf = ALPHABET[Number(mod)] + buf;
+		buf = KAI_ALPHABET[Number(mod)] + buf;
 		genes = (genes - mod) / BASE;
 	}
 
 	// Add the last 4 (finally).
-	buf = ALPHABET[Number(genes)] + buf;
+	buf = KAI_ALPHABET[Number(genes)] + buf;
 
 	// Pad with leading 0s.
 	buf = buf.padStart(48, "1");
