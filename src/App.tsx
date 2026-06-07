@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeroCard from './components/Heroes/HeroCard';
 import { fetchHeroOnChain } from './chainHero';
-import { loadRoster } from './roster';
+import { loadRoster, samplePicks } from './roster';
 import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
 
@@ -54,15 +54,7 @@ export default function App() {
   }
 
   const firstN = () => loadBatch(roster.slice(0, count), `first ${count}`);
-  const randomN = () => {
-    const picks: RosterEntry[] = [];
-    const used = new Set<number>();
-    while (picks.length < Math.min(count, roster.length)) {
-      const i = Math.floor(Math.random() * roster.length);
-      if (!used.has(i)) { used.add(i); picks.push(roster[i]); }
-    }
-    loadBatch(picks, `random ${count}`);
-  };
+  const randomN = () => loadBatch(samplePicks(roster, count), `random ${count}`);
   const lookup = () => {
     const id = lookupId.trim();
     if (!id) return;

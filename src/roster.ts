@@ -36,3 +36,28 @@ export async function loadRoster(
 		return { entries: [], status: `roster failed to load: ${message.slice(0, 90)}` };
 	}
 }
+
+// Pick up to `count` distinct roster entries at random, without repeats. The
+// target is clamped to the roster length so asking for more heroes than exist
+// returns the whole roster instead of looping forever hunting for distinct
+// indices that cannot exist (count <= 0 or an empty roster yields []). The RNG
+// is injected — defaulting to Math.random, and expected to return values in
+// [0, 1) like Math.random — so the distinct-selection and clamp behaviour can
+// be exercised deterministically without a DOM.
+export function samplePicks(
+	roster: RosterEntry[],
+	count: number,
+	rng: () => number = Math.random,
+): RosterEntry[] {
+	const target = Math.min(count, roster.length);
+	const picks: RosterEntry[] = [];
+	const used = new Set<number>();
+	while (picks.length < target) {
+		const i = Math.floor(rng() * roster.length);
+		if (!used.has(i)) {
+			used.add(i);
+			picks.push(roster[i]);
+		}
+	}
+	return picks;
+}
