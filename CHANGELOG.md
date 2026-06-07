@@ -15,11 +15,13 @@ Notable changes to this project. Format follows [Keep a Changelog](https://keepa
 - Pulled repeated card and stat markup into shared pieces: `StatTab`, `StatColumn`, `GeneRow`, `StatBar`, `SpecialsRow`, `IconBadge`, and a `capPercent` helper. Trait icons and profession rows are now data-driven instead of hand-written one row at a time.
 - Concurrent `getHero` calls now coalesce into a single batched JSON-RPC request.
 - Centralised the zero address behind a shared `ZERO_ADDRESS` constant and gave the summon-cost constants clearer names.
+- CI now runs on Node 24, replacing the end-of-life Node 20.
 
 ### Fixed
 - The roster reports a load failure now instead of sitting on the loading screen forever.
 - Chain values split on CRLF, so names stay clean when the data was authored on Windows.
 - Remaining stamina clamps at zero for recharge times far in the future, rather than going negative.
+- The lockfile installs cleanly on Linux as well as Windows. It was missing the two pure-JS `@emnapi` runtime fallbacks that Linux resolves, so `npm ci` failed in CI while passing locally.
 
 ### Performance
 - Split ethers and React into their own vendor chunks for better caching.
