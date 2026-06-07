@@ -76,19 +76,19 @@ export default function App() {
     <div>
       <h1>DFK Classic: Transcended Hero Viewer</h1>
       <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', margin: '10px 0 6px' }}>
-        <label style={{ fontSize: 13, color: '#8b93a3' }}>show</label>
-        <input style={{ ...inp, width: 64 }} type="number" min={MIN_COUNT} max={MAX_COUNT} value={count}
+        <label htmlFor="hero-count" style={{ fontSize: 13, color: '#8b93a3' }}>show</label>
+        <input id="hero-count" style={{ ...inp, width: 64 }} type="number" min={MIN_COUNT} max={MAX_COUNT} value={count}
                onChange={e => setCount(clampCount(e.target.value))} />
         <button style={btn} onClick={firstN} disabled={!roster.length}>First {count}</button>
         <button style={btn} onClick={randomN} disabled={!roster.length}>Random {count}</button>
         <span style={{ width: 14 }} />
-        <input style={{ ...inp, width: 170 }} placeholder="hero ID…" value={lookupId}
+        <input style={{ ...inp, width: 170 }} aria-label="hero ID" placeholder="hero ID…" value={lookupId}
                onChange={e => setLookupId(e.target.value)}
                onKeyDown={e => e.key === 'Enter' && lookup()} />
         <button style={btn} onClick={lookup}>Look up</button>
         <button style={{ ...btn, color: '#8b93a3' }} onClick={() => { runRef.current++; setHeroes([]); setStatus('cleared.'); }}>Clear</button>
       </div>
-      <div style={{ color: '#8b93a3', fontSize: 12, marginBottom: 14 }}>{status}</div>
+      <div role="status" style={{ color: '#8b93a3', fontSize: 12, marginBottom: 14 }}>{status}</div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18 }}>
         {heroes.map((h, i) => (
           <div key={heroKey(h, i)}>
