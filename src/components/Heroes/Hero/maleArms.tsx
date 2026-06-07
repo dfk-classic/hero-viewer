@@ -4,17 +4,13 @@ import styles from "../HeroCard/styles.module.css";
 /* MALE ARMS */
 import maleLeftarmbtmhighlight from "../../../assets/images/hero/male/LeftArmBtm-highlight.svg";
 import maleLeftarmbtmshadow from "../../../assets/images/hero/male/LeftArmBtm-shadow.svg";
-// import maleLeftarmbtm from '../../../assets/images/hero/male/LeftArmBtm.svg'
 import maleLeftarmtophighlight from "../../../assets/images/hero/male/LeftArmTop-highlight.svg";
 import maleLeftarmtopshadow from "../../../assets/images/hero/male/LeftArmTop-shadow.svg";
-// import maleLeftarmtop from '../../../assets/images/hero/male/LeftArmTop.svg'
 
 import maleRightarmbtmhighlight from "../../../assets/images/hero/male/RightArmBtm-highlight.svg";
 import maleRightarmbtmshadow from "../../../assets/images/hero/male/RightArmBtm-shadow.svg";
-// import maleRightarmbtm from '../../../assets/images/hero/male/RightArmBtm.svg'
 import maleRightarmtophighlight from "../../../assets/images/hero/male/RightArmTop-highlight.svg";
 import maleRightarmtopshadow from "../../../assets/images/hero/male/RightArmTop-shadow.svg";
-// import maleRightarmtop from '../../../assets/images/hero/male/RightArmTop.svg'
 
 import archerLeftArmTop from "../../../assets/images/hero/male/clothes/archer-LeftArmTop.svg";
 import archerLeftArmBottom from "../../../assets/images/hero/male/clothes/archer-LeftArmBtm.svg";
