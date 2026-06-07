@@ -11,13 +11,9 @@ import HeroStatsAbilities from "../HeroStatsAbilities";
 import HeroStatsRecessive from "../HeroStatsRecessive";
 import HeroCardTabs from "../HeroCardTabs";
 import IconBadge from "./IconBadge";
+import SpecialsRow from "./SpecialsRow";
 
-import {
-  elementIcons,
-  backgroundIcons,
-  rarityIcons,
-  genderIcons,
-} from "./heroIcons";
+import { rarityIcons } from "./heroIcons";
 
 import healthIcon from "../../../assets/images/hero/icons/icon-health.png";
 import manaIcon from "../../../assets/images/hero/icons/icon-mana.png";
@@ -189,20 +185,7 @@ const HeroCard = ({
                 <span className={styles.tooltip}>Mana</span>
               </div>
               <div className={styles.heroCardFrame}>
-                <div className={`${styles.specials} ${styles.row}`}>
-                  <IconBadge
-                    src={elementIcons[hero.element]}
-                    label={hero.element}
-                  />
-                  <IconBadge
-                    src={backgroundIcons[hero.visualGenes.background]}
-                    label={hero.background}
-                  />
-                  <IconBadge
-                    src={genderIcons[hero.gender] ?? genderIcons.male}
-                    label={hero.gender}
-                  />
-                </div>
+                <SpecialsRow hero={hero} />
 
                 <div className={styles.heroName}>
                   <span>{hero.name}</span>
@@ -237,20 +220,7 @@ const HeroCard = ({
             </div>
             <div className={styles.heroCardBack}>
               <div className={styles.heroCardFrame}>
-                <div className={`${styles.specials} ${styles.row}`}>
-                  <IconBadge
-                    src={elementIcons[hero.element]}
-                    label={hero.element}
-                  />
-                  <IconBadge
-                    src={backgroundIcons[hero.visualGenes.background]}
-                    label={hero.background}
-                  />
-                  <IconBadge
-                    src={genderIcons[hero.gender] ?? genderIcons.male}
-                    label={hero.gender}
-                  />
-                </div>
+                <SpecialsRow hero={hero} />
 
                 <div className={styles.heroStats}>
                   <div className={styles.heroFrame}>{activePage.content}</div>
