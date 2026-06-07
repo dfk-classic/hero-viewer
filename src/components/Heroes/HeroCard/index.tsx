@@ -44,6 +44,9 @@ import manaIcon from "../../../assets/images/hero/icons/icon-mana.png";
 import survivorIcon from "../../../assets/images/gui/survivor_badge_2x.png";
 import type { Hero as HeroType } from "../../../types/hero";
 
+// How long the hero-id badge shows "copied!" before reverting to the id.
+const COPIED_FEEDBACK_MS = 900;
+
 interface HeroCardProps {
   hero: HeroType;
   isFlipped?: boolean;
@@ -127,7 +130,7 @@ const HeroCard = ({
     el.textContent = "copied!";
     setTimeout(() => {
       el.textContent = original;
-    }, 900);
+    }, COPIED_FEEDBACK_MS);
   };
 
   // Make the whole card a keyboard-operable toggle, but only when it is actually
