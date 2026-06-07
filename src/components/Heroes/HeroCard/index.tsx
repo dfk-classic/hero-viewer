@@ -10,6 +10,7 @@ import HeroStatsGrowth from "../HeroStatsGrowth";
 import HeroStatsAbilities from "../HeroStatsAbilities";
 import HeroStatsRecessive from "../HeroStatsRecessive";
 import HeroCardTabs from "../HeroCardTabs";
+import IconBadge from "./IconBadge";
 
 import {
   elementIcons,
@@ -189,28 +190,18 @@ const HeroCard = ({
               </div>
               <div className={styles.heroCardFrame}>
                 <div className={`${styles.specials} ${styles.row}`}>
-                  <div className={styles.icon}>
-                    {elementIcons[hero.element] && (
-                      <img src={elementIcons[hero.element]} alt="" />
-                    )}
-                    <span className={styles.tooltip}>{hero.element}</span>
-                  </div>
-                  <div className={styles.icon}>
-                    {backgroundIcons[hero.visualGenes.background] && (
-                      <img
-                        src={backgroundIcons[hero.visualGenes.background]}
-                        alt=""
-                      />
-                    )}
-                    <span className={styles.tooltip}>{hero.background}</span>
-                  </div>
-                  <div className={styles.icon}>
-                    <img
-                      src={genderIcons[hero.gender] ?? genderIcons.male}
-                      alt=""
-                    />
-                    <span className={styles.tooltip}>{hero.gender}</span>
-                  </div>
+                  <IconBadge
+                    src={elementIcons[hero.element]}
+                    label={hero.element}
+                  />
+                  <IconBadge
+                    src={backgroundIcons[hero.visualGenes.background]}
+                    label={hero.background}
+                  />
+                  <IconBadge
+                    src={genderIcons[hero.gender] ?? genderIcons.male}
+                    label={hero.gender}
+                  />
                 </div>
 
                 <div className={styles.heroName}>
@@ -228,12 +219,10 @@ const HeroCard = ({
                     <span className={styles.subClass}>{hero.subClass}</span>
                   </div>
                   <div className={styles.cardRarity}>
-                    <div className={styles.icon}>
-                      {rarityIcons[hero.rarity] && (
-                        <img src={rarityIcons[hero.rarity]} alt="" />
-                      )}
-                      <span className={styles.tooltip}>{hero.rarity}</span>
-                    </div>
+                    <IconBadge
+                      src={rarityIcons[hero.rarity]}
+                      label={hero.rarity}
+                    />
                   </div>
                   <div className={styles.level}>
                     Level {hero.level}
@@ -249,28 +238,18 @@ const HeroCard = ({
             <div className={styles.heroCardBack}>
               <div className={styles.heroCardFrame}>
                 <div className={`${styles.specials} ${styles.row}`}>
-                  <div className={styles.icon}>
-                    {elementIcons[hero.element] && (
-                      <img src={elementIcons[hero.element]} alt="" />
-                    )}
-                    <span className={styles.tooltip}>{hero.element}</span>
-                  </div>
-                  <div className={styles.icon}>
-                    {backgroundIcons[hero.visualGenes.background] && (
-                      <img
-                        src={backgroundIcons[hero.visualGenes.background]}
-                        alt=""
-                      />
-                    )}
-                    <span className={styles.tooltip}>{hero.background}</span>
-                  </div>
-                  <div className={styles.icon}>
-                    <img
-                      src={genderIcons[hero.gender] ?? genderIcons.male}
-                      alt=""
-                    />
-                    <span className={styles.tooltip}>{hero.gender}</span>
-                  </div>
+                  <IconBadge
+                    src={elementIcons[hero.element]}
+                    label={hero.element}
+                  />
+                  <IconBadge
+                    src={backgroundIcons[hero.visualGenes.background]}
+                    label={hero.background}
+                  />
+                  <IconBadge
+                    src={genderIcons[hero.gender] ?? genderIcons.male}
+                    label={hero.gender}
+                  />
                 </div>
 
                 <div className={styles.heroStats}>
