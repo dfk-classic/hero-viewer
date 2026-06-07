@@ -22,6 +22,16 @@ describe("convertGenes", () => {
 		expect(decoded.gender).toBeUndefined();
 	});
 
+	it("left-pads short gene values so a high-index trait still aligns", () => {
+		// Encoding only trait 10 yields a number a few kai digits wide, far short of the full 48.
+		// genesToKai must left-pad with zero-equivalent kai before the per-trait slice, otherwise the
+		// dominant nibble would land under the wrong trait. The high trait decodes to its real choice
+		// while every lower, unset trait falls back to its code-0 value (background -> desert).
+		const decoded = convertGenes(genesToBigNumber({ 10: 7 }), visualGenesMap);
+		expect(decoded.backAppendageColor).toBe("6f3a3c");
+		expect(decoded.background).toBe("desert");
+	});
+
 	it("decodes colour and appendage traits across the trait map", () => {
 		// visualGenesMap indices: 1 -> headAppendage, 5 -> hairColor, 7 -> eyeColor, 8 -> skinColor.
 		const decoded = convertGenes(genesToBigNumber({ 1: 16, 5: 7, 7: 14, 8: 2 }), visualGenesMap);
