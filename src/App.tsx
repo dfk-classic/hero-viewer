@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import HeroCard from './components/Heroes/HeroCard';
 import { fetchHeroOnChain } from './chainHero';
+import { loadRoster } from './roster';
+import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
-
-type RosterEntry = { id: string; chain: string };
 
 const btn: React.CSSProperties = {
   background: '#1d2330', color: '#e9e4d8', border: '1px solid #2e3850',
@@ -23,14 +23,11 @@ export default function App() {
   const runRef = useRef(0); // cancels an in-flight batch when a new one starts
 
   useEffect(() => {
-    fetch(import.meta.env.BASE_URL + 'roster.csv').then(r => r.text()).then(t => {
-      const entries = t.trim().split('\n').slice(1).map(l => {
-        const [id, chain] = l.split(',');
-        return { id, chain };
+    loadRoster(() => fetch(import.meta.env.BASE_URL + 'roster.csv').then(r => r.text()))
+      .then(({ entries, status: loadStatus }) => {
+        setRoster(entries);
+        setStatus(loadStatus);
       });
-      setRoster(entries);
-      setStatus(`roster loaded: ${entries.length.toLocaleString()} transcended heroes. Pick a sample.`);
-    });
   }, []);
 
   async function loadBatch(entries: RosterEntry[], label: string) {
