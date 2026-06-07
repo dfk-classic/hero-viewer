@@ -1,4 +1,6 @@
 import React from "react";
+import GeneRow from "../GeneRow";
+import { recessiveRows } from "./recessiveRows";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
 
@@ -7,25 +9,11 @@ interface HeroStatsRecessiveProps {
 	slot: "r1" | "r2" | "r3";
 }
 
-// Recessive genes tab, HONK Marketplace layout and colors. One component per
-// recessive slot. Trait order follows the documented gene encoding; HONK's
-// own display swaps active1/active2 here, which we intentionally do not copy.
-const COLORS = {
-	class: "#e6c15a",
-	subClass: "#d14f69",
-	profession: "#8bc34a",
-	statBoost1: "#ff9800",
-	statBoost2: "#4caf50",
-	active: "#2196f3",
-	passive: "#9c27b0",
-};
-
-const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
-
+// Recessive genes tab, HONK Marketplace layout and colors. One component per recessive slot; the row values and trait order live in recessiveRows so each slot stays a thin render of that shared layout.
 const HeroStatsRecessive = ({ hero, slot }: HeroStatsRecessiveProps) => {
 	const g = hero?.genes?.stat;
 	if (!g) return null;
-	const v = (trait: keyof typeof g) => String(g[trait][slot].name);
+	const groups = recessiveRows(g, slot);
 	return (
 		<div style={{ padding: "0 10px" }}>
 			<div className={styles.col}>
@@ -33,76 +21,23 @@ const HeroStatsRecessive = ({ hero, slot }: HeroStatsRecessiveProps) => {
 					Recessive Genes ({slot.toUpperCase()})
 				</h3>
 				<div className={styles.geneList}>
-					<div className={styles.genePair}>
-						<div className={styles.geneRow}>
-							<div className={styles.geneName}>Class</div>
-							<div className={styles.geneValue} style={{ color: COLORS.class }}>
-								{v("mainClass")}
+					{groups.map((group, i) => {
+						const rows = group.rows.map((row) => (
+							<GeneRow
+								key={row.label}
+								label={row.label}
+								value={row.value}
+								color={row.color}
+							/>
+						));
+						return group.pair ? (
+							<div className={styles.genePair} key={i}>
+								{rows}
 							</div>
-						</div>
-						<div className={styles.geneRow}>
-							<div className={styles.geneName}>Subclass</div>
-							<div
-								className={styles.geneValue}
-								style={{ color: COLORS.subClass }}
-							>
-								{v("subClass")}
-							</div>
-						</div>
-					</div>
-					<div className={styles.geneRow}>
-						<div className={styles.geneName}>Profession</div>
-						<div
-							className={styles.geneValue}
-							style={{ color: COLORS.profession }}
-						>
-							{cap(v("profession"))}
-						</div>
-					</div>
-					<div className={styles.genePair}>
-						<div className={styles.geneRow}>
-							<div className={styles.geneName}>Stat Boost 1</div>
-							<div
-								className={styles.geneValue}
-								style={{ color: COLORS.statBoost1 }}
-							>
-								{v("statBoost1")}
-							</div>
-						</div>
-						<div className={styles.geneRow}>
-							<div className={styles.geneName}>Stat Boost 2</div>
-							<div
-								className={styles.geneValue}
-								style={{ color: COLORS.statBoost2 }}
-							>
-								{v("statBoost2")}
-							</div>
-						</div>
-					</div>
-					<div className={styles.geneRow}>
-						<div className={styles.geneName}>Active 1</div>
-						<div className={styles.geneValue} style={{ color: COLORS.active }}>
-							{v("active1")}
-						</div>
-					</div>
-					<div className={styles.geneRow}>
-						<div className={styles.geneName}>Active 2</div>
-						<div className={styles.geneValue} style={{ color: COLORS.active }}>
-							{v("active2")}
-						</div>
-					</div>
-					<div className={styles.geneRow}>
-						<div className={styles.geneName}>Passive 1</div>
-						<div className={styles.geneValue} style={{ color: COLORS.passive }}>
-							{v("passive1")}
-						</div>
-					</div>
-					<div className={styles.geneRow}>
-						<div className={styles.geneName}>Passive 2</div>
-						<div className={styles.geneValue} style={{ color: COLORS.passive }}>
-							{v("passive2")}
-						</div>
-					</div>
+						) : (
+							<React.Fragment key={i}>{rows}</React.Fragment>
+						);
+					})}
 				</div>
 			</div>
 		</div>
