@@ -14,7 +14,9 @@ export const calculateRemainingStamina = (hero: Hero) => {
 	const finalDiff = diffInSeconds.toObject().seconds;
 
 	if (finalDiff) {
-		return hero.stats.stamina - Math.ceil(finalDiff / secondsPerStaminaPoint);
+		// Stamina is a non-negative game resource; clamp at zero so a recharge time far in the
+		// future can never drive the remaining value below what the UI can meaningfully show.
+		return Math.max(0, hero.stats.stamina - Math.ceil(finalDiff / secondsPerStaminaPoint));
 	} else {
 		return hero.stats.stamina;
 	}
