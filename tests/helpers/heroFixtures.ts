@@ -43,6 +43,10 @@ export interface RawHeroOptions {
 	stamina?: number;
 	startingPrice?: BigNumber | string | number;
 	endingPrice?: BigNumber | string | number;
+	summons?: number;
+	maxSummons?: number;
+	shiny?: boolean;
+	shinyStyle?: number;
 }
 
 // Raw hero id/xp/staminaFullAt arrive on-chain as BigNumber or string; let tests pass plain numbers
@@ -61,8 +65,8 @@ export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 			statGenes: options.statGenes ?? genesToBigNumber({ 0: 1 }),
 			generation: 0,
 			rarity: options.rarity ?? 0,
-			shiny: false,
-			shinyStyle: 0,
+			shiny: options.shiny ?? false,
+			shinyStyle: options.shinyStyle ?? 0,
 		},
 		state: {
 			xp: options.xp !== undefined ? toRaw(options.xp) : BigNumber.from(0),
@@ -75,8 +79,8 @@ export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 			nextSummonTime: BigNumber.from(0),
 			summonerId: 0,
 			assistantId: 0,
-			summons: 0,
-			maxSummons: 10,
+			summons: options.summons ?? 0,
+			maxSummons: options.maxSummons ?? 10,
 		},
 		stats: { ...zeroStatBlock, hp: 0, mp: 0, stamina: options.stamina ?? 25 },
 		primaryStatGrowth: { ...zeroStatBlock },

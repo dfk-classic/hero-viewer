@@ -92,6 +92,38 @@ describe("buildHero", () => {
 		expect(hero.rarity).toBe(name);
 		expect(hero.rarityNum).toBe(rarityNum);
 	});
+
+	it("treats equal non-zero start and end prices as a fixed-price sale, not an auction", () => {
+		// A declining auction needs distinct start/end prices; equal prices are a flat listing, so
+		// onAuction stays false even though both prices parse to a real value.
+		const hero = buildHero(
+			makeRawHero({ startingPrice: "1000000000000000000", endingPrice: "1000000000000000000" }),
+		);
+		expect(hero.auction.onAuction).toBe(false);
+		expect(hero.auction.startingPrice).toBe(1);
+		expect(hero.auction.endingPrice).toBe(1);
+	});
+
+	it.each([
+		[10, 0, 10],
+		[10, 3, 7],
+		[11, 4, 11],
+		[20, 9, 11],
+	])("derives summonsRemaining for maxSummons %i and summons %i", (maxSummons, summons, remaining) => {
+		// Below 11 the remaining count is the literal difference; at 11 or above the value is pinned
+		// to 11, the sentinel for an effectively unlimited summoner.
+		const hero = buildHero(makeRawHero({ maxSummons, summons }));
+		expect(hero.summonsRemaining).toBe(remaining);
+	});
+
+	it("zeroes the shiny style on a non-shiny hero and preserves it on a shiny one", () => {
+		const plain = buildHero(makeRawHero({ shiny: false, shinyStyle: 5 }));
+		expect(plain.shiny).toBe(false);
+		expect(plain.shinyStyle).toBe(0);
+		const shiny = buildHero(makeRawHero({ shiny: true, shinyStyle: 5 }));
+		expect(shiny.shiny).toBe(true);
+		expect(shiny.shinyStyle).toBe(5);
+	});
 });
 
 describe("calculateRequiredXp", () => {
