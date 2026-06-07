@@ -127,6 +127,14 @@ describe("buildHero", () => {
 		expect(shiny.shiny).toBe(true);
 		expect(shiny.shinyStyle).toBe(5);
 	});
+
+	it("derives firstName, lastName and name from the same on-chain info indices", () => {
+		// Regression guard: firstName/lastName were read from a synthetic top-level heroRaw.firstName/heroRaw.lastName that the real ethers getHero tuple never carries, while name read the canonical heroRaw.info.firstName/info.lastName, so on an on-chain-shaped hero the two diverged - name resolved while firstName/lastName came back undefined and the built hero's own name invariant broke. All three now read heroRaw.info.*.
+		const hero = buildHero(makeRawHero({ firstName: 0, lastName: 0 }));
+		expect(hero.firstName).toBeTruthy();
+		expect(hero.lastName).toBeTruthy();
+		expect(hero.name).toBe(`${hero.firstName} ${hero.lastName}`);
+	});
 });
 
 describe("calculateRequiredXp", () => {

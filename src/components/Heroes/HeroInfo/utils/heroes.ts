@@ -558,8 +558,6 @@ interface RawStatBlock {
 
 export interface RawNestedHero {
 	id: bigint | string;
-	firstName?: string | number | bigint;
-	lastName?: string | number | bigint;
 	info: {
 		visualGenes: bigint;
 		statGenes: bigint;
@@ -637,8 +635,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
 		level: num(heroRaw.state.level),
 		xp: num(heroRaw.state.xp),
-		firstName: getFirstName(visualGenes.gender, heroRaw.firstName),
-		lastName: getLastName(heroRaw.lastName),
+		firstName: getFirstName(visualGenes.gender, heroRaw.info.firstName),
+		lastName: getLastName(heroRaw.info.lastName),
 		name: getFullName(
 			visualGenes.gender,
 			heroRaw.info.firstName,
