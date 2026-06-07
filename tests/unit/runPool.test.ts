@@ -1,8 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { runPool } from "../../src/runPool";
 
-// A deferred lets a test hold a worker open until it explicitly resolves it, so
-// we can observe how many workers sit in flight at a chosen moment.
+// A deferred lets a test hold a worker open until it explicitly resolves it, so we can observe how many workers sit in flight at a chosen moment.
 function deferred(): { promise: Promise<void>; resolve: () => void } {
 	let resolve!: () => void;
 	const promise = new Promise<void>((r) => {
@@ -35,8 +34,7 @@ describe("runPool", () => {
 			await gate.promise;
 			active--;
 		});
-		// Both runners start synchronously and block on their gate, so the peak of
-		// 2 is reached before any gate resolves; releasing them lets `run` settle.
+		// Both runners start synchronously and block on their gate, so the peak of 2 is reached before any gate resolves; releasing them lets `run` settle.
 		for (const gate of gates) gate.resolve();
 		await run;
 		expect(peak).toBe(2);

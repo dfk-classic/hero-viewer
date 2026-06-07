@@ -15,18 +15,14 @@ describe("convertGenes", () => {
 	});
 
 	it("decodes the code-0 nibble and leaves traits without a 0 choice undefined", () => {
-		// All-zero genes: background has a code-0 entry (desert); gender starts at code 1, so its
-		// code-0 lookup is intentionally undefined.
+		// All-zero genes: background has a code-0 entry (desert); gender starts at code 1, so its code-0 lookup is intentionally undefined.
 		const decoded = convertGenes(genesToBigNumber({}), visualGenesMap);
 		expect(decoded.background).toBe("desert");
 		expect(decoded.gender).toBeUndefined();
 	});
 
 	it("left-pads short gene values so a high-index trait still aligns", () => {
-		// Encoding only trait 10 yields a number a few kai digits wide, far short of the full 48.
-		// genesToKai must left-pad with zero-equivalent kai before the per-trait slice, otherwise the
-		// dominant nibble would land under the wrong trait. The high trait decodes to its real choice
-		// while every lower, unset trait falls back to its code-0 value (background -> desert).
+		// Encoding only trait 10 yields a number a few kai digits wide, far short of the full 48. genesToKai must left-pad with zero-equivalent kai before the per-trait slice, otherwise the dominant nibble would land under the wrong trait. The high trait decodes to its real choice while every lower, unset trait falls back to its code-0 value (background -> desert).
 		const decoded = convertGenes(genesToBigNumber({ 10: 7 }), visualGenesMap);
 		expect(decoded.backAppendageColor).toBe("6f3a3c");
 		expect(decoded.background).toBe("desert");
@@ -76,8 +72,7 @@ describe("buildHero", () => {
 	});
 
 	it("decodes class, subClass and element from the stat genes", () => {
-		// statsGenesMap indices: 0 -> class, 1 -> subClass, 10 -> element.
-		// summoner (18) / thief sub (2) / dark element (14).
+		// statsGenesMap indices: 0 -> class, 1 -> subClass, 10 -> element. summoner (18) / thief sub (2) / dark element (14).
 		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 0: 18, 1: 2, 10: 14 }) }));
 		expect(hero.class).toBe("summoner");
 		expect(hero.subClass).toBe("thief");
@@ -104,8 +99,7 @@ describe("buildHero", () => {
 	});
 
 	it("treats equal non-zero start and end prices as a fixed-price sale, not an auction", () => {
-		// A declining auction needs distinct start/end prices; equal prices are a flat listing, so
-		// onAuction stays false even though both prices parse to a real value.
+		// A declining auction needs distinct start/end prices; equal prices are a flat listing, so onAuction stays false even though both prices parse to a real value.
 		const hero = buildHero(
 			makeRawHero({ startingPrice: "1000000000000000000", endingPrice: "1000000000000000000" }),
 		);
@@ -120,8 +114,7 @@ describe("buildHero", () => {
 		[11, 4, 11],
 		[20, 9, 11],
 	])("derives summonsRemaining for maxSummons %i and summons %i", (maxSummons, summons, remaining) => {
-		// Below 11 the remaining count is the literal difference; at 11 or above the value is pinned
-		// to 11, the sentinel for an effectively unlimited summoner.
+		// Below 11 the remaining count is the literal difference; at 11 or above the value is pinned to 11, the sentinel for an effectively unlimited summoner.
 		const hero = buildHero(makeRawHero({ maxSummons, summons }));
 		expect(hero.summonsRemaining).toBe(remaining);
 	});
@@ -157,8 +150,7 @@ describe("calculateRequiredXp", () => {
 		[55, 290000],
 		[100, 740000],
 	])("lands on each tier's lower boundary: level %i -> %i xp", (level, expected) => {
-		// Each level sits at the bottom of a piecewise tier, so the value must equal the constant
-		// term of that tier — proving the breakpoints join continuously with no gap or overlap.
+		// Each level sits at the bottom of a piecewise tier, so the value must equal the constant term of that tier — proving the breakpoints join continuously with no gap or overlap.
 		expect(calculateRequiredXp(level)).toBe(expected);
 	});
 });

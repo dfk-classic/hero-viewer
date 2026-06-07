@@ -1,11 +1,7 @@
-// Keyboard handling for the card's tab bar, following the WAI-ARIA tabs pattern
-// with automatic activation: arrow keys move (and select) the adjacent tab,
-// Home/End jump to the ends, and Enter/Space (re)activate the focused tab.
+// Keyboard handling for the card's tab bar, following the WAI-ARIA tabs pattern with automatic activation: arrow keys move (and select) the adjacent tab, Home/End jump to the ends, and Enter/Space (re)activate the focused tab.
 export type TabKeyResult = { index: number; activate: boolean };
 
-// Maps a keydown to the tab that should receive focus and selection. Returns
-// null for keys the tab bar does not own, so their default behaviour (Tab to
-// leave the list, typing, etc.) is left untouched. Indices wrap around the ends.
+// Maps a keydown to the tab that should receive focus and selection. Returns null for keys the tab bar does not own, so their default behaviour (Tab to leave the list, typing, etc.) is left untouched. Indices wrap around the ends.
 export function resolveTabKey(
 	key: string,
 	currentIndex: number,

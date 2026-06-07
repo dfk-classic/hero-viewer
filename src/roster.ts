@@ -1,11 +1,6 @@
 export type RosterEntry = { id: string; chain: string };
 
-// Parse the roster CSV: drop the header row, then split each remaining line into
-// its id and chain columns. Splitting on /\r?\n/ tolerates CRLF files (roster.csv
-// ships with CRLF endings) so chain values never carry a trailing \r, which would
-// otherwise miss the CHAINS lookup and silently route Kaia heroes to DFK Chain.
-// Kept pure and separate from the component so the parsing and the load-failure
-// handling can be exercised without a DOM.
+// Parse the roster CSV: drop the header row, then split each remaining line into its id and chain columns. Splitting on /\r?\n/ tolerates CRLF files (roster.csv ships with CRLF endings) so chain values never carry a trailing \r, which would otherwise miss the CHAINS lookup and silently route Kaia heroes to DFK Chain. Kept pure and separate from the component so the parsing and the load-failure handling can be exercised without a DOM.
 export function parseRoster(csv: string): RosterEntry[] {
 	return csv
 		.trim()
@@ -19,9 +14,7 @@ export function parseRoster(csv: string): RosterEntry[] {
 
 export type RosterLoadResult = { entries: RosterEntry[]; status: string };
 
-// Load and parse the roster, turning any failure into a visible status instead
-// of an unhandled rejection that would leave the UI stuck on "loading roster…".
-// The CSV fetch is injected so the success and failure paths are both testable.
+// Load and parse the roster, turning any failure into a visible status instead of an unhandled rejection that would leave the UI stuck on "loading roster…". The CSV fetch is injected so the success and failure paths are both testable.
 export async function loadRoster(
 	fetchCsv: () => Promise<string>,
 ): Promise<RosterLoadResult> {
@@ -37,13 +30,7 @@ export async function loadRoster(
 	}
 }
 
-// Pick up to `count` distinct roster entries at random, without repeats. The
-// target is clamped to the roster length so asking for more heroes than exist
-// returns the whole roster instead of looping forever hunting for distinct
-// indices that cannot exist (count <= 0 or an empty roster yields []). The RNG
-// is injected — defaulting to Math.random, and expected to return values in
-// [0, 1) like Math.random — so the distinct-selection and clamp behaviour can
-// be exercised deterministically without a DOM.
+// Pick up to `count` distinct roster entries at random, without repeats. The target is clamped to the roster length so asking for more heroes than exist returns the whole roster instead of looping forever hunting for distinct indices that cannot exist (count <= 0 or an empty roster yields []). The RNG is injected — defaulting to Math.random, and expected to return values in [0, 1) like Math.random — so the distinct-selection and clamp behaviour can be exercised deterministically without a DOM.
 export function samplePicks(
 	roster: RosterEntry[],
 	count: number,

@@ -28,8 +28,7 @@ describe("calculateRemainingStamina", () => {
 	});
 
 	it("clamps at zero when the recharge time is further out than the stamina pool", () => {
-		// 12000s out -> 10 points recharging, but the hero only holds 5; the result must not go
-		// negative. Regression guard for the non-negative-stamina invariant.
+		// 12000s out -> 10 points recharging, but the hero only holds 5; the result must not go negative. Regression guard for the non-negative-stamina invariant.
 		const hero = makeHero({ stamina: 5, staminaFullAt: nowSeconds() + 12000 });
 		expect(calculateRemainingStamina(hero)).toBe(0);
 	});

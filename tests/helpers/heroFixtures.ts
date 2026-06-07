@@ -4,10 +4,7 @@ import type { RawNestedHero } from "../../src/components/Heroes/HeroInfo/utils/h
 import type { Hero } from "../../src/types/hero";
 import { ZERO_ADDRESS } from "../../src/constants";
 
-// Encode a hero gene string from a sparse {traitIndex: dominantCode} map. convertGenes reads the
-// dominant nibble of each 4-kai trait group, which is the last char of the group (kai index i*4+3).
-// In the 48-char base-32 (kai) string that is place value 32^(44 - 4*i), so each trait's dominant
-// code lands there and every other nibble stays 0.
+// Encode a hero gene string from a sparse {traitIndex: dominantCode} map. convertGenes reads the dominant nibble of each 4-kai trait group, which is the last char of the group (kai index i*4+3). In the 48-char base-32 (kai) string that is place value 32^(44 - 4*i), so each trait's dominant code lands there and every other nibble stays 0.
 export function encodeGenes(dominant: Record<number, number>): bigint {
 	let genes = 0n;
 	for (const [index, code] of Object.entries(dominant)) {
@@ -49,14 +46,12 @@ export interface RawHeroOptions {
 	shinyStyle?: number;
 }
 
-// Raw hero id/xp/staminaFullAt arrive on-chain as BigNumber or string; let tests pass plain numbers
-// for readability and coerce them to BigNumber so the raw hero keeps its real on-chain shape.
+// Raw hero id/xp/staminaFullAt arrive on-chain as BigNumber or string; let tests pass plain numbers for readability and coerce them to BigNumber so the raw hero keeps its real on-chain shape.
 function toRaw(value: BigNumber | string | number): BigNumber | string {
 	return typeof value === "number" ? BigNumber.from(value) : value;
 }
 
-// Build a complete on-chain-shaped raw hero. Defaults decode to a male/forest knight so the gene
-// path is exercised with valid lookups; every field a test cares about is overridable.
+// Build a complete on-chain-shaped raw hero. Defaults decode to a male/forest knight so the gene path is exercised with valid lookups; every field a test cares about is overridable.
 export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 	return {
 		id: options.id !== undefined ? toRaw(options.id) : BigNumber.from(1),

@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { resolveTabKey } from "../../src/components/Heroes/HeroCardTabs/tabKeys";
 
-// The tab bar is keyboard-operable via the WAI-ARIA tabs pattern. Before this
-// helper existed the tabs were click-only divs, unreachable by keyboard users;
-// these anchors guard the key -> target-index mapping that restores that access.
+// The tab bar is keyboard-operable via the WAI-ARIA tabs pattern. Before this helper existed the tabs were click-only divs, unreachable by keyboard users; these anchors guard the key -> target-index mapping that restores that access.
 describe("resolveTabKey", () => {
 	it("advances to the next tab on ArrowRight/ArrowDown and selects it", () => {
 		expect(resolveTabKey("ArrowRight", 0, 5)).toEqual({ index: 1, activate: true });

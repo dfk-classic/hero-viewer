@@ -5,10 +5,7 @@ import {
 	getFullName,
 } from "../../src/components/Heroes/HeroInfo/utils/names.js";
 
-// The name tables are fixed, append-only data files, so a handful of known
-// index -> value anchors pin the lookup behaviour without depending on the full
-// list. maleFirstNames[0]="Dernere", femaleFirstNames[0]="Alexandria",
-// lastNames[0]="Ironsteam" are the first entries of each array.
+// The name tables are fixed, append-only data files, so a handful of known index -> value anchors pin the lookup behaviour without depending on the full list. maleFirstNames[0]="Dernere", femaleFirstNames[0]="Alexandria", lastNames[0]="Ironsteam" are the first entries of each array.
 describe("getFirstName", () => {
 	it("returns the male first name at the given index", () => {
 		expect(getFirstName("male", 0)).toBe("Dernere");

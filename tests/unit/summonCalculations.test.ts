@@ -1,8 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { calculateHeroSummonCost } from "../../src/components/Heroes/utils/summonCalculations";
 
-// Cost model: base 6 + 2 per hero already summoned + 10 per summoner generation.
-// A generation-0 hero is capped at 30; any higher generation is uncapped.
+// Cost model: base 6 + 2 per hero already summoned + 10 per summoner generation. A generation-0 hero is capped at 30; any higher generation is uncapped.
 describe("calculateHeroSummonCost", () => {
 	it("returns the base cost for a fresh gen-0 summoner", () => {
 		expect(calculateHeroSummonCost(0, 0)).toBe(6);

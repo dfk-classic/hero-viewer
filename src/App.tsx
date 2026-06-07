@@ -7,9 +7,7 @@ import { runPool } from './runPool';
 import type { RosterEntry } from './roster';
 import type { Hero } from './types/hero';
 
-// How many hero fetches run against the chain at once. The viewer reads from a
-// shared public RPC, so this caps in-flight requests to stay polite while still
-// loading a batch far faster than the old one-at-a-time walk.
+// How many hero fetches run against the chain at once. The viewer reads from a shared public RPC, so this caps in-flight requests to stay polite while still loading a batch far faster than the old one-at-a-time walk.
 const LOAD_CONCURRENCY = 6;
 
 const btn: React.CSSProperties = {
@@ -40,8 +38,7 @@ export default function App() {
   async function loadBatch(entries: RosterEntry[], label: string) {
     const run = ++runRef.current;
     setHeroes([]);
-    // Results land in roster-position slots so out-of-order completions still
-    // render in roster order; `loaded` counts successes for the status line.
+    // Results land in roster-position slots so out-of-order completions still render in roster order; `loaded` counts successes for the status line.
     const slots: (Hero | undefined)[] = Array.from({ length: entries.length });
     let loaded = 0;
     const isStale = () => runRef.current !== run; // a newer batch superseded this one
@@ -55,8 +52,7 @@ export default function App() {
         setStatus(`${label}: ${loaded}/${entries.length} loaded from chain…`);
       } catch (err: unknown) {
         if (isStale()) return;
-        // Dev-only trace; the user-facing failure is surfaced via setStatus below.
-        // Vite strips this from production builds.
+        // Dev-only trace; the user-facing failure is surfaced via setStatus below. Vite strips this from production builds.
         if (import.meta.env.DEV) console.error(e.id, err);
         const message = err instanceof Error ? err.message : String(err);
         setStatus(`hero ${e.id} (${e.chain}) failed: ${message.slice(0, 90)}`);

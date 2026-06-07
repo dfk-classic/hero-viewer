@@ -1,6 +1,4 @@
-// Fetch a hero straight from chain and shape it with omer-bar's buildHero.
-// Routes to the right chain: DFK Chain (Crystalvale) or Kaia (Serendale);
-// same getHero struct on both HeroCore diamonds.
+// Fetch a hero straight from chain and shape it with omer-bar's buildHero. Routes to the right chain: DFK Chain (Crystalvale) or Kaia (Serendale); same getHero struct on both HeroCore diamonds.
 import { ethers } from 'ethers';
 import buildHero, { type RawNestedHero } from './components/Heroes/HeroInfo/utils/heroes';
 import type { Hero } from './types/hero';
@@ -41,8 +39,7 @@ export function contractFor(chain: string): ethers.Contract {
 
 export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain'): Promise<Hero> {
   const raw = await contractFor(chain).getHero(heroId);
-  // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName;
-  // ethers tuples only expose the nested form, so alias the flat fields.
+  // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName; ethers tuples only expose the nested form, so alias the flat fields.
   const heroRaw: RawNestedHero = {
     id: raw.id,
     summoningInfo: raw.summoningInfo,

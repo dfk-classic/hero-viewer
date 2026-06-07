@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { translateGenes } from "../../src/components/Heroes/HeroInfo/utils/geneTranslator";
 
-// Pack one trait's four kai slots into the full 48-digit base-32 gene integer.
-// Trait t occupies digits [t*4 .. t*4+3] counted from the most significant end;
-// the dominant slot sits at place value 32^(44 - 4t) and the recessives r1/r2/r3
-// climb one place each above it. Summing per-trait packs builds a whole gene.
+// Pack one trait's four kai slots into the full 48-digit base-32 gene integer. Trait t occupies digits [t*4 .. t*4+3] counted from the most significant end; the dominant slot sits at place value 32^(44 - 4t) and the recessives r1/r2/r3 climb one place each above it. Summing per-trait packs builds a whole gene.
 const encodeTrait = (
 	traitIndex: number,
 	slots: { dominant: number; r1?: number; r2?: number; r3?: number },
@@ -49,8 +46,7 @@ describe("translateGenes", () => {
 	});
 
 	it("falls back to a prefixed raw label when a code has no mapped name", () => {
-		// 12 is not a class code; element 1 is not a mapped element. Both fall back to
-		// "<prefix><raw>" so the card still renders something deterministic.
+		// 12 is not a class code; element 1 is not a mapped element. Both fall back to "<prefix><raw>" so the card still renders something deterministic.
 		const statGenes =
 			encodeTrait(0, { dominant: 12 }) + encodeTrait(10, { dominant: 1 });
 		const { stat } = translateGenes(statGenes, NO_GENES);
@@ -59,8 +55,7 @@ describe("translateGenes", () => {
 	});
 
 	it("decodes mapped visual traits and leaves style/colour traits numeric", () => {
-		// gender (visual trait 0) dominant 1 -> male, background (trait 3) dominant 2 -> forest,
-		// hairColor (trait 5) has no mapper so its raw code passes through unchanged.
+		// gender (visual trait 0) dominant 1 -> male, background (trait 3) dominant 2 -> forest, hairColor (trait 5) has no mapper so its raw code passes through unchanged.
 		const visualGenes =
 			encodeTrait(0, { dominant: 1 }) +
 			encodeTrait(3, { dominant: 2 }) +
