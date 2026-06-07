@@ -5,14 +5,18 @@ import { ethers } from 'ethers';
 import buildHero, { type RawNestedHero } from './components/Heroes/HeroInfo/utils/heroes';
 import type { Hero } from './types/hero';
 
-const CHAINS: Record<string, { rpc: string; herocore: string }> = {
+const CHAINS: Record<string, { rpc: string; herocore: string; chainId: number; name: string }> = {
   dfkchain: {
     rpc: 'https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc',
     herocore: '0xEb9B61B145D6489Be575D3603F4a704810e143dF',
+    chainId: 53935,
+    name: 'dfkchain',
   },
   kaia: {
     rpc: 'https://kaia.rpc.defikingdoms.com/',
     herocore: '0x268CC8248FFB72Cd5F3e73A9a20Fa2FF40EfbA61',
+    chainId: 8217,
+    name: 'kaia',
   },
 };
 
@@ -22,10 +26,14 @@ const heroABI = [
 ];
 
 const contracts: Record<string, ethers.Contract> = {};
-function contractFor(chain: string) {
+export function contractFor(chain: string): ethers.Contract {
   if (!contracts[chain]) {
     const cfg = CHAINS[chain] || CHAINS.dfkchain;
-    const provider = new ethers.providers.StaticJsonRpcProvider(cfg.rpc);
+    // Pin the network at construction so the provider never spends an eth_chainId round-trip auto-detecting the chain, and batch the concurrent getHero calls a loadBatch fires (see runPool) into a single JSON-RPC request rather than one HTTP call per hero. The pinned network also makes detectNetwork static, so this replaces the former StaticJsonRpcProvider while adding batching.
+    const provider = new ethers.providers.JsonRpcBatchProvider(cfg.rpc, {
+      chainId: cfg.chainId,
+      name: cfg.name,
+    });
     contracts[chain] = new ethers.Contract(cfg.herocore, heroABI, provider);
   }
   return contracts[chain];
