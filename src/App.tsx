@@ -43,7 +43,9 @@ export default function App() {
         setHeroes([...out]);
         setStatus(`${label}: ${out.length}/${entries.length} loaded from chain…`);
       } catch (err: unknown) {
-        console.error(e.id, err);
+        // Dev-only trace; the user-facing failure is surfaced via setStatus below.
+        // Vite strips this from production builds.
+        if (import.meta.env.DEV) console.error(e.id, err);
         const message = err instanceof Error ? err.message : String(err);
         setStatus(`hero ${e.id} (${e.chain}) failed: ${message.slice(0, 90)}`);
       }
