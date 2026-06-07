@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import buildHero from "../../src/components/Heroes/HeroInfo/utils/heroes";
 import type { RawNestedHero } from "../../src/components/Heroes/HeroInfo/utils/heroes";
 import type { Hero } from "../../src/types/hero";
@@ -13,8 +12,8 @@ export function encodeGenes(dominant: Record<number, number>): bigint {
 	return genes;
 }
 
-export function genesToBigNumber(dominant: Record<number, number>): BigNumber {
-	return BigNumber.from(encodeGenes(dominant).toString());
+export function genesToBigNumber(dominant: Record<number, number>): bigint {
+	return encodeGenes(dominant);
 }
 
 const zeroStatBlock = {
@@ -29,32 +28,32 @@ const zeroStatBlock = {
 };
 
 export interface RawHeroOptions {
-	id?: BigNumber | string | number;
-	visualGenes?: BigNumber;
-	statGenes?: BigNumber;
+	id?: bigint | string | number;
+	visualGenes?: bigint;
+	statGenes?: bigint;
 	rarity?: string | number;
-	xp?: BigNumber | string | number;
+	xp?: bigint | string | number;
 	level?: number;
-	staminaFullAt?: BigNumber | string | number;
+	staminaFullAt?: bigint | string | number;
 	currentQuest?: string;
 	stamina?: number;
-	startingPrice?: BigNumber | string | number;
-	endingPrice?: BigNumber | string | number;
+	startingPrice?: bigint | string | number;
+	endingPrice?: bigint | string | number;
 	summons?: number;
 	maxSummons?: number;
 	shiny?: boolean;
 	shinyStyle?: number;
 }
 
-// Raw hero id/xp/staminaFullAt arrive on-chain as BigNumber or string; let tests pass plain numbers for readability and coerce them to BigNumber so the raw hero keeps its real on-chain shape.
-function toRaw(value: BigNumber | string | number): BigNumber | string {
-	return typeof value === "number" ? BigNumber.from(value) : value;
+// Raw hero id/xp/staminaFullAt arrive on-chain as bigint or string; let tests pass plain numbers for readability and coerce them to bigint so the raw hero keeps its real on-chain shape.
+function toRaw(value: bigint | string | number): bigint | string {
+	return typeof value === "number" ? BigInt(value) : value;
 }
 
 // Build a complete on-chain-shaped raw hero. Defaults decode to a male/forest knight so the gene path is exercised with valid lookups; every field a test cares about is overridable.
 export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 	return {
-		id: options.id !== undefined ? toRaw(options.id) : BigNumber.from(1),
+		id: options.id !== undefined ? toRaw(options.id) : BigInt(1),
 		info: {
 			visualGenes: options.visualGenes ?? genesToBigNumber({ 0: 1, 3: 2 }),
 			statGenes: options.statGenes ?? genesToBigNumber({ 0: 1 }),
@@ -64,14 +63,14 @@ export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 			shinyStyle: options.shinyStyle ?? 0,
 		},
 		state: {
-			xp: options.xp !== undefined ? toRaw(options.xp) : BigNumber.from(0),
-			staminaFullAt: options.staminaFullAt !== undefined ? toRaw(options.staminaFullAt) : BigNumber.from(0),
+			xp: options.xp !== undefined ? toRaw(options.xp) : BigInt(0),
+			staminaFullAt: options.staminaFullAt !== undefined ? toRaw(options.staminaFullAt) : BigInt(0),
 			level: options.level ?? 1,
 			currentQuest: options.currentQuest ?? ZERO_ADDRESS,
 		},
 		summoningInfo: {
-			summonedTime: BigNumber.from(0),
-			nextSummonTime: BigNumber.from(0),
+			summonedTime: BigInt(0),
+			nextSummonTime: BigInt(0),
 			summonerId: 0,
 			assistantId: 0,
 			summons: options.summons ?? 0,

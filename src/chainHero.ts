@@ -27,11 +27,9 @@ const contracts: Record<string, ethers.Contract> = {};
 export function contractFor(chain: string): ethers.Contract {
   if (!contracts[chain]) {
     const cfg = CHAINS[chain] || CHAINS.dfkchain;
-    // Pin the network at construction so the provider never spends an eth_chainId round-trip auto-detecting the chain, and batch the concurrent getHero calls a loadBatch fires (see runPool) into a single JSON-RPC request rather than one HTTP call per hero. The pinned network also makes detectNetwork static, so this replaces the former StaticJsonRpcProvider while adding batching.
-    const provider = new ethers.providers.JsonRpcBatchProvider(cfg.rpc, {
-      chainId: cfg.chainId,
-      name: cfg.name,
-    });
+    // Pin the network at construction via staticNetwork so the provider never spends an eth_chainId round-trip auto-detecting the chain, and let JsonRpcProvider coalesce the concurrent getHero calls a loadBatch fires (see runPool) into one JSON-RPC request rather than one HTTP call per hero (v6 batches by default).
+    const network = new ethers.Network(cfg.name, cfg.chainId);
+    const provider = new ethers.JsonRpcProvider(cfg.rpc, network, { staticNetwork: network });
     contracts[chain] = new ethers.Contract(cfg.herocore, heroABI, provider);
   }
   return contracts[chain];

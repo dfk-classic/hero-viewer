@@ -2,10 +2,9 @@ import { describe, it, expect } from "vitest";
 import { ethers } from "ethers";
 import { contractFor } from "../../src/chainHero";
 
-// `.provider` is typed as the abstract Provider, which has no synchronous network getter; narrow to the concrete batch provider we construct. The instanceof assertion in the first test backs this cast for every chain.
-function providerOf(chain: string): ethers.providers.JsonRpcBatchProvider {
-	const { provider } = contractFor(chain);
-	return provider as ethers.providers.JsonRpcBatchProvider;
+// A Contract's `.runner` is typed as the abstract ContractRunner, which has no synchronous network getter; narrow to the concrete JsonRpcProvider we construct it with. The instanceof assertion in the batching test backs this cast for every chain.
+function providerOf(chain: string): ethers.JsonRpcProvider {
+	return contractFor(chain).runner as ethers.JsonRpcProvider;
 }
 
 describe("contractFor", () => {
@@ -18,24 +17,24 @@ describe("contractFor", () => {
 		expect(contractFor("dfkchain")).not.toBe(contractFor("kaia"));
 	});
 
-	it("builds a batching provider so concurrent getHero calls coalesce into one request", () => {
-		expect(providerOf("dfkchain")).toBeInstanceOf(ethers.providers.JsonRpcBatchProvider);
+	it("builds a JsonRpcProvider so concurrent getHero calls coalesce into one batched request", () => {
+		expect(providerOf("dfkchain")).toBeInstanceOf(ethers.JsonRpcProvider);
 	});
 
 	it("pins the DFK Chain network so no eth_chainId round-trip is needed", () => {
-		// `_network` is populated synchronously only when a network is pinned at construction; an unpinned provider leaves `network` undefined until an eth_chainId round-trip resolves, so reading it here both proves the pin and guards against a regression that drops it.
-		const network = providerOf("dfkchain").network;
-		expect(network.chainId).toBe(53935);
+		// `_network` resolves synchronously only when a network is pinned at construction via staticNetwork; an unpinned provider defers it to an eth_chainId round-trip, so reading it here both proves the pin and guards against a regression that drops it. Under ethers v6 chainId is a bigint, so the literal must be too.
+		const network = providerOf("dfkchain")._network;
+		expect(network.chainId).toBe(53935n);
 		expect(network.name).toBe("dfkchain");
 	});
 
 	it("pins the Kaia network id", () => {
-		const network = providerOf("kaia").network;
-		expect(network.chainId).toBe(8217);
+		const network = providerOf("kaia")._network;
+		expect(network.chainId).toBe(8217n);
 		expect(network.name).toBe("kaia");
 	});
 
 	it("falls back to the DFK Chain config for an unknown chain", () => {
-		expect(providerOf("bogus").network.chainId).toBe(53935);
+		expect(providerOf("bogus")._network.chainId).toBe(53935n);
 	});
 });
