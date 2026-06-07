@@ -15,6 +15,18 @@ describe("parseRoster", () => {
 	it("returns an empty list for a header-only roster", () => {
 		expect(parseRoster("id,chain")).toEqual([]);
 	});
+
+	it("strips CRLF line endings so chain values stay clean", () => {
+		// Regression guard: roster.csv ships with CRLF endings. Splitting on "\n"
+		// alone leaves a trailing "\r" on every chain ("kaia\r"), which misses the
+		// CHAINS lookup in chainHero and silently routes Kaia heroes to DFK Chain.
+		const crlf = "id,chain\r\n1,dfkchain\r\n2,kaia\r\n3,dfkchain";
+		expect(parseRoster(crlf)).toEqual([
+			{ id: "1", chain: "dfkchain" },
+			{ id: "2", chain: "kaia" },
+			{ id: "3", chain: "dfkchain" },
+		]);
+	});
 });
 
 describe("loadRoster", () => {
