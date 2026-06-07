@@ -11,32 +11,12 @@ import HeroStatsAbilities from "../HeroStatsAbilities";
 import HeroStatsRecessive from "../HeroStatsRecessive";
 import HeroCardTabs from "../HeroCardTabs";
 
-import femaleIcon from "../../../assets/images/hero/icons/icon-female.png";
-import maleIcon from "../../../assets/images/hero/icons/icon-male.png";
-
-import fireIcon from "../../../assets/images/hero/icons/element-fire.png";
-import waterIcon from "../../../assets/images/hero/icons/element-water.png";
-import earthIcon from "../../../assets/images/hero/icons/element-earth.png";
-import windIcon from "../../../assets/images/hero/icons/element-wind.png";
-import lightningIcon from "../../../assets/images/hero/icons/element-lightning.png";
-import iceIcon from "../../../assets/images/hero/icons/element-ice.png";
-import lightIcon from "../../../assets/images/hero/icons/element-light.png";
-import darkIcon from "../../../assets/images/hero/icons/element-dark.png";
-
-import arcticIcon from "../../../assets/images/hero/icons/icon-arctic.png";
-import cityIcon from "../../../assets/images/hero/icons/icon-city.png";
-import desertIcon from "../../../assets/images/hero/icons/icon-desert.png";
-import forestIcon from "../../../assets/images/hero/icons/icon-forest.png";
-import islandIcon from "../../../assets/images/hero/icons/icon-island.png";
-import mountainIcon from "../../../assets/images/hero/icons/icon-mountains.png";
-import plainsIcon from "../../../assets/images/hero/icons/icon-plains.png";
-import swampIcon from "../../../assets/images/hero/icons/icon-swamp.png";
-
-import commonIcon from "../../../assets/images/hero/icons/rarity-common.png";
-import uncommonIcon from "../../../assets/images/hero/icons/rarity-uncommon.png";
-import rareIcon from "../../../assets/images/hero/icons/rarity-rare.png";
-import legendaryIcon from "../../../assets/images/hero/icons/rarity-legendary.png";
-import mythicIcon from "../../../assets/images/hero/icons/rarity-mythic.png";
+import {
+  elementIcons,
+  backgroundIcons,
+  rarityIcons,
+  genderIcons,
+} from "./heroIcons";
 
 import healthIcon from "../../../assets/images/hero/icons/icon-health.png";
 import manaIcon from "../../../assets/images/hero/icons/icon-mana.png";
@@ -210,48 +190,23 @@ const HeroCard = ({
               <div className={styles.heroCardFrame}>
                 <div className={`${styles.specials} ${styles.row}`}>
                   <div className={styles.icon}>
-                    {hero.element === "fire" && <img src={fireIcon} alt="" />}
-                    {hero.element === "water" && <img src={waterIcon} alt="" />}
-                    {hero.element === "earth" && <img src={earthIcon} alt="" />}
-                    {hero.element === "wind" && <img src={windIcon} alt="" />}
-                    {hero.element === "lightning" && (
-                      <img src={lightningIcon} alt="" />
+                    {elementIcons[hero.element] && (
+                      <img src={elementIcons[hero.element]} alt="" />
                     )}
-                    {hero.element === "ice" && <img src={iceIcon} alt="" />}
-                    {hero.element === "light" && <img src={lightIcon} alt="" />}
-                    {hero.element === "dark" && <img src={darkIcon} alt="" />}
                     <span className={styles.tooltip}>{hero.element}</span>
                   </div>
                   <div className={styles.icon}>
-                    {hero.visualGenes.background === "arctic" && (
-                      <img src={arcticIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "city" && (
-                      <img src={cityIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "desert" && (
-                      <img src={desertIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "forest" && (
-                      <img src={forestIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "island" && (
-                      <img src={islandIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "mountains" && (
-                      <img src={mountainIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "plains" && (
-                      <img src={plainsIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "swamp" && (
-                      <img src={swampIcon} alt="" />
+                    {backgroundIcons[hero.visualGenes.background] && (
+                      <img
+                        src={backgroundIcons[hero.visualGenes.background]}
+                        alt=""
+                      />
                     )}
                     <span className={styles.tooltip}>{hero.background}</span>
                   </div>
                   <div className={styles.icon}>
                     <img
-                      src={hero.gender === "female" ? femaleIcon : maleIcon}
+                      src={genderIcons[hero.gender] ?? genderIcons.male}
                       alt=""
                     />
                     <span className={styles.tooltip}>{hero.gender}</span>
@@ -274,18 +229,8 @@ const HeroCard = ({
                   </div>
                   <div className={styles.cardRarity}>
                     <div className={styles.icon}>
-                      {hero.rarity === "common" && (
-                        <img src={commonIcon} alt="" />
-                      )}
-                      {hero.rarity === "uncommon" && (
-                        <img src={uncommonIcon} alt="" />
-                      )}
-                      {hero.rarity === "rare" && <img src={rareIcon} alt="" />}
-                      {hero.rarity === "legendary" && (
-                        <img src={legendaryIcon} alt="" />
-                      )}
-                      {hero.rarity === "mythic" && (
-                        <img src={mythicIcon} alt="" />
+                      {rarityIcons[hero.rarity] && (
+                        <img src={rarityIcons[hero.rarity]} alt="" />
                       )}
                       <span className={styles.tooltip}>{hero.rarity}</span>
                     </div>
@@ -305,48 +250,23 @@ const HeroCard = ({
               <div className={styles.heroCardFrame}>
                 <div className={`${styles.specials} ${styles.row}`}>
                   <div className={styles.icon}>
-                    {hero.element === "fire" && <img src={fireIcon} alt="" />}
-                    {hero.element === "water" && <img src={waterIcon} alt="" />}
-                    {hero.element === "earth" && <img src={earthIcon} alt="" />}
-                    {hero.element === "wind" && <img src={windIcon} alt="" />}
-                    {hero.element === "lightning" && (
-                      <img src={lightningIcon} alt="" />
+                    {elementIcons[hero.element] && (
+                      <img src={elementIcons[hero.element]} alt="" />
                     )}
-                    {hero.element === "ice" && <img src={iceIcon} alt="" />}
-                    {hero.element === "light" && <img src={lightIcon} alt="" />}
-                    {hero.element === "dark" && <img src={darkIcon} alt="" />}
                     <span className={styles.tooltip}>{hero.element}</span>
                   </div>
                   <div className={styles.icon}>
-                    {hero.visualGenes.background === "arctic" && (
-                      <img src={arcticIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "city" && (
-                      <img src={cityIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "desert" && (
-                      <img src={desertIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "forest" && (
-                      <img src={forestIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "island" && (
-                      <img src={islandIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "mountains" && (
-                      <img src={mountainIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "plains" && (
-                      <img src={plainsIcon} alt="" />
-                    )}
-                    {hero.visualGenes.background === "swamp" && (
-                      <img src={swampIcon} alt="" />
+                    {backgroundIcons[hero.visualGenes.background] && (
+                      <img
+                        src={backgroundIcons[hero.visualGenes.background]}
+                        alt=""
+                      />
                     )}
                     <span className={styles.tooltip}>{hero.background}</span>
                   </div>
                   <div className={styles.icon}>
                     <img
-                      src={hero.gender === "female" ? femaleIcon : maleIcon}
+                      src={genderIcons[hero.gender] ?? genderIcons.male}
                       alt=""
                     />
                     <span className={styles.tooltip}>{hero.gender}</span>
