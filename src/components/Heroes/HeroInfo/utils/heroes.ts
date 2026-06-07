@@ -441,16 +441,14 @@ const statsGenesMap: { [index: number]: string } = {
 	11: "statsUnknown2",
 };
 
-// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x"
-// (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two
-// directions of the conversion can never drift out of sync.
+// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x" (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two directions of the conversion can never drift out of sync.
 const KAI_ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
 
-function kai2dec(kai: string) {
+function kai2dec(kai: string): number {
 	return KAI_ALPHABET.indexOf(kai);
 }
 
-function genesToKai(genes: bigint) {
+function genesToKai(genes: bigint): string {
 	const BASE = BigInt(KAI_ALPHABET.length);
 
 	let buf = "";
@@ -472,7 +470,7 @@ function genesToKai(genes: bigint) {
 export function convertGenes(
 	_genes: bigint,
 	genesMap: { [index: number]: string }
-) {
+): { [index: string]: string | number } {
 	// First, convert the genes to kai, then drop the grouping spaces.
 	const rawKai = genesToKai(_genes).split(" ").join("");
 
@@ -487,8 +485,8 @@ export function convertGenes(
 	return genes;
 }
 
-export const calculateRequiredXp = (level: number) => {
-	let xpNeeded;
+export const calculateRequiredXp = (level: number): number => {
+	let xpNeeded: number;
 	const nextLevel = level + 1;
 	switch (true) {
 		case level < 6:
