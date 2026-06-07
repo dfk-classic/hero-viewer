@@ -474,23 +474,17 @@ export function convertGenes(
 	_genes: BigNumber,
 	genesMap: { [index: number]: string }
 ) {
-	// First, convert the genes to kai.
-	const rawKai = genesToKai(BigInt(_genes.toString()))
-		.split(" ")
-		.join("");
+	// First, convert the genes to kai, then drop the grouping spaces.
+	const rawKai = genesToKai(BigInt(_genes.toString())).split(" ").join("");
 
 	const genes: { [index: string]: string | number } = {};
 
-	// Remove spaces, and get every 4th character.
-	for (const k in rawKai.split("")) {
-		if (Object.prototype.hasOwnProperty.call(rawKai, k)) {
-			const trait = genesMap[Math.floor(Number(k) / 4)];
-
-			const kai = rawKai[k];
-			const valueNum = kai2dec(kai);
-
-			genes[trait] = choices[trait][valueNum];
-		}
+	// Each trait owns a 4-kai group. Walk every character and let later ones overwrite earlier
+	// ones, so the dominant nibble — the 4th, highest place-value char of the group — is what
+	// survives for each trait.
+	for (let i = 0; i < rawKai.length; i++) {
+		const trait = genesMap[Math.floor(i / 4)];
+		genes[trait] = choices[trait][kai2dec(rawKai[i])];
 	}
 
 	return genes;
