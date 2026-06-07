@@ -234,8 +234,6 @@ const getInfo = (mainClass: string | number): GetInfoProps => {
 };
 
 const Appendage = ({ overlay, stroke, baseString, backId }: { base?: string; overlay?: string; stroke?: string; baseString?: string; backId?: string | number }) => {
-  // const Base = props.base
-
   return (
     <React.Fragment>
       <img src={overlay} className={styles.overlay} alt="" />
@@ -253,7 +251,7 @@ const Appendage = ({ overlay, stroke, baseString, backId }: { base?: string; ove
 };
 
 export const BackAppendage = ({ backId, stroke }: { backId?: string | number; stroke?: string }) => {
-  const info = getInfo(backId);
+  const info = getInfo(backId ?? "");
   return (
     <>
       <div className={styles.backAppendage}>

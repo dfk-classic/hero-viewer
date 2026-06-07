@@ -1,18 +1,20 @@
-// Fetch a hero straight from chain and shape it with omer-bar's buildHero.
-// Routes to the right chain: DFK Chain (Crystalvale) or Kaia (Serendale);
-// same getHero struct on both HeroCore diamonds.
+// Fetch a hero straight from chain and shape it with omer-bar's buildHero. Routes to the right chain: DFK Chain (Crystalvale) or Kaia (Serendale); same getHero struct on both HeroCore diamonds.
 import { ethers } from 'ethers';
 import buildHero, { type RawNestedHero } from './components/Heroes/HeroInfo/utils/heroes';
 import type { Hero } from './types/hero';
 
-const CHAINS: Record<string, { rpc: string; herocore: string }> = {
+const CHAINS: Record<string, { rpc: string; herocore: string; chainId: number; name: string }> = {
   dfkchain: {
     rpc: 'https://subnets.avax.network/defi-kingdoms/dfk-chain/rpc',
     herocore: '0xEb9B61B145D6489Be575D3603F4a704810e143dF',
+    chainId: 53935,
+    name: 'dfkchain',
   },
   kaia: {
     rpc: 'https://kaia.rpc.defikingdoms.com/',
     herocore: '0x268CC8248FFB72Cd5F3e73A9a20Fa2FF40EfbA61',
+    chainId: 8217,
+    name: 'kaia',
   },
 };
 
@@ -22,10 +24,12 @@ const heroABI = [
 ];
 
 const contracts: Record<string, ethers.Contract> = {};
-function contractFor(chain: string) {
+export function contractFor(chain: string): ethers.Contract {
   if (!contracts[chain]) {
     const cfg = CHAINS[chain] || CHAINS.dfkchain;
-    const provider = new ethers.providers.StaticJsonRpcProvider(cfg.rpc);
+    // Pin the network at construction via staticNetwork so the provider never spends an eth_chainId round-trip auto-detecting the chain, and let JsonRpcProvider coalesce the concurrent getHero calls a loadBatch fires (see runPool) into one JSON-RPC request rather than one HTTP call per hero (v6 batches by default).
+    const network = new ethers.Network(cfg.name, cfg.chainId);
+    const provider = new ethers.JsonRpcProvider(cfg.rpc, network, { staticNetwork: network });
     contracts[chain] = new ethers.Contract(cfg.herocore, heroABI, provider);
   }
   return contracts[chain];
@@ -33,8 +37,7 @@ function contractFor(chain: string) {
 
 export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain'): Promise<Hero> {
   const raw = await contractFor(chain).getHero(heroId);
-  // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName;
-  // ethers tuples only expose the nested form, so alias the flat fields.
+  // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName; ethers tuples only expose the nested form, so alias the flat fields.
   const heroRaw: RawNestedHero = {
     id: raw.id,
     summoningInfo: raw.summoningInfo,
@@ -47,10 +50,10 @@ export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain
     firstName: raw.info.firstName,
     lastName: raw.info.lastName,
   };
-  const hero = buildHero(heroRaw, null);
-  // Full built hero for cross-checking against the exported dataset.
-  // hero.genes holds the complete translation (every stat and visual trait,
-  // dominant + r1/r2/r3, named). Shows under the Verbose console level.
-  console.debug(`hero ${heroId} (${chain}):`, { genes: hero.genes, stats: hero.stats, statGrowth: hero.statGrowth, skills: hero.skills, hero });
+  const hero = buildHero(heroRaw);
+  // Dev-only trace of the full built hero (genes holds the complete translation — every stat and visual trait, dominant + r1/r2/r3, named — alongside stats, statGrowth and skills) for cross-checking against the exported dataset; Vite strips this from production builds.
+  if (import.meta.env.DEV) {
+    console.debug(`hero ${heroId} (${chain}):`, { genes: hero.genes, stats: hero.stats, statGrowth: hero.statGrowth, skills: hero.skills, hero });
+  }
   return hero;
 }

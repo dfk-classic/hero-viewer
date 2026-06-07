@@ -3,17 +3,13 @@ import styles from "../HeroCard/styles.module.css";
 /* FEMALE ARMS */
 import femaleLeftarmbtmhighlight from "../../../assets/images/hero/female/LeftArmBtm-highlight.svg";
 import femaleLeftarmbtmshadow from "../../../assets/images/hero/female/LeftArmBtm-shadow.svg";
-// import femaleLeftarmbtm from '../../../assets/images/hero/female/LeftArmBtm.svg'
 import femaleLeftarmtophighlight from "../../../assets/images/hero/female/LeftArmTop-highlight.svg";
 import femaleLeftarmtopshadow from "../../../assets/images/hero/female/LeftArmTop-shadow.svg";
-// import femaleLeftarmtop from '../../../assets/images/hero/female/LeftArmTop.svg'
 
 import femaleRightarmbtmhighlight from "../../../assets/images/hero/female/RightArmBtm-highlight.svg";
 import femaleRightarmbtmshadow from "../../../assets/images/hero/female/RightArmBtm-shadow.svg";
-// import femaleRightarmbtm from '../../../assets/images/hero/female/RightArmBtm.svg'
 import femaleRightarmtophighlight from "../../../assets/images/hero/female/RightArmTop-highlight.svg";
 import femaleRightarmtopshadow from "../../../assets/images/hero/female/RightArmTop-shadow.svg";
-// import femaleRightarmtop from '../../../assets/images/hero/female/RightArmTop.svg'
 
 import archerLeftArmTop from "../../../assets/images/hero/female/clothes/archer-LeftArmTop.svg";
 import archerLeftArmBottom from "../../../assets/images/hero/female/clothes/archer-LeftArmBtm.svg";
@@ -492,7 +488,7 @@ const LeftArmBtmFemale = ({
 );
 
 const FemaleArms = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
-	const classInfo = getClassInfo(mainClass);
+	const classInfo = getClassInfo(mainClass ?? "");
 	return (
 		<>
 			<div className={`${styles.heroRightArm} ${styles.bodyPart}`}>

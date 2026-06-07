@@ -1,4 +1,7 @@
 import React from "react";
+import GeneRow from "../GeneRow";
+import StatTab from "../StatTab";
+import StatColumn from "../StatColumn";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
 
@@ -6,8 +9,7 @@ interface HeroStatsAbilitiesProps {
 	hero?: Hero;
 }
 
-// Abilities tab, HONK Marketplace style: the four dominant ability genes
-// with their full names ("Iron Skin (Basic5)").
+// Abilities tab, HONK Marketplace style: the four dominant ability genes with their full names ("Iron Skin (Basic5)").
 const HeroStatsAbilities = ({ hero }: HeroStatsAbilitiesProps) => {
 	const g = hero?.genes?.stat;
 	if (!g) return null;
@@ -18,19 +20,15 @@ const HeroStatsAbilities = ({ hero }: HeroStatsAbilitiesProps) => {
 		["Passive 2", g.passive2.dominant.name],
 	];
 	return (
-		<div style={{ padding: "0 10px" }}>
-			<div className={styles.col}>
-				<h3 style={{ marginTop: ".5rem" }}>Ability Genes</h3>
+		<StatTab>
+			<StatColumn title="Ability Genes">
 				<div className={`${styles.geneList} ${styles.abilityList}`}>
 					{rows.map(([label, value]) => (
-						<div key={label} className={styles.geneRow}>
-							<div className={styles.geneName}>{label}</div>
-							<div className={styles.geneValue}>{value}</div>
-						</div>
+						<GeneRow key={label} label={label} value={value} />
 					))}
 				</div>
-			</div>
-		</div>
+			</StatColumn>
+		</StatTab>
 	);
 };
 

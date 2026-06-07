@@ -50,7 +50,6 @@ import femaleHair8fronthighlight from "../../../assets/images/hero/female/hair/h
 import femaleHair8frontshadow from "../../../assets/images/hero/female/hair/hair8-front-shadow.svg";
 
 // Hairstyle 9 is breaking the hero generator -- says hair9-back-base.svg is not a valid name.
-// import femaleHair9backbase from 'assets/images/hero/female/hair/hair9-back-base.svg'
 import femaleHair9backshadow from "../../../assets/images/hero/female/hair/hair9-back-shadow.svg";
 import femaleHair9frontbase from "../../../assets/images/hero/female/hair/hair9-front-base.svg?react";
 import femaleHair9fronthighlight from "../../../assets/images/hero/female/hair/hair9-front-highlight.svg";
@@ -508,12 +507,12 @@ const getHair = (id: string | number): GetHairProps => {
 };
 
 const FemaleHair = ({ hairId, hairColor }: { hairId?: string | number; hairColor?: string | number }) => {
-  const config = getHair(hairId);
+  const config = getHair(hairId ?? "");
   const BackBase = config.backbase;
   const FrontBase = config.frontbase;
   return (
     <>
-      {config.backbase && (
+      {BackBase && (
         <div className={`${styles.heroHairBack} ${styles.hair}`}>
           <>
             <img src={config.backhighlight} className={styles.highlight} />
@@ -522,7 +521,7 @@ const FemaleHair = ({ hairId, hairColor }: { hairId?: string | number; hairColor
           </>
         </div>
       )}
-      {config.frontbase && (
+      {FrontBase && (
         <div className={`${styles.heroHairFront} ${styles.hair}`}>
           <>
             <img src={config.fronthighlight} className={styles.highlight} />

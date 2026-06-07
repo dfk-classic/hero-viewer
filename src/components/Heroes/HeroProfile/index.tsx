@@ -1,5 +1,4 @@
 import React from "react";
-import cx from "classnames";
 import Hero from "../Hero";
 import styles from "./index.module.scss";
 import type { Hero as HeroType } from "../../../types/hero";
@@ -19,16 +18,19 @@ const HeroProfile = ({
 }: HeroProfile) => {
 	return (
 		<button
-			className={cx(styles.heroProfileSquare, {
-				[styles.profileChoice]: profileChoice,
-				[styles.profileSmall]: profileSmall,
-			})}
+			className={[
+				styles.heroProfileSquare,
+				profileChoice && styles.profileChoice,
+				profileSmall && styles.profileSmall,
+			]
+				.filter(Boolean)
+				.join(" ")}
 			title={
-				hero &&
-				hero.name &&
-				hero.name.replace(/(^\w{1})|(\s{1}\w{1})/g, (s: string) =>
-					s.toUpperCase()
-				)
+				hero?.name
+					? hero.name.replace(/(^\w{1})|(\s{1}\w{1})/g, (s: string) =>
+							s.toUpperCase()
+						)
+					: undefined
 			}
 		>
 			<div className={styles.heroFrame}>

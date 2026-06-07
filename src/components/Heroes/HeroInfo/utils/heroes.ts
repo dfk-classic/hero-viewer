@@ -1,13 +1,11 @@
-import { BigNumber, utils } from "ethers";
+import { formatEther } from "ethers";
 import { DateTime } from "luxon";
 import { getFullName, getFirstName, getLastName } from "./names.js";
 import { translateGenes } from "./geneTranslator";
+import { ZERO_ADDRESS } from "../../../../constants";
 
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
-
-// Raw payloads deliver ids/timestamps as BigNumber (on-chain calls) or decimal strings (subgraph); normalise both to BigNumber so downstream .toNumber() reads are safe regardless of source.
-const toBN = (value: BigNumber | string): BigNumber =>
-	typeof value === "string" ? BigNumber.from(value) : value;
+// Raw payloads deliver numeric fields as bigint (on-chain getHero, where every integer width decodes to bigint under ethers v6) or as decimal strings/numbers (subgraph); coerce any of them to a JS number so the built hero stays uniformly numeric regardless of source.
+const num = (value: bigint | number | string): number => Number(value);
 
 const choices: { [index: string]: { [code: number]: string | number } } = {
 	gender: { 1: "male", 3: "female" },
@@ -443,24 +441,27 @@ const statsGenesMap: { [index: number]: string } = {
 	11: "statsUnknown2",
 };
 
+// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x"
+// (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two
+// directions of the conversion can never drift out of sync.
+const KAI_ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
+
 function kai2dec(kai: string) {
-	const ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
-	return ALPHABET.indexOf(kai);
+	return KAI_ALPHABET.indexOf(kai);
 }
 
 function genesToKai(genes: bigint) {
-	const ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
-	const BASE = BigInt(ALPHABET.length);
+	const BASE = BigInt(KAI_ALPHABET.length);
 
 	let buf = "";
 	while (genes >= BASE) {
 		const mod = genes % BASE;
-		buf = ALPHABET[Number(mod)] + buf;
+		buf = KAI_ALPHABET[Number(mod)] + buf;
 		genes = (genes - mod) / BASE;
 	}
 
 	// Add the last 4 (finally).
-	buf = ALPHABET[Number(genes)] + buf;
+	buf = KAI_ALPHABET[Number(genes)] + buf;
 
 	// Pad with leading 0s.
 	buf = buf.padStart(48, "1");
@@ -469,26 +470,18 @@ function genesToKai(genes: bigint) {
 }
 
 export function convertGenes(
-	_genes: BigNumber,
+	_genes: bigint,
 	genesMap: { [index: number]: string }
 ) {
-	// First, convert the genes to kai.
-	const rawKai = genesToKai(BigInt(_genes.toString()))
-		.split(" ")
-		.join("");
+	// First, convert the genes to kai, then drop the grouping spaces.
+	const rawKai = genesToKai(_genes).split(" ").join("");
 
 	const genes: { [index: string]: string | number } = {};
 
-	// Remove spaces, and get every 4th character.
-	for (const k in rawKai.split("")) {
-		if (Object.prototype.hasOwnProperty.call(rawKai, k)) {
-			const trait = genesMap[Math.floor(Number(k) / 4)];
-
-			const kai = rawKai[k];
-			const valueNum = kai2dec(kai);
-
-			genes[trait] = choices[trait][valueNum];
-		}
+	// Each trait owns a 4-kai group. Walk every character and let later ones overwrite earlier ones, so the dominant nibble — the 4th, highest place-value char of the group — is what survives for each trait.
+	for (let i = 0; i < rawKai.length; i++) {
+		const trait = genesMap[Math.floor(i / 4)];
+		genes[trait] = choices[trait][kai2dec(rawKai[i])];
 	}
 
 	return genes;
@@ -555,52 +548,52 @@ interface RawOwner {
 }
 
 interface RawStatBlock {
-	strength: number;
-	intelligence: number;
-	wisdom: number;
-	luck: number;
-	agility: number;
-	vitality: number;
-	endurance: number;
-	dexterity: number;
+	strength: number | bigint;
+	intelligence: number | bigint;
+	wisdom: number | bigint;
+	luck: number | bigint;
+	agility: number | bigint;
+	vitality: number | bigint;
+	endurance: number | bigint;
+	dexterity: number | bigint;
 }
 
 export interface RawNestedHero {
-	id: BigNumber | string;
-	firstName?: string | number;
-	lastName?: string | number;
+	id: bigint | string;
+	firstName?: string | number | bigint;
+	lastName?: string | number | bigint;
 	info: {
-		visualGenes: BigNumber;
-		statGenes: BigNumber;
-		generation: number;
-		rarity: string | number;
+		visualGenes: bigint;
+		statGenes: bigint;
+		generation: number | bigint;
+		rarity: string | number | bigint;
 		shiny: boolean;
-		shinyStyle: number;
-		firstName?: string | number;
-		lastName?: string | number;
+		shinyStyle: number | bigint;
+		firstName?: string | number | bigint;
+		lastName?: string | number | bigint;
 	};
 	state: {
-		xp: BigNumber | string;
-		staminaFullAt: BigNumber | string;
-		level: number;
+		xp: bigint | string;
+		staminaFullAt: bigint | string;
+		level: number | bigint;
 		currentQuest: string;
 	};
 	summoningInfo: {
-		summonedTime: BigNumber | string;
-		nextSummonTime: BigNumber | string;
-		summonerId: number;
-		assistantId: number;
-		summons: number;
-		maxSummons: number;
+		summonedTime: bigint | string;
+		nextSummonTime: bigint | string;
+		summonerId: number | bigint;
+		assistantId: number | bigint;
+		summons: number | bigint;
+		maxSummons: number | bigint;
 	};
-	stats: RawStatBlock & { hp: number; mp: number; stamina: number };
+	stats: RawStatBlock & { hp: number | bigint; mp: number | bigint; stamina: number | bigint };
 	primaryStatGrowth: RawStatBlock;
 	secondaryStatGrowth: RawStatBlock;
-	professions: { mining: number; gardening: number; fishing: number; foraging: number };
-	salePrice?: BigNumber | string | number;
-	summoningPrice?: BigNumber | string | number;
-	startingPrice?: BigNumber | string | number;
-	endingPrice?: BigNumber | string | number;
+	professions: { mining: number | bigint; gardening: number | bigint; fishing: number | bigint; foraging: number | bigint };
+	salePrice?: bigint | string | number;
+	summoningPrice?: bigint | string | number;
+	startingPrice?: bigint | string | number;
+	endingPrice?: bigint | string | number;
 	startedAt?: number;
 	duration?: number;
 	winner?: string | null;
@@ -619,16 +612,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		};
 	}
 
-	if (typeof heroRaw.id == "string") {
-		heroRaw.id = BigNumber.from(heroRaw.id);
-		heroRaw.state.xp = BigNumber.from(heroRaw.state.xp);
-		heroRaw.state.staminaFullAt = BigNumber.from(heroRaw.state.staminaFullAt);
-		heroRaw.summoningInfo.summonedTime = BigNumber.from(
-			heroRaw.summoningInfo.summonedTime
-		);
-		heroRaw.summoningInfo.nextSummonTime = BigNumber.from(
-			heroRaw.summoningInfo.nextSummonTime
-		);
+	// Subgraph delivers rarity as its lowercase tier name; map it to the numeric enum index the on-chain payload already provides. Every other numeric field (id, xp, timestamps) is coerced to a number at read time by num(), so no upfront normalisation is needed.
+	if (typeof heroRaw.id === "string") {
 		heroRaw.info.rarity = RARITY_LEVELS.indexOf(
 			(heroRaw.info.rarity as string).toLowerCase()
 		);
@@ -636,8 +621,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 
 	return {
 		owner: {
-			name: owner.name ? owner.name : owner._name,
-			owner: owner.owner ? owner.owner : owner._owner ? owner._owner : owner.id,
+			name: owner.name || owner._name || "",
+			owner: owner.owner || owner._owner || owner.id || "",
 		},
 		background: visualGenes.background as string,
 		class: (statGenes.class || statGenes.mainClass) as string,
@@ -645,15 +630,15 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		classType: "basic",
 		element: statGenes.element as string,
 		gender: visualGenes.gender as string,
-		generation: heroRaw.info.generation,
-		id: toBN(heroRaw.id).toNumber(),
-		heroId: toBN(heroRaw.id).toNumber(),
-		summonerId: heroRaw.summoningInfo.summonerId,
-		assistantId: heroRaw.summoningInfo.assistantId,
+		generation: num(heroRaw.info.generation),
+		id: num(heroRaw.id),
+		heroId: num(heroRaw.id),
+		summonerId: num(heroRaw.summoningInfo.summonerId),
+		assistantId: num(heroRaw.summoningInfo.assistantId),
 		currentQuest: heroRaw.state.currentQuest,
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
-		level: heroRaw.state.level,
-		xp: toBN(heroRaw.state.xp).toNumber(),
+		level: num(heroRaw.state.level),
+		xp: num(heroRaw.state.xp),
 		firstName: getFirstName(visualGenes.gender, heroRaw.firstName),
 		lastName: getLastName(heroRaw.lastName),
 		name: getFullName(
@@ -661,29 +646,29 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 			heroRaw.info.firstName,
 			heroRaw.info.lastName
 		),
-		rarity: RARITY_LEVELS[heroRaw.info.rarity],
-		rarityNum: heroRaw.info.rarity as number,
+		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)],
+		rarityNum: num(heroRaw.info.rarity),
 		shiny: heroRaw.info.shiny,
-		shinyStyle: heroRaw.info.shiny ? heroRaw.info.shinyStyle : 0,
-		currentStamina: heroRaw.stats.stamina,
-		staminaFullAt: DateTime.fromSeconds(toBN(heroRaw.state.staminaFullAt).toNumber()),
+		shinyStyle: heroRaw.info.shiny ? num(heroRaw.info.shinyStyle) : 0,
+		currentStamina: num(heroRaw.stats.stamina),
+		staminaFullAt: DateTime.fromSeconds(num(heroRaw.state.staminaFullAt)),
 		summonedDate: DateTime.fromSeconds(
-			toBN(heroRaw.summoningInfo.summonedTime).toNumber()
+			num(heroRaw.summoningInfo.summonedTime)
 		),
 		nextSummonTime: DateTime.fromSeconds(
-			toBN(heroRaw.summoningInfo.nextSummonTime).toNumber()
+			num(heroRaw.summoningInfo.nextSummonTime)
 		),
-		summons: heroRaw.summoningInfo.summons,
-		maxSummons: heroRaw.summoningInfo.maxSummons,
+		summons: num(heroRaw.summoningInfo.summons),
+		maxSummons: num(heroRaw.summoningInfo.maxSummons),
 		summonsRemaining:
-			heroRaw.summoningInfo.maxSummons < 11
-				? heroRaw.summoningInfo.maxSummons - heroRaw.summoningInfo.summons
+			num(heroRaw.summoningInfo.maxSummons) < 11
+				? num(heroRaw.summoningInfo.maxSummons) - num(heroRaw.summoningInfo.summons)
 				: 11,
 		price: heroRaw.salePrice
-			? parseFloat(utils.formatEther(heroRaw.salePrice))
+			? parseFloat(formatEther(heroRaw.salePrice))
 			: 0,
 		summoningPrice: heroRaw.summoningPrice
-			? parseFloat(utils.formatEther(heroRaw.summoningPrice))
+			? parseFloat(formatEther(heroRaw.summoningPrice))
 			: 0,
 		pjstatus: null,
 		pjlevel: null,
@@ -691,64 +676,63 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		auction: {
 			onAuction: heroRaw.startingPrice !== heroRaw.endingPrice ? true : false,
 			startingPrice: heroRaw.startingPrice
-				? parseFloat(utils.formatEther(heroRaw.startingPrice))
+				? parseFloat(formatEther(heroRaw.startingPrice))
 				: 0,
 			endingPrice: heroRaw.endingPrice
-				? parseFloat(utils.formatEther(heroRaw.endingPrice))
+				? parseFloat(formatEther(heroRaw.endingPrice))
 				: 0,
-			startedAt: heroRaw.startedAt,
-			duration: heroRaw.duration,
+			startedAt: heroRaw.startedAt ?? 0,
+			duration: heroRaw.duration ?? 0,
 		},
 		stats: {
-			strength: heroRaw.stats.strength,
-			intelligence: heroRaw.stats.intelligence,
-			wisdom: heroRaw.stats.wisdom,
-			luck: heroRaw.stats.luck,
-			agility: heroRaw.stats.agility,
-			vitality: heroRaw.stats.vitality,
-			endurance: heroRaw.stats.endurance,
-			dexterity: heroRaw.stats.dexterity,
-			hp: heroRaw.stats.hp,
-			mp: heroRaw.stats.mp,
-			stamina: heroRaw.stats.stamina,
+			strength: num(heroRaw.stats.strength),
+			intelligence: num(heroRaw.stats.intelligence),
+			wisdom: num(heroRaw.stats.wisdom),
+			luck: num(heroRaw.stats.luck),
+			agility: num(heroRaw.stats.agility),
+			vitality: num(heroRaw.stats.vitality),
+			endurance: num(heroRaw.stats.endurance),
+			dexterity: num(heroRaw.stats.dexterity),
+			hp: num(heroRaw.stats.hp),
+			mp: num(heroRaw.stats.mp),
+			stamina: num(heroRaw.stats.stamina),
 		},
 		visualGenes: visualGenes,
 		visual: {
 			...visualGenes,
 			shiny: heroRaw.info.shiny,
-			shinyStyle: heroRaw.info.shiny ? heroRaw.info.shinyStyle : 0,
+			shinyStyle: heroRaw.info.shiny ? num(heroRaw.info.shinyStyle) : 0,
 		},
 		statGrowth: {
 			primary: {
-				strength: heroRaw.primaryStatGrowth.strength,
-				intelligence: heroRaw.primaryStatGrowth.intelligence,
-				wisdom: heroRaw.primaryStatGrowth.wisdom,
-				luck: heroRaw.primaryStatGrowth.luck,
-				agility: heroRaw.primaryStatGrowth.agility,
-				vitality: heroRaw.primaryStatGrowth.vitality,
-				endurance: heroRaw.primaryStatGrowth.endurance,
-				dexterity: heroRaw.primaryStatGrowth.dexterity,
+				strength: num(heroRaw.primaryStatGrowth.strength),
+				intelligence: num(heroRaw.primaryStatGrowth.intelligence),
+				wisdom: num(heroRaw.primaryStatGrowth.wisdom),
+				luck: num(heroRaw.primaryStatGrowth.luck),
+				agility: num(heroRaw.primaryStatGrowth.agility),
+				vitality: num(heroRaw.primaryStatGrowth.vitality),
+				endurance: num(heroRaw.primaryStatGrowth.endurance),
+				dexterity: num(heroRaw.primaryStatGrowth.dexterity),
 			},
 			secondary: {
-				strength: heroRaw.secondaryStatGrowth.strength,
-				intelligence: heroRaw.secondaryStatGrowth.intelligence,
-				wisdom: heroRaw.secondaryStatGrowth.wisdom,
-				luck: heroRaw.secondaryStatGrowth.luck,
-				agility: heroRaw.secondaryStatGrowth.agility,
-				vitality: heroRaw.secondaryStatGrowth.vitality,
-				endurance: heroRaw.secondaryStatGrowth.endurance,
-				dexterity: heroRaw.secondaryStatGrowth.dexterity,
+				strength: num(heroRaw.secondaryStatGrowth.strength),
+				intelligence: num(heroRaw.secondaryStatGrowth.intelligence),
+				wisdom: num(heroRaw.secondaryStatGrowth.wisdom),
+				luck: num(heroRaw.secondaryStatGrowth.luck),
+				agility: num(heroRaw.secondaryStatGrowth.agility),
+				vitality: num(heroRaw.secondaryStatGrowth.vitality),
+				endurance: num(heroRaw.secondaryStatGrowth.endurance),
+				dexterity: num(heroRaw.secondaryStatGrowth.dexterity),
 			},
 		},
 		statGenes: statGenes,
-		// Full translation of both gene strings: every trait, dominant + r1/r2/r3,
-		// named the same way HONK and the transcended-roster dataset name them.
+		// Full translation of both gene strings: every trait, dominant + r1/r2/r3, named the same way HONK and the transcended-roster dataset name them.
 		genes: translateGenes(heroRaw.info.statGenes, heroRaw.info.visualGenes),
 		skills: {
-			mining: heroRaw.professions.mining / 10,
-			gardening: heroRaw.professions.gardening / 10,
-			fishing: heroRaw.professions.fishing / 10,
-			foraging: heroRaw.professions.foraging / 10,
+			mining: num(heroRaw.professions.mining) / 10,
+			gardening: num(heroRaw.professions.gardening) / 10,
+			fishing: num(heroRaw.professions.fishing) / 10,
+			foraging: num(heroRaw.professions.foraging) / 10,
 		},
 	};
 }

@@ -246,7 +246,7 @@ const RightFootFemale = ({ rightFoot, stroke }: { leftFoot?: string; rightFoot?:
 );
 
 const FemaleFeet = ({ mainClass, stroke }: { mainClass?: string; stroke?: string }) => {
-	const classInfo = getClassInfo(mainClass);
+	const classInfo = getClassInfo(mainClass ?? "");
 	return (
 		<>
 			<div className={`${styles.heroFootRight} ${styles.bodyPart}`}>

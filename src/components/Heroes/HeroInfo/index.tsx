@@ -3,6 +3,7 @@ import { MouseoverTooltip } from "../../Tooltip";
 import { DateTime } from "luxon";
 import { calculateRequiredXp } from "./utils/heroes";
 import { calculateRemainingStamina } from "../utils/staminaCalculations";
+import StatBar from "./StatBar";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
 
@@ -14,8 +15,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 	const remainingStamina = calculateRemainingStamina(hero);
 	const staminaPercentage = (remainingStamina / hero.stats.stamina) * 100;
 	const currentTime = DateTime.fromJSDate(new Date());
-	const staminaFullAt =
-		hero.staminaFullAt && DateTime.fromJSDate(new Date(hero.staminaFullAt));
+	const staminaFullAt = hero.staminaFullAt;
 
 	let staminaFullAtString = "Full " + staminaFullAt.toRelative();
 	if (!staminaFullAt || staminaFullAt <= currentTime) {
@@ -37,67 +37,49 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 		<>
 			<div className={styles.heroStats}>
 				<div className={styles.heroFrame}>
-					<div className={`${styles.statSummons} ${styles.row}`}>
-						Summons
-						<div className={styles.bar}>
-							<div
-								className={styles.summonsBar}
-								style={{
-									width:
-										(summonPercentage <= 100 ? summonPercentage : 100) + "%",
-								}}
-							></div>
-						</div>
-						<div className={`${styles.summonsAmount} ${styles.amount}`}>
-							{/* {hero.summons}/{hero.summons} */}
-							{hero.generation === 0 ? (
-								<div style={{ display: "flex", alignItems: "center" }}>
-									<span style={{ fontSize: "8px" }}>{hero.summons + "/"}</span>
-									<span style={{ fontSize: "16px" }}>&infin;</span>
-								</div>
-							) : (
-								`${hero.maxSummons - hero.summons}/${hero.maxSummons}`
-							)}
-						</div>
-					</div>
+					<StatBar
+						rowClassName={styles.statSummons}
+						label="Summons"
+						barClassName={styles.summonsBar}
+						percent={summonPercentage}
+						amountClassName={styles.summonsAmount}
+					>
+						{hero.generation === 0 ? (
+							<div style={{ display: "flex", alignItems: "center" }}>
+								<span style={{ fontSize: "8px" }}>{hero.summons + "/"}</span>
+								<span style={{ fontSize: "16px" }}>&infin;</span>
+							</div>
+						) : (
+							`${hero.maxSummons - hero.summons}/${hero.maxSummons}`
+						)}
+					</StatBar>
 					<div className={`${styles.statStaminaWrapper}`}>
 						<MouseoverTooltip text={tooltips.staminaFullAtString}>
-							<div className={`${styles.statStamina} ${styles.row}`}>
-								Stamina
-								<div className={styles.bar}>
-									<div
-										className={styles.staminaBar}
-										style={{
-											width:
-												(staminaPercentage <= 100 ? staminaPercentage : 100) +
-												"%",
-										}}
-									>
-										{staminaPercentage < 100 && (
-											<div className={styles.staminaLoading} />
-										)}
-									</div>
-								</div>
-								<div className={`${styles.staminaAmount} ${styles.amount}`}>
-									{remainingStamina}/{hero.stats.stamina}
-								</div>
-							</div>
+							<StatBar
+								rowClassName={styles.statStamina}
+								label="Stamina"
+								barClassName={styles.staminaBar}
+								percent={staminaPercentage}
+								amountClassName={styles.staminaAmount}
+								barChildren={
+									staminaPercentage < 100 && (
+										<div className={styles.staminaLoading} />
+									)
+								}
+							>
+								{remainingStamina}/{hero.stats.stamina}
+							</StatBar>
 						</MouseoverTooltip>
 					</div>
-					<div className={`${styles.statXp} ${styles.row}`}>
-						XP
-						<div className={styles.bar}>
-							<div
-								className={styles.xpBar}
-								style={{
-									width: xpPercentage <= 100 ? xpPercentage + "%" : 100 + "%",
-								}}
-							/>
-						</div>
-						<div className={`${styles.xpAmount} ${styles.amount}`}>
-							{hero.xp}/{xpNextLevel}
-						</div>
-					</div>
+					<StatBar
+						rowClassName={styles.statXp}
+						label="XP"
+						barClassName={styles.xpBar}
+						percent={xpPercentage}
+						amountClassName={styles.xpAmount}
+					>
+						{hero.xp}/{xpNextLevel}
+					</StatBar>
 				</div>
 			</div>
 		</>

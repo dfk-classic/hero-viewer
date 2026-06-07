@@ -223,8 +223,6 @@ const getInfo = (mainClass: string | number): GetInfoProps => {
 };
 
 const Appendage = ({ overlay, stroke, baseString }: { base?: string; overlay?: string; stroke?: string; baseString?: string }) => {
-  // const Base = props.base
-
   return (
     <div className={styles.headAppendage}>
       <React.Fragment>
@@ -243,7 +241,7 @@ const Appendage = ({ overlay, stroke, baseString }: { base?: string; overlay?: s
 };
 
 export const HeadAppendage = ({ headId, stroke }: { headId?: string | number; stroke?: string }) => {
-  const info = getInfo(headId);
+  const info = getInfo(headId ?? "");
   return (
     <>
       <Appendage
