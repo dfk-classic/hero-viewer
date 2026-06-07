@@ -3,6 +3,7 @@ import { MouseoverTooltip } from "../../Tooltip";
 import { DateTime } from "luxon";
 import { calculateRequiredXp } from "./utils/heroes";
 import { calculateRemainingStamina } from "../utils/staminaCalculations";
+import { capPercent } from "../utils/percent";
 import styles from "../HeroCard/styles.module.css";
 import type { Hero } from "../../../types/hero";
 
@@ -42,8 +43,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 							<div
 								className={styles.summonsBar}
 								style={{
-									width:
-										(summonPercentage <= 100 ? summonPercentage : 100) + "%",
+									width: capPercent(summonPercentage) + "%",
 								}}
 							></div>
 						</div>
@@ -67,9 +67,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 									<div
 										className={styles.staminaBar}
 										style={{
-											width:
-												(staminaPercentage <= 100 ? staminaPercentage : 100) +
-												"%",
+											width: capPercent(staminaPercentage) + "%",
 										}}
 									>
 										{staminaPercentage < 100 && (
@@ -89,7 +87,7 @@ const HeroInfo = ({ hero }: HeroInfoProps) => {
 							<div
 								className={styles.xpBar}
 								style={{
-									width: xpPercentage <= 100 ? xpPercentage + "%" : 100 + "%",
+									width: capPercent(xpPercentage) + "%",
 								}}
 							/>
 						</div>
