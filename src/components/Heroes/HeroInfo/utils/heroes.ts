@@ -1,6 +1,6 @@
 import { formatEther } from "ethers";
 import { DateTime } from "luxon";
-import { getFullName, getFirstName, getLastName } from "./names.js";
+import { getFirstName, getLastName } from "./names.js";
 import { translateGenes } from "./geneTranslator";
 import { ZERO_ADDRESS } from "../../../../constants";
 import type { Hero } from "../../../../types/hero";
@@ -615,6 +615,10 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 		heroRaw.info.rarity = idx >= 0 ? idx : 0;
 	}
 
+	// Pre-coerce firstName/lastName before the return block so both the name fields and the name derivation use the same bounded values. getFirstName returns undefined for off-spec genders; getLastName has no bounds check and returns undefined for out-of-range indices. Both are normalised here so name is always derived from the same sentinel-safe strings, never from a raw array lookup that embeds "undefined" in the name string.
+	const firstNameStr = getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "";
+	const lastNameStr = getLastName(heroRaw.info.lastName) ?? "";
+
 	return {
 		owner: {
 			name: owner.name || owner._name || "",
@@ -638,15 +642,10 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
 		level: num(heroRaw.state.level),
 		xp: num(heroRaw.state.xp),
-		// getFirstName falls through to undefined for any gender other than male/female; normalise to the empty-string sentinel here, the same way owner.name is coerced above, so firstName stays a guaranteed string on the built hero.
-		firstName: getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "",
-		// getLastName does lastNames[index] with no bounds check; an undefined, missing, or out-of-range index returns undefined — normalise to the empty-string sentinel so lastName stays a guaranteed string on the built hero.
-		lastName: getLastName(heroRaw.info.lastName) ?? "",
-		name: getFullName(
-			visualGenes.gender,
-			heroRaw.info.firstName,
-			heroRaw.info.lastName
-		),
+		firstName: firstNameStr,
+		lastName: lastNameStr,
+		// Derive name from the pre-coerced components; getFullName uses lastNames[index] inside a template literal, so an out-of-range index embeds the literal string "undefined" in the name while hero.lastName is already "". Using the pre-coerced values keeps all three fields consistent.
+		name: firstNameStr && lastNameStr ? `${firstNameStr} ${lastNameStr}` : firstNameStr || lastNameStr || undefined,
 		// RARITY_LEVELS has indices 0-4; any out-of-range on-chain value (or one that survived the subgraph guard with a non-zero offset) produces undefined — fall back to "common" so rarity stays a guaranteed string.
 		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)] ?? "common",
 		rarityNum: num(heroRaw.info.rarity),

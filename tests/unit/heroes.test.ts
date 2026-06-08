@@ -207,6 +207,13 @@ describe("buildHero", () => {
 		expect(typeof hero.rarity).toBe("string");
 		expect(hero.rarityNum).toBe(99);
 	});
+
+	it("keeps hero.name consistent with hero.firstName and hero.lastName when the last-name index is out of range", () => {
+		// getFullName uses lastNames[index] inside a template literal; an out-of-range index coerces undefined to the string "undefined", producing e.g. "Jasper undefined" even after Loop 18 coerced hero.lastName to "". buildHero must derive name from the same pre-coerced firstName/lastName so all three fields stay consistent and the name never exposes a raw "undefined" substring.
+		const hero = buildHero(makeRawHero({ lastName: 999999 }));
+		expect(hero.name).not.toContain("undefined");
+		expect(hero.lastName).toBe("");
+	});
 });
 
 describe("calculateRequiredXp", () => {
