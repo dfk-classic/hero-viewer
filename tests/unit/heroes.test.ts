@@ -86,6 +86,13 @@ describe("buildHero", () => {
 		expect(hero.element).toBe("fire");
 	});
 
+	it("keeps element as a string when the element nibble is off-spec instead of leaking undefined", () => {
+		// choices.element maps only even codes 0,2,4,6,8,10,12,14; any odd dominant nibble (e.g. code 1 at statsGenesMap index 10) decodes to undefined from convertGenes. buildHero must still surface element as a real string or the undefined punches through the typed Hero contract and breaks the element icon lookup in SpecialsRow downstream.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 10: 1 }) }));
+		expect(hero.element).toBe("");
+		expect(typeof hero.element).toBe("string");
+	});
+
 	it.each([
 		[0, "common"],
 		[1, "uncommon"],
