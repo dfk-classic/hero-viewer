@@ -640,7 +640,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 		xp: num(heroRaw.state.xp),
 		// getFirstName falls through to undefined for any gender other than male/female; normalise to the empty-string sentinel here, the same way owner.name is coerced above, so firstName stays a guaranteed string on the built hero.
 		firstName: getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "",
-		lastName: getLastName(heroRaw.info.lastName),
+		// getLastName does lastNames[index] with no bounds check; an undefined, missing, or out-of-range index returns undefined — normalise to the empty-string sentinel so lastName stays a guaranteed string on the built hero.
+		lastName: getLastName(heroRaw.info.lastName) ?? "",
 		name: getFullName(
 			visualGenes.gender,
 			heroRaw.info.firstName,

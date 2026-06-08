@@ -192,6 +192,13 @@ describe("buildHero", () => {
 		expect(typeof hero.gender).toBe("string");
 		expect(typeof hero.firstName).toBe("string");
 	});
+
+	it("keeps lastName as a string when the last-name index is out-of-range instead of leaking undefined", () => {
+		// heroRaw.info.lastName is optional (lastName?: string | number | bigint in RawNestedHero); getLastName(index) does lastNames[index] with no bounds check, so an out-of-range index returns undefined — violating Hero.lastName: string. buildHero must normalise to the empty-string sentinel so lastName stays a guaranteed string, mirroring the same coercion already applied to firstName.
+		const hero = buildHero(makeRawHero({ lastName: 999999 }));
+		expect(hero.lastName).toBe("");
+		expect(typeof hero.lastName).toBe("string");
+	});
 });
 
 describe("calculateRequiredXp", () => {
