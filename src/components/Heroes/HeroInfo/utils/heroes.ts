@@ -647,7 +647,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 			heroRaw.info.firstName,
 			heroRaw.info.lastName
 		),
-		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)],
+		// RARITY_LEVELS has indices 0-4; any out-of-range on-chain value (or one that survived the subgraph guard with a non-zero offset) produces undefined — fall back to "common" so rarity stays a guaranteed string.
+		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)] ?? "common",
 		rarityNum: num(heroRaw.info.rarity),
 		shiny: heroRaw.info.shiny,
 		shinyStyle: heroRaw.info.shiny ? num(heroRaw.info.shinyStyle) : 0,

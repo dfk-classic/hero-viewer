@@ -199,6 +199,14 @@ describe("buildHero", () => {
 		expect(hero.lastName).toBe("");
 		expect(typeof hero.lastName).toBe("string");
 	});
+
+	it("falls back to common when the on-chain rarity numeric value is out of range", () => {
+		// RARITY_LEVELS has indices 0-4; any value outside that range makes RARITY_LEVELS[n] return undefined — violating Hero.rarity: string. The subgraph path was already guarded (Loop 17), but the on-chain return-block expression lacked the same belt-and-suspenders. Regression guard: an on-chain hero (bigint id) with rarity 99 must still produce a valid rarity string.
+		const hero = buildHero(makeRawHero({ rarity: 99 }));
+		expect(hero.rarity).toBe("common");
+		expect(typeof hero.rarity).toBe("string");
+		expect(hero.rarityNum).toBe(99);
+	});
 });
 
 describe("calculateRequiredXp", () => {
