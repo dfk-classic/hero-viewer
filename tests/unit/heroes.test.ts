@@ -86,6 +86,34 @@ describe("buildHero", () => {
 		expect(hero.element).toBe("fire");
 	});
 
+	it("keeps element as a string when the element nibble is off-spec instead of leaking undefined", () => {
+		// choices.element maps only even codes 0,2,4,6,8,10,12,14; any odd dominant nibble (e.g. code 1 at statsGenesMap index 10) decodes to undefined from convertGenes. buildHero must still surface element as a real string or the undefined punches through the typed Hero contract and breaks the element icon lookup in SpecialsRow downstream.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 10: 1 }) }));
+		expect(hero.element).toBe("");
+		expect(typeof hero.element).toBe("string");
+	});
+
+	it("keeps background as a string when the background nibble is off-spec instead of leaking undefined", () => {
+		// choices.background maps only even codes 0,2,4,6,8,10,12,14; any odd dominant nibble (e.g. code 1 at visualGenesMap index 3) decodes to undefined from convertGenes. buildHero must still surface background as a real string or the undefined punches through the typed Hero contract.
+		const hero = buildHero(makeRawHero({ visualGenes: genesToBigNumber({ 3: 1 }) }));
+		expect(hero.background).toBe("");
+		expect(typeof hero.background).toBe("string");
+	});
+
+	it("keeps class as a string when the class nibble is off-spec instead of leaking undefined", () => {
+		// choices.class maps 0-11, 16-21, 24-26, 28; code 12 is a gap — any nibble code without an entry decodes to undefined from convertGenes. buildHero must still surface class as a real string.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 0: 12 }) }));
+		expect(hero.class).toBe("");
+		expect(typeof hero.class).toBe("string");
+	});
+
+	it("keeps subClass as a string when the subClass nibble is off-spec instead of leaking undefined", () => {
+		// choices.subClass has the same gaps as choices.class; code 12 at statsGenesMap index 1 decodes to undefined. buildHero must still surface subClass as a real string.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 1: 12 }) }));
+		expect(hero.subClass).toBe("");
+		expect(typeof hero.subClass).toBe("string");
+	});
+
 	it.each([
 		[0, "common"],
 		[1, "uncommon"],
@@ -96,6 +124,26 @@ describe("buildHero", () => {
 		const hero = buildHero(makeRawHero({ rarity: rarityNum }));
 		expect(hero.rarity).toBe(name);
 		expect(hero.rarityNum).toBe(rarityNum);
+	});
+
+	it.each([
+		["common", 0],
+		["uncommon", 1],
+		["rare", 2],
+		["legendary", 3],
+		["mythic", 4],
+	])("resolves subgraph rarity string %s to numeric index %i and back", (rarityName, rarityIdx) => {
+		// subgraph format identified by string id; rarity arrives as a lowercase tier name that the normalisation block converts to its numeric index so the on-chain path still applies to the return block. Regression guard for the subgraph string-to-index conversion.
+		const hero = buildHero(makeRawHero({ id: "1", rarity: rarityName }));
+		expect(hero.rarity).toBe(rarityName);
+		expect(hero.rarityNum).toBe(rarityIdx);
+	});
+
+	it("falls back to common when the subgraph delivers an unrecognised rarity tier name", () => {
+		// RARITY_LEVELS.indexOf of an unrecognised name returns -1; before the fix buildHero mutated heroRaw.info.rarity to -1, then RARITY_LEVELS[-1] produced undefined for hero.rarity and -1 for hero.rarityNum — both violating the Hero contract. Regression guard for the indexOf-guard and the common fallback.
+		const hero = buildHero(makeRawHero({ id: "1", rarity: "unknown" }));
+		expect(hero.rarity).toBe("common");
+		expect(hero.rarityNum).toBe(0);
 	});
 
 	it("treats equal non-zero start and end prices as a fixed-price sale, not an auction", () => {
@@ -126,6 +174,45 @@ describe("buildHero", () => {
 		const shiny = buildHero(makeRawHero({ shiny: true, shinyStyle: 5 }));
 		expect(shiny.shiny).toBe(true);
 		expect(shiny.shinyStyle).toBe(5);
+	});
+
+	it("derives firstName, lastName and name from the same on-chain info indices", () => {
+		// Regression guard: firstName/lastName were read from a synthetic top-level heroRaw.firstName/heroRaw.lastName that the real ethers getHero tuple never carries, while name read the canonical heroRaw.info.firstName/info.lastName, so on an on-chain-shaped hero the two diverged - name resolved while firstName/lastName came back undefined and the built hero's own name invariant broke. All three now read heroRaw.info.*.
+		const hero = buildHero(makeRawHero({ firstName: 0, lastName: 0 }));
+		expect(hero.firstName).toBeTruthy();
+		expect(hero.lastName).toBeTruthy();
+		expect(hero.name).toBe(`${hero.firstName} ${hero.lastName}`);
+	});
+
+	it("keeps gender and firstName as strings when the gender nibble is off-spec instead of leaking undefined", () => {
+		// choices.gender only maps codes 1 (male) and 3 (female); any other dominant nibble decodes gender to undefined. Both gender and firstName must still surface as strings or an off-spec gene would punch undefined through the typed Hero contract and break the name invariant downstream.
+		const hero = buildHero(makeRawHero({ visualGenes: genesToBigNumber({ 0: 2 }) }));
+		expect(hero.gender).toBe("");
+		expect(hero.firstName).toBe("");
+		expect(typeof hero.gender).toBe("string");
+		expect(typeof hero.firstName).toBe("string");
+	});
+
+	it("keeps lastName as a string when the last-name index is out-of-range instead of leaking undefined", () => {
+		// heroRaw.info.lastName is optional (lastName?: string | number | bigint in RawNestedHero); getLastName(index) does lastNames[index] with no bounds check, so an out-of-range index returns undefined — violating Hero.lastName: string. buildHero must normalise to the empty-string sentinel so lastName stays a guaranteed string, mirroring the same coercion already applied to firstName.
+		const hero = buildHero(makeRawHero({ lastName: 999999 }));
+		expect(hero.lastName).toBe("");
+		expect(typeof hero.lastName).toBe("string");
+	});
+
+	it("falls back to common when the on-chain rarity numeric value is out of range", () => {
+		// RARITY_LEVELS has indices 0-4; any value outside that range makes RARITY_LEVELS[n] return undefined — violating Hero.rarity: string. The subgraph path was already guarded (Loop 17), but the on-chain return-block expression lacked the same belt-and-suspenders. Regression guard: an on-chain hero (bigint id) with rarity 99 must still produce a valid rarity string.
+		const hero = buildHero(makeRawHero({ rarity: 99 }));
+		expect(hero.rarity).toBe("common");
+		expect(typeof hero.rarity).toBe("string");
+		expect(hero.rarityNum).toBe(99);
+	});
+
+	it("keeps hero.name consistent with hero.firstName and hero.lastName when the last-name index is out of range", () => {
+		// getFullName uses lastNames[index] inside a template literal; an out-of-range index coerces undefined to the string "undefined", producing e.g. "Jasper undefined" even after Loop 18 coerced hero.lastName to "". buildHero must derive name from the same pre-coerced firstName/lastName so all three fields stay consistent and the name never exposes a raw "undefined" substring.
+		const hero = buildHero(makeRawHero({ lastName: 999999 }));
+		expect(hero.name).not.toContain("undefined");
+		expect(hero.lastName).toBe("");
 	});
 });
 

@@ -1,6 +1,6 @@
 export type RosterEntry = { id: string; chain: string };
 
-// Parse the roster CSV: drop the header row, then split each remaining line into its id and chain columns. Splitting on /\r?\n/ tolerates CRLF files (roster.csv ships with CRLF endings) so chain values never carry a trailing \r, which would otherwise miss the CHAINS lookup and silently route Kaia heroes to DFK Chain. Kept pure and separate from the component so the parsing and the load-failure handling can be exercised without a DOM.
+// Parse the roster CSV: drop the header row, then split each remaining line into its id and chain columns. Splitting on /\r?\n/ tolerates CRLF files (roster.csv ships with CRLF endings) so chain values never carry a trailing \r, which would otherwise miss the CHAINS lookup and silently route Kaia heroes to DFK Chain. Rows missing an id or a chain (a blank line, or a row with no comma) are dropped so a malformed CSV never inflates the loaded count or queues a junk { id: "", chain: undefined } fetch that can only fail. Kept pure and separate from the component so the parsing and the load-failure handling can be exercised without a DOM.
 export function parseRoster(csv: string): RosterEntry[] {
 	return csv
 		.trim()
@@ -9,7 +9,8 @@ export function parseRoster(csv: string): RosterEntry[] {
 		.map((line) => {
 			const [id, chain] = line.split(",");
 			return { id, chain };
-		});
+		})
+		.filter((entry) => Boolean(entry.id && entry.chain));
 }
 
 export type RosterLoadResult = { entries: RosterEntry[]; status: string };

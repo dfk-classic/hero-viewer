@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import styles from "./styles.module.css";
 import { isActivateKey } from "./cardKeys";
+import { heroCardClassName } from "./cardClassName";
 
 import Hero from "../Hero";
 import HeroInfo from "../HeroInfo";
@@ -135,16 +136,16 @@ const HeroCard = ({
               if (flipToggle) setFlipped(!Flipped);
             }}
             {...flipToggleProps}
-            className={`
-          ${styles.heroCard}
-          ${isAnimated && styles.animate}
-          ${flipToggle ? styles.flippable : ""}
-          ${hero.shiny ? styles.shiny : ""}
-          ${hero.shiny ? styles[`shiny${hero.shinyStyle}`] : ""}
-          ${styles[`${hero.element}`]}
-          ${styles[`${hero.rarity}`]}
-          ${Flipped || isFlipped ? styles.flipped : ""}
-          `}
+            className={heroCardClassName({
+              styles,
+              element: hero.element,
+              rarity: hero.rarity,
+              shiny: hero.shiny,
+              shinyStyle: hero.shinyStyle,
+              isAnimated,
+              flipToggle,
+              flipped: Boolean(Flipped || isFlipped),
+            })}
           >
             <div className={styles.heroCardFront}>
               {hero.pjstatus === "SURVIVED" && (

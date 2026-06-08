@@ -37,7 +37,7 @@ export function contractFor(chain: string): ethers.Contract {
 
 export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain'): Promise<Hero> {
   const raw = await contractFor(chain).getHero(heroId);
-  // buildHero reads both heroRaw.info.firstName and flat heroRaw.firstName; ethers tuples only expose the nested form, so alias the flat fields.
+  // Repack the ethers Result tuple into a plain, typed RawNestedHero so buildHero reads ordinary own properties rather than the proxy's indexed entries.
   const heroRaw: RawNestedHero = {
     id: raw.id,
     summoningInfo: raw.summoningInfo,
@@ -47,8 +47,6 @@ export async function fetchHeroOnChain(heroId: string, chain: string = 'dfkchain
     primaryStatGrowth: raw.primaryStatGrowth,
     secondaryStatGrowth: raw.secondaryStatGrowth,
     professions: raw.professions,
-    firstName: raw.info.firstName,
-    lastName: raw.info.lastName,
   };
   const hero = buildHero(heroRaw);
   // Dev-only trace of the full built hero (genes holds the complete translation — every stat and visual trait, dominant + r1/r2/r3, named — alongside stats, statGrowth and skills) for cross-checking against the exported dataset; Vite strips this from production builds.

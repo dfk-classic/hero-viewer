@@ -43,6 +43,8 @@ export interface RawHeroOptions {
 	maxSummons?: number;
 	shiny?: boolean;
 	shinyStyle?: number;
+	firstName?: number;
+	lastName?: number;
 }
 
 // Raw hero id/xp/staminaFullAt arrive on-chain as bigint or string; let tests pass plain numbers for readability and coerce them to bigint so the raw hero keeps its real on-chain shape.
@@ -61,6 +63,8 @@ export function makeRawHero(options: RawHeroOptions = {}): RawNestedHero {
 			rarity: options.rarity ?? 0,
 			shiny: options.shiny ?? false,
 			shinyStyle: options.shinyStyle ?? 0,
+			firstName: options.firstName ?? 0,
+			lastName: options.lastName ?? 0,
 		},
 		state: {
 			xp: options.xp !== undefined ? toRaw(options.xp) : BigInt(0),

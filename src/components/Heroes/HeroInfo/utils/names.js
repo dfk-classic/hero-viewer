@@ -6068,22 +6068,6 @@ const lastNames = [
   "Dúgheli",
 ];
 
-/**
- * Returns a random integer between min (inclusive) and max (inclusive).
- * The value is no lower than min (or the next integer greater than min
- * if min isn't an integer) and no greater than max (or the next integer
- * lower than max if max isn't an integer).
- * Using Math.round() will give you a non-uniform distribution!
- *
- * @param {number} min a minumum number
- * @param {number} max a maximum number
- * @return {number}
- */
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 export const getFirstName = (gender, firstNameIndex) => {
   if (gender === "male") {
     return maleFirstNames[firstNameIndex];
@@ -6103,31 +6087,5 @@ export const getFullName = (gender, firstNameIndex, lastNameIndex) => {
   }
   if (gender === "female") {
     return `${femaleFirstNames[firstNameIndex]} ${lastNames[lastNameIndex]}`;
-  }
-};
-
-export const getRandomFirstName = (gender) => {
-  if (gender === "male") {
-    return `${maleFirstNames[getRandomInt(0, 2000)]}`;
-  }
-  if (gender === "female") {
-    return `${femaleFirstNames[getRandomInt(0, 2000)]}`;
-  }
-};
-
-export const getRandomLastName = () => {
-  return `${lastNames[getRandomInt(0, 2000)]}`;
-};
-
-export const getRandomFullName = (gender) => {
-  if (gender === "male") {
-    return `${maleFirstNames[getRandomInt(0, 2000)]} ${
-      lastNames[getRandomInt(0, 2000)]
-    }`;
-  }
-  if (gender === "female") {
-    return `${femaleFirstNames[getRandomInt(0, 2000)]} ${
-      lastNames[getRandomInt(0, 2000)]
-    }`;
   }
 };

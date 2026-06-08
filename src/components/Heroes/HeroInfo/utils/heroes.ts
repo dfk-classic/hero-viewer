@@ -1,8 +1,9 @@
 import { formatEther } from "ethers";
 import { DateTime } from "luxon";
-import { getFullName, getFirstName, getLastName } from "./names.js";
+import { getFirstName, getLastName } from "./names.js";
 import { translateGenes } from "./geneTranslator";
 import { ZERO_ADDRESS } from "../../../../constants";
+import type { Hero } from "../../../../types/hero";
 
 // Raw payloads deliver numeric fields as bigint (on-chain getHero, where every integer width decodes to bigint under ethers v6) or as decimal strings/numbers (subgraph); coerce any of them to a JS number so the built hero stays uniformly numeric regardless of source.
 const num = (value: bigint | number | string): number => Number(value);
@@ -441,16 +442,14 @@ const statsGenesMap: { [index: number]: string } = {
 	11: "statsUnknown2",
 };
 
-// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x"
-// (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two
-// directions of the conversion can never drift out of sync.
+// Base-32 "kai" alphabet used to encode gene strings: index 0 is "1", 31 is "x" (the letters l and v are skipped). Shared by kai2dec and genesToKai so the two directions of the conversion can never drift out of sync.
 const KAI_ALPHABET = "123456789abcdefghijkmnopqrstuvwx";
 
-function kai2dec(kai: string) {
+function kai2dec(kai: string): number {
 	return KAI_ALPHABET.indexOf(kai);
 }
 
-function genesToKai(genes: bigint) {
+function genesToKai(genes: bigint): string {
 	const BASE = BigInt(KAI_ALPHABET.length);
 
 	let buf = "";
@@ -472,7 +471,7 @@ function genesToKai(genes: bigint) {
 export function convertGenes(
 	_genes: bigint,
 	genesMap: { [index: number]: string }
-) {
+): { [index: string]: string | number } {
 	// First, convert the genes to kai, then drop the grouping spaces.
 	const rawKai = genesToKai(_genes).split(" ").join("");
 
@@ -487,8 +486,8 @@ export function convertGenes(
 	return genes;
 }
 
-export const calculateRequiredXp = (level: number) => {
-	let xpNeeded;
+export const calculateRequiredXp = (level: number): number => {
+	let xpNeeded: number;
 	const nextLevel = level + 1;
 	switch (true) {
 		case level < 6:
@@ -560,8 +559,6 @@ interface RawStatBlock {
 
 export interface RawNestedHero {
 	id: bigint | string;
-	firstName?: string | number | bigint;
-	lastName?: string | number | bigint;
 	info: {
 		visualGenes: bigint;
 		statGenes: bigint;
@@ -600,7 +597,7 @@ export interface RawNestedHero {
 }
 
 /** Returns a hero object the way the game likes it. */
-export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
+export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Hero {
 	const visualGenes = convertGenes(heroRaw.info.visualGenes, visualGenesMap);
 	const statGenes = convertGenes(heroRaw.info.statGenes, statsGenesMap);
 
@@ -612,24 +609,30 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		};
 	}
 
-	// Subgraph delivers rarity as its lowercase tier name; map it to the numeric enum index the on-chain payload already provides. Every other numeric field (id, xp, timestamps) is coerced to a number at read time by num(), so no upfront normalisation is needed.
-	if (typeof heroRaw.id === "string") {
-		heroRaw.info.rarity = RARITY_LEVELS.indexOf(
-			(heroRaw.info.rarity as string).toLowerCase()
-		);
+	// Subgraph delivers rarity as its lowercase tier name; map it to the numeric enum index the on-chain payload already provides. Every other numeric field (id, xp, timestamps) is coerced to a number at read time by num(), so no upfront normalisation is needed. Guard the indexOf result: an unrecognised tier name returns -1, which would index RARITY_LEVELS out-of-bounds and produce undefined for rarity in the return block — fall back to 0 (common) to keep the Hero contract valid.
+	if (typeof heroRaw.id === "string" && typeof heroRaw.info.rarity === "string") {
+		const idx = RARITY_LEVELS.indexOf(heroRaw.info.rarity.toLowerCase());
+		heroRaw.info.rarity = idx >= 0 ? idx : 0;
 	}
+
+	// Pre-coerce firstName/lastName before the return block so both the name fields and the name derivation use the same bounded values. getFirstName returns undefined for off-spec genders; getLastName has no bounds check and returns undefined for out-of-range indices. Both are normalised here so name is always derived from the same sentinel-safe strings, never from a raw array lookup that embeds "undefined" in the name string.
+	const firstNameStr = getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "";
+	const lastNameStr = getLastName(heroRaw.info.lastName) ?? "";
 
 	return {
 		owner: {
 			name: owner.name || owner._name || "",
 			owner: owner.owner || owner._owner || owner.id || "",
 		},
-		background: visualGenes.background as string,
-		class: (statGenes.class || statGenes.mainClass) as string,
-		subClass: statGenes.subClass as string,
+		// choices.background maps only even codes; choices.class and choices.subClass have gaps at 12-15, 22-23, 27, 29-31 — normalise missing entries to the empty-string sentinel so these fields stay guaranteed strings on the built hero.
+		background: (visualGenes.background as string | undefined) ?? "",
+		class: (statGenes.class as string | undefined) ?? "",
+		subClass: (statGenes.subClass as string | undefined) ?? "",
 		classType: "basic",
-		element: statGenes.element as string,
-		gender: visualGenes.gender as string,
+		// choices.element maps only even codes 0,2,4,6,8,10,12,14; any odd nibble decodes to undefined — normalise to the empty-string sentinel so element stays a guaranteed string on the built hero.
+		element: (statGenes.element as string | undefined) ?? "",
+		// choices.gender only maps codes 1 and 3; any other nibble decodes to undefined — normalise to the empty-string sentinel so gender stays a guaranteed string on the built hero, matching the same coercion applied to firstName below.
+		gender: (visualGenes.gender as string | undefined) ?? "",
 		generation: num(heroRaw.info.generation),
 		id: num(heroRaw.id),
 		heroId: num(heroRaw.id),
@@ -639,14 +642,12 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
 		level: num(heroRaw.state.level),
 		xp: num(heroRaw.state.xp),
-		firstName: getFirstName(visualGenes.gender, heroRaw.firstName),
-		lastName: getLastName(heroRaw.lastName),
-		name: getFullName(
-			visualGenes.gender,
-			heroRaw.info.firstName,
-			heroRaw.info.lastName
-		),
-		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)],
+		firstName: firstNameStr,
+		lastName: lastNameStr,
+		// Derive name from the pre-coerced components; getFullName uses lastNames[index] inside a template literal, so an out-of-range index embeds the literal string "undefined" in the name while hero.lastName is already "". Using the pre-coerced values keeps all three fields consistent.
+		name: firstNameStr && lastNameStr ? `${firstNameStr} ${lastNameStr}` : firstNameStr || lastNameStr || undefined,
+		// RARITY_LEVELS has indices 0-4; any out-of-range on-chain value (or one that survived the subgraph guard with a non-zero offset) produces undefined — fall back to "common" so rarity stays a guaranteed string.
+		rarity: RARITY_LEVELS[num(heroRaw.info.rarity)] ?? "common",
 		rarityNum: num(heroRaw.info.rarity),
 		shiny: heroRaw.info.shiny,
 		shinyStyle: heroRaw.info.shiny ? num(heroRaw.info.shinyStyle) : 0,

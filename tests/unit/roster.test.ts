@@ -39,6 +39,15 @@ describe("parseRoster", () => {
 			{ id: "3", chain: "dfkchain" },
 		]);
 	});
+
+	it("drops blank and incomplete rows instead of emitting junk entries", () => {
+		// Regression guard: a blank line or a row missing the chain column used to parse into { id: "", chain: undefined } (or { id, chain: undefined }), which inflated the loaded count and queued an on-chain fetch with no id/chain that could only fail. Such rows must be dropped.
+		const messy = "id,chain\n1,dfkchain\n\n2,kaia\n3";
+		expect(parseRoster(messy)).toEqual([
+			{ id: "1", chain: "dfkchain" },
+			{ id: "2", chain: "kaia" },
+		]);
+	});
 });
 
 describe("loadRoster", () => {

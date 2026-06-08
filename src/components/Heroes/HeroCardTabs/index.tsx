@@ -2,8 +2,7 @@ import React, { useRef } from "react";
 import styles from "./styles.module.css";
 import { resolveTabKey } from "./tabKeys";
 
-// Tab bar on the back of the card, HONK Marketplace style:
-// Stats / Growth / Abilities / Recessive 1 / Recessive 2.
+// Tab bar on the back of the card, HONK Marketplace style: Stats / Growth / Abilities / Recessive 1 / Recessive 2.
 export type CardTab = {
 	label: string;
 	symbol: string;
