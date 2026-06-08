@@ -609,11 +609,10 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 		};
 	}
 
-	// Subgraph delivers rarity as its lowercase tier name; map it to the numeric enum index the on-chain payload already provides. Every other numeric field (id, xp, timestamps) is coerced to a number at read time by num(), so no upfront normalisation is needed.
-	if (typeof heroRaw.id === "string") {
-		heroRaw.info.rarity = RARITY_LEVELS.indexOf(
-			(heroRaw.info.rarity as string).toLowerCase()
-		);
+	// Subgraph delivers rarity as its lowercase tier name; map it to the numeric enum index the on-chain payload already provides. Every other numeric field (id, xp, timestamps) is coerced to a number at read time by num(), so no upfront normalisation is needed. Guard the indexOf result: an unrecognised tier name returns -1, which would index RARITY_LEVELS out-of-bounds and produce undefined for rarity in the return block — fall back to 0 (common) to keep the Hero contract valid.
+	if (typeof heroRaw.id === "string" && typeof heroRaw.info.rarity === "string") {
+		const idx = RARITY_LEVELS.indexOf(heroRaw.info.rarity.toLowerCase());
+		heroRaw.info.rarity = idx >= 0 ? idx : 0;
 	}
 
 	return {

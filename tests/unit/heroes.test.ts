@@ -126,6 +126,26 @@ describe("buildHero", () => {
 		expect(hero.rarityNum).toBe(rarityNum);
 	});
 
+	it.each([
+		["common", 0],
+		["uncommon", 1],
+		["rare", 2],
+		["legendary", 3],
+		["mythic", 4],
+	])("resolves subgraph rarity string %s to numeric index %i and back", (rarityName, rarityIdx) => {
+		// subgraph format identified by string id; rarity arrives as a lowercase tier name that the normalisation block converts to its numeric index so the on-chain path still applies to the return block. Regression guard for the subgraph string-to-index conversion.
+		const hero = buildHero(makeRawHero({ id: "1", rarity: rarityName }));
+		expect(hero.rarity).toBe(rarityName);
+		expect(hero.rarityNum).toBe(rarityIdx);
+	});
+
+	it("falls back to common when the subgraph delivers an unrecognised rarity tier name", () => {
+		// RARITY_LEVELS.indexOf of an unrecognised name returns -1; before the fix buildHero mutated heroRaw.info.rarity to -1, then RARITY_LEVELS[-1] produced undefined for hero.rarity and -1 for hero.rarityNum — both violating the Hero contract. Regression guard for the indexOf-guard and the common fallback.
+		const hero = buildHero(makeRawHero({ id: "1", rarity: "unknown" }));
+		expect(hero.rarity).toBe("common");
+		expect(hero.rarityNum).toBe(0);
+	});
+
 	it("treats equal non-zero start and end prices as a fixed-price sale, not an auction", () => {
 		// A declining auction needs distinct start/end prices; equal prices are a flat listing, so onAuction stays false even though both prices parse to a real value.
 		const hero = buildHero(
