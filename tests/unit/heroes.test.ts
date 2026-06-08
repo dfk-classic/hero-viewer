@@ -135,6 +135,14 @@ describe("buildHero", () => {
 		expect(hero.lastName).toBeTruthy();
 		expect(hero.name).toBe(`${hero.firstName} ${hero.lastName}`);
 	});
+
+	it("keeps firstName a string when the gender nibble is off-spec instead of leaking undefined", () => {
+		// choices.gender only maps codes 1 (male) and 3 (female); any other dominant nibble decodes gender to undefined, and getFirstName has no branch for that case, so it falls through to undefined. buildHero must still surface firstName as a real string or an off-spec gene would punch undefined through the typed Hero contract and break the name invariant downstream - regression guard for the buildHero firstName coercion.
+		const hero = buildHero(makeRawHero({ visualGenes: genesToBigNumber({ 0: 2 }) }));
+		expect(hero.gender).toBeUndefined();
+		expect(hero.firstName).toBe("");
+		expect(typeof hero.firstName).toBe("string");
+	});
 });
 
 describe("calculateRequiredXp", () => {

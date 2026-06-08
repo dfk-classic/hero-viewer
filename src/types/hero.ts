@@ -77,6 +77,8 @@ export interface Hero {
 	heroId: number;
 	owner: HeroOwner;
 	name?: string;
+	firstName: string;
+	lastName: string;
 
 	generation: number;
 	level: number;
@@ -92,11 +94,17 @@ export interface Hero {
 	element: string;
 	gender: string;
 
+	summonerId: number;
+	assistantId: number;
+	currentQuest: string;
+	isQuesting: boolean;
+
 	currentStamina: number;
 	summons: number;
 	maxSummons: number;
 	summonsRemaining: number;
 	price: number;
+	summoningPrice: number;
 	winner: string | null;
 
 	pjstatus: string | null;

@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import { getFullName, getFirstName, getLastName } from "./names.js";
 import { translateGenes } from "./geneTranslator";
 import { ZERO_ADDRESS } from "../../../../constants";
+import type { Hero } from "../../../../types/hero";
 
 // Raw payloads deliver numeric fields as bigint (on-chain getHero, where every integer width decodes to bigint under ethers v6) or as decimal strings/numbers (subgraph); coerce any of them to a JS number so the built hero stays uniformly numeric regardless of source.
 const num = (value: bigint | number | string): number => Number(value);
@@ -596,7 +597,7 @@ export interface RawNestedHero {
 }
 
 /** Returns a hero object the way the game likes it. */
-export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
+export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Hero {
 	const visualGenes = convertGenes(heroRaw.info.visualGenes, visualGenesMap);
 	const statGenes = convertGenes(heroRaw.info.statGenes, statsGenesMap);
 
@@ -635,7 +636,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner) {
 		isQuesting: heroRaw.state.currentQuest !== ZERO_ADDRESS,
 		level: num(heroRaw.state.level),
 		xp: num(heroRaw.state.xp),
-		firstName: getFirstName(visualGenes.gender, heroRaw.info.firstName),
+		// getFirstName falls through to undefined for any gender other than male/female; normalise to the empty-string sentinel here, the same way owner.name is coerced above, so firstName stays a guaranteed string on the built hero.
+		firstName: getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "",
 		lastName: getLastName(heroRaw.info.lastName),
 		name: getFullName(
 			visualGenes.gender,
