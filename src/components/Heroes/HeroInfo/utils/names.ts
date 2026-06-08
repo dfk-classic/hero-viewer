@@ -1,4 +1,4 @@
-const maleFirstNames = [
+const maleFirstNames: readonly string[] = [
   "Dernere",
   "Heremód",
   "Fréabald",
@@ -2000,7 +2000,7 @@ const maleFirstNames = [
   "Yilgultael",
   "Idrosrial",
 ];
-const femaleFirstNames = [
+const femaleFirstNames: readonly string[] = [
   "Alexandria",
   "Romy",
   "Jenina",
@@ -4058,7 +4058,7 @@ const femaleFirstNames = [
   "Caitlan",
   "Argoel",
 ];
-const lastNames = [
+const lastNames: readonly string[] = [
   "Ironsteam",
   "Boneglide",
   "Havenfollower",
@@ -6068,7 +6068,8 @@ const lastNames = [
   "Dúgheli",
 ];
 
-export const getFirstName = (gender, firstNameIndex) => {
+
+export const getFirstName = (gender: string, firstNameIndex: number): string | undefined => {
   if (gender === "male") {
     return maleFirstNames[firstNameIndex];
   }
@@ -6077,11 +6078,11 @@ export const getFirstName = (gender, firstNameIndex) => {
   }
 };
 
-export const getLastName = (lastNameIndex) => {
+export const getLastName = (lastNameIndex: number): string | undefined => {
   return lastNames[lastNameIndex];
 };
 
-export const getFullName = (gender, firstNameIndex, lastNameIndex) => {
+export const getFullName = (gender: string, firstNameIndex: number, lastNameIndex: number): string | undefined => {
   if (gender === "male") {
     return `${maleFirstNames[firstNameIndex]} ${lastNames[lastNameIndex]}`;
   }
