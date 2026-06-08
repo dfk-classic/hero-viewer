@@ -616,8 +616,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 	}
 
 	// Pre-coerce firstName/lastName before the return block so both the name fields and the name derivation use the same bounded values. getFirstName returns undefined for off-spec genders; getLastName has no bounds check and returns undefined for out-of-range indices. Both are normalised here so name is always derived from the same sentinel-safe strings, never from a raw array lookup that embeds "undefined" in the name string.
-	const firstNameStr = getFirstName(visualGenes.gender, heroRaw.info.firstName) ?? "";
-	const lastNameStr = getLastName(heroRaw.info.lastName) ?? "";
+	const firstNameStr = getFirstName(visualGenes.gender as string, num(heroRaw.info.firstName ?? 0)) ?? "";
+	const lastNameStr = getLastName(num(heroRaw.info.lastName ?? 0)) ?? "";
 
 	return {
 		owner: {
