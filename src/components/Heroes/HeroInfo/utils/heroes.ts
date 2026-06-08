@@ -621,9 +621,10 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 			name: owner.name || owner._name || "",
 			owner: owner.owner || owner._owner || owner.id || "",
 		},
-		background: visualGenes.background as string,
-		class: (statGenes.class || statGenes.mainClass) as string,
-		subClass: statGenes.subClass as string,
+		// choices.background maps only even codes; choices.class and choices.subClass have gaps at 12-15, 22-23, 27, 29-31 — normalise missing entries to the empty-string sentinel so these fields stay guaranteed strings on the built hero.
+		background: (visualGenes.background as string | undefined) ?? "",
+		class: (statGenes.class as string | undefined) ?? "",
+		subClass: (statGenes.subClass as string | undefined) ?? "",
 		classType: "basic",
 		// choices.element maps only even codes 0,2,4,6,8,10,12,14; any odd nibble decodes to undefined — normalise to the empty-string sentinel so element stays a guaranteed string on the built hero.
 		element: (statGenes.element as string | undefined) ?? "",

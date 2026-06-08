@@ -93,6 +93,27 @@ describe("buildHero", () => {
 		expect(typeof hero.element).toBe("string");
 	});
 
+	it("keeps background as a string when the background nibble is off-spec instead of leaking undefined", () => {
+		// choices.background maps only even codes 0,2,4,6,8,10,12,14; any odd dominant nibble (e.g. code 1 at visualGenesMap index 3) decodes to undefined from convertGenes. buildHero must still surface background as a real string or the undefined punches through the typed Hero contract.
+		const hero = buildHero(makeRawHero({ visualGenes: genesToBigNumber({ 3: 1 }) }));
+		expect(hero.background).toBe("");
+		expect(typeof hero.background).toBe("string");
+	});
+
+	it("keeps class as a string when the class nibble is off-spec instead of leaking undefined", () => {
+		// choices.class maps 0-11, 16-21, 24-26, 28; code 12 is a gap — any nibble code without an entry decodes to undefined from convertGenes. buildHero must still surface class as a real string.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 0: 12 }) }));
+		expect(hero.class).toBe("");
+		expect(typeof hero.class).toBe("string");
+	});
+
+	it("keeps subClass as a string when the subClass nibble is off-spec instead of leaking undefined", () => {
+		// choices.subClass has the same gaps as choices.class; code 12 at statsGenesMap index 1 decodes to undefined. buildHero must still surface subClass as a real string.
+		const hero = buildHero(makeRawHero({ statGenes: genesToBigNumber({ 1: 12 }) }));
+		expect(hero.subClass).toBe("");
+		expect(typeof hero.subClass).toBe("string");
+	});
+
 	it.each([
 		[0, "common"],
 		[1, "uncommon"],
