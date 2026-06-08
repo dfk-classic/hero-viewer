@@ -1,10 +1,4 @@
-// Full gene translator for the card back: every stat and visual trait, all four slots (dominant + 3 recessives), mapped to display names.
-//
-// Mappings match HONK Marketplace's heroUtils.js and the dfk-classic transcended-roster exporter (lib/decode.mjs), so the viewer, the marketplace and the dataset all read the same hero identically.
-//
-// Slot positions follow the DFK kai encoding: each trait is a 4-char group, char1=r3, char2=r2, char3=r1, char4=dominant.
-//
-// Known HONK quirk, intentionally NOT reproduced: HONK's recessive tab display swaps active1/active2 (formatRecessiveStatGenes in heroGeneParser.js). The swap has no basis in the gene encoding (dominants and passives are never swapped), so this translator keeps documented trait order.
+// Full gene translator for the card back: every stat and visual trait, all four slots (dominant + 3 recessives), mapped to display names. Mappings match HONK Marketplace's heroUtils.js and the dfk-classic transcended-roster exporter (lib/decode.mjs), so the viewer, the marketplace and the dataset all read the same hero identically. Slot positions follow the DFK kai encoding: each trait is a 4-char group, char1=r3, char2=r2, char3=r1, char4=dominant. Known HONK quirk, intentionally NOT reproduced: HONK's recessive tab display swaps active1/active2 (formatRecessiveStatGenes in heroGeneParser.js). The swap has no basis in the gene encoding (dominants and passives are never swapped), so this translator keeps documented trait order.
 
 export const CLASS_NAMES: Record<number, string> = {
 	0: "Warrior", 1: "Knight", 2: "Thief", 3: "Archer", 4: "Priest",
