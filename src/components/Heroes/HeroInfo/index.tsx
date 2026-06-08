@@ -12,9 +12,9 @@ interface HeroInfoProps {
 }
 
 const HeroInfo = ({ hero }: HeroInfoProps) => {
-	const remainingStamina = calculateRemainingStamina(hero);
-	const staminaPercentage = (remainingStamina / hero.stats.stamina) * 100;
 	const currentTime = DateTime.fromJSDate(new Date());
+	const remainingStamina = calculateRemainingStamina(hero, currentTime);
+	const staminaPercentage = (remainingStamina / hero.stats.stamina) * 100;
 	const staminaFullAtString = staminaFullLabel(hero.staminaFullAt, currentTime);
 	const tooltips: Record<string, string> = {
 		staminaFullAtString: staminaFullAtString,

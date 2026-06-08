@@ -39,6 +39,13 @@ describe("calculateRemainingStamina", () => {
 		const hero = makeHero({ stamina: 25, staminaFullAt: nowSeconds() });
 		expect(calculateRemainingStamina(hero)).toBe(25);
 	});
+
+	it("measures against an injected reference instant rather than the wall clock", () => {
+		// Pin both now and staminaFullAt so the result depends only on the gap between them, not on Date.now(): 4800s out -> ceil(4800 / 1200) = 4 points recharging -> 25 - 4 = 21. This proves now is honoured, keeping the value consistent with staminaFullLabel when HeroInfo feeds both calls a single instant.
+		const now = DateTime.fromObject({ year: 2026, month: 1, day: 1, hour: 12 });
+		const hero = makeHero({ stamina: 25, staminaFullAt: Math.floor(now.toSeconds()) + 4800 });
+		expect(calculateRemainingStamina(hero, now)).toBe(21);
+	});
 });
 
 describe("staminaFullLabel", () => {
