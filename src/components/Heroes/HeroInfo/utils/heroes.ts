@@ -626,7 +626,8 @@ export default function buildHero(heroRaw: RawNestedHero, owner?: RawOwner): Her
 		subClass: statGenes.subClass as string,
 		classType: "basic",
 		element: statGenes.element as string,
-		gender: visualGenes.gender as string,
+		// choices.gender only maps codes 1 and 3; any other nibble decodes to undefined — normalise to the empty-string sentinel so gender stays a guaranteed string on the built hero, matching the same coercion applied to firstName below.
+		gender: (visualGenes.gender as string | undefined) ?? "",
 		generation: num(heroRaw.info.generation),
 		id: num(heroRaw.id),
 		heroId: num(heroRaw.id),
